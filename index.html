@@ -1,0 +1,3175 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Урок 8: Робочий стіл комп’ютера — 3 клас НУШ</title>
+  <!-- Підключення Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Підключення дружніх українських шрифтів Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Nunito', 'sans-serif'],
+            display: ['Montserrat', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Основні стилі та анімації інтерфейсу НУШ */
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: radial-gradient(circle at 12% 18%, #dbeafe 0%, transparent 42%),
+                  radial-gradient(circle at 88% 15%, #fef3c7 0%, transparent 40%),
+                  radial-gradient(circle at 80% 85%, #e0e7ff 0%, transparent 45%),
+                  linear-gradient(135deg, #f0f9ff 0%, #eef2ff 52%, #fdf4ff 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+      user-select: none;
+    }
+
+    input, textarea {
+      user-select: text;
+    }
+
+    /* Шар падаючих тематичних смайликів на задньому фоні */
+    #emoji-rain-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 5;
+      overflow: hidden;
+    }
+
+    .falling-emoji {
+      position: absolute;
+      top: -64px;
+      pointer-events: auto;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      transition: transform 0.12s ease;
+      filter: drop-shadow(0 6px 10px rgba(30, 41, 59, 0.14));
+      will-change: transform, top;
+      touch-action: manipulation;
+    }
+
+    .falling-emoji:hover {
+      transform: scale(1.25) !important;
+      filter: drop-shadow(0 0 12px rgba(99, 102, 241, 0.55));
+    }
+
+    .falling-emoji:active {
+      transform: scale(0.9) !important;
+    }
+
+    /* Спалах вибуху при натисканні на смайлик */
+    .emoji-boom-flash {
+      position: fixed;
+      pointer-events: none;
+      z-index: 60;
+      font-size: 2.6rem;
+      transform: translate(-50%, -50%) scale(0.3);
+      animation: boomFlash 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes boomFlash {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0.3) rotate(-15deg);
+      }
+      50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.45) rotate(12deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.8) rotate(20deg);
+      }
+    }
+
+    /* Шар частинок вибуху та конфетті */
+    #fx-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 55;
+    }
+
+    /* Скляна картка слайда */
+    .slide-card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 2px solid rgba(255, 255, 255, 0.95);
+      box-shadow: 0 20px 50px -12px rgba(49, 46, 129, 0.14),
+                  0 4px 16px -2px rgba(15, 23, 42, 0.05);
+    }
+
+    /* Анімація появи слайда */
+    .slide-enter {
+      animation: slideFadeIn 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes slideFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.985);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* 3D-перевертання інтерактивних карток */
+    .flip-card {
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-style: preserve-3d;
+    }
+
+    .flip-card.flipped .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-card-front,
+    .flip-card-back {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 1.25rem;
+    }
+
+    .flip-card-back {
+      transform: rotateY(180deg);
+    }
+
+    /* Пульсуючі точки-підказки на схемі */
+    @keyframes pulseRing {
+      0% {
+        transform: scale(0.85);
+        opacity: 0.9;
+      }
+      70% {
+        transform: scale(1.75);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1.75);
+        opacity: 0;
+      }
+    }
+
+    .hotspot-ring {
+      animation: pulseRing 2s infinite;
+    }
+
+    /* Анімація помаху крил пінгвіна Такса */
+    @keyframes tuxBounce {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-14px) rotate(-5deg); }
+      50% { transform: translateY(-4px) rotate(5deg); }
+      75% { transform: translateY(-10px) rotate(-3deg); }
+    }
+
+    .tux-happy {
+      animation: tuxBounce 0.7s ease-in-out;
+    }
+
+    /* Анімація тремтіння при помилці */
+    @keyframes gentleShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+
+    .shake-anim {
+      animation: gentleShake 0.4s ease-in-out;
+    }
+
+    /* Кастомний скролбар */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(226, 232, 240, 0.5);
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(99, 102, 241, 0.4);
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(99, 102, 241, 0.7);
+    }
+  </style>
+</head>
+<body class="text-slate-800 flex flex-col justify-between min-h-screen relative">
+
+  <!-- Полотно для іскор від вибуху смайликів та святкового конфетті -->
+  <canvas id="fx-canvas"></canvas>
+
+  <!-- Шар падаючих тематичних смайликів на фоні -->
+  <div id="emoji-rain-layer" aria-hidden="true"></div>
+
+  <!-- Спливаюче повідомлення (замість alert) -->
+  <div id="toast-container" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 pointer-events-none w-full max-w-md px-4"></div>
+
+  <!-- ВЕРХНЯ ПАНЕЛЬ НАВІГАЦІЇ ТА КЕРУВАННЯ -->
+  <header class="sticky top-0 z-30 bg-white/85 backdrop-blur-md border-b border-indigo-100 shadow-sm px-3 sm:px-6 py-2.5">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <!-- Ліва частина: Бейдж уроку та поточна роль -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-600 text-white flex items-center justify-center text-xl shadow-md">
+          🖥️
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-lg">НУШ • 3 клас • Урок 8</span>
+            <span id="role-badge" class="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800">
+              Вибір режиму
+            </span>
+          </div>
+          <h1 class="font-display font-extrabold text-sm sm:text-base text-slate-800 leading-tight">
+            Робочий стіл комп’ютера
+          </h1>
+        </div>
+      </div>
+
+      <!-- Права частина: Інструменти, лічильник смайликів, посилання, вчительські кнопки -->
+      <div class="flex items-center flex-wrap gap-1.5 sm:gap-2">
+        <!-- Лічильник спійманих смайликів -->
+        <div class="flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-800 px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-extrabold shadow-xs" title="Натискай на падаючі смайлики на фоні!">
+          <span>💥 Спіймано:</span>
+          <span id="popped-counter" class="text-amber-600 text-base">0</span>
+        </div>
+
+        <!-- Живий лічильник активності учнів (видно вчителю) -->
+        <div id="teacher-activity-pill" class="hidden items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-800 px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-extrabold" title="Кількість виконаних інтерактивних завдань учнями">
+          <span>🏆 Відповіді учнів:</span>
+          <span id="student-activity-count" class="text-emerald-600 text-base">0</span>
+        </div>
+
+        <!-- Кнопка феєрверку для класу (тільки для вчителя) -->
+        <button id="btn-teacher-firework" onclick="triggerClassFireworks()" class="hidden items-center gap-1.5 bg-gradient-to-r from-pink-500 to-amber-500 hover:from-pink-600 hover:to-amber-600 text-white px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-extrabold shadow-sm active:scale-95 transition cursor-pointer">
+          <span>🎉 Феєрверк</span>
+        </button>
+
+        <!-- Кнопка Конспекту вчителя (тільки для вчителя) -->
+        <button id="btn-teacher-notes" onclick="toggleTeacherNotes()" class="hidden items-center gap-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-extrabold transition cursor-pointer">
+          <span>📋 Конспект</span>
+        </button>
+
+        <!-- Кнопка Посилання (Вчитель / Учень) -->
+        <button onclick="openLinksModal()" class="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-extrabold shadow-sm active:scale-95 transition cursor-pointer">
+          <span>🔗 Посилання</span>
+        </button>
+
+        <!-- Кнопка увімкнення/вимкнення звуку -->
+        <button id="btn-sound-toggle" onclick="toggleSound()" class="flex items-center justify-center w-9 h-9 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition cursor-pointer" title="Увімкнути / вимкнути звук">
+          🔊
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ГОЛОВНА ОБЛАСТЬ СЛАЙДА -->
+  <main class="relative z-10 flex-1 flex items-center justify-center px-3 sm:px-6 py-4">
+    <div id="slide-container" class="w-full max-w-5xl slide-card rounded-3xl p-4 sm:p-8 min-h-[520px] flex flex-col justify-between relative">
+      <!-- Динамічний контент поточного слайда рендериться тут -->
+    </div>
+  </main>
+
+  <!-- НИЖНЯ ПАНЕЛЬ НАВІГАЦІЇ (Різна для Вчителя та Учня) -->
+  <footer class="sticky bottom-0 z-30 bg-white/90 backdrop-blur-md border-t border-indigo-100 px-3 sm:px-6 py-2.5">
+    <div class="max-w-5xl mx-auto">
+      <!-- Панель керування ВЧИТЕЛЯ -->
+      <div id="teacher-footer" class="hidden flex-wrap items-center justify-between gap-2">
+        <button id="btn-prev-slide" onclick="changeSlide(-1)" class="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-indigo-100 text-slate-700 hover:text-indigo-700 font-extrabold text-sm sm:text-base transition disabled:opacity-40 cursor-pointer">
+          <span>⬅️ Попередній</span>
+        </button>
+
+        <!-- Індикатор слайдів 1..13 (клікабельний для швидкого переходу вчителем) -->
+        <div id="slide-dots" class="flex items-center flex-wrap justify-center gap-1.5"></div>
+
+        <button id="btn-next-slide" onclick="changeSlide(1)" class="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-extrabold text-sm sm:text-base shadow-md active:scale-95 transition disabled:opacity-40 cursor-pointer">
+          <span>Наступний ➡️</span>
+        </button>
+      </div>
+
+      <!-- Панель статусу УЧНЯ -->
+      <div id="student-footer" class="hidden flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5">
+          <span class="relative flex h-3 w-3">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+          </span>
+          <span id="student-live-label" class="font-extrabold text-sm sm:text-base text-slate-700">
+            🟢 Наживо з вчителем • Слайд 1 з 13
+          </span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span class="text-xs sm:text-sm font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-xl">
+            ✨ Усі картки та завдання на екрані активні — натискай і виконуй!
+          </span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ВИСУВНА ШПАРГАЛКА «КОНСПЕКТ ВЧИТЕЛЯ» -->
+  <aside id="teacher-notes-drawer" class="fixed top-16 right-0 bottom-16 w-full max-w-sm bg-white/95 backdrop-blur-lg border-l-2 border-indigo-200 shadow-2xl z-40 transform translate-x-full transition-transform duration-300 flex flex-col">
+    <div class="p-4 bg-gradient-to-r from-indigo-600 to-blue-600 text-white flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">📋</span>
+        <h2 class="font-display font-extrabold text-base">Конспект вчителя</h2>
+      </div>
+      <button onclick="toggleTeacherNotes()" class="w-8 h-8 rounded-xl bg-white/20 hover:bg-white/30 flex items-center justify-center font-bold cursor-pointer">✕</button>
+    </div>
+    <div id="teacher-notes-content" class="p-5 overflow-y-auto flex-1 space-y-4 text-sm leading-relaxed text-slate-700">
+      <!-- Динамічні методичні поради до поточного слайда -->
+    </div>
+  </aside>
+
+  <!-- СТАРТОВЕ ВІКНО ВИБОРУ РОЛІ (Якщо відкрито без параметрів) -->
+  <div id="role-select-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border-2 border-indigo-100 text-center space-y-6 animate-bounce-once">
+      <div class="inline-flex items-center gap-2 bg-indigo-50 text-indigo-700 px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wider">
+        НУШ • 3 клас • Інформатика / ЯДС
+      </div>
+      <div>
+        <h2 class="font-display font-black text-2xl sm:text-3xl text-slate-800 mb-2">
+          Урок 8: Робочий стіл комп’ютера 🖥️
+        </h2>
+        <p class="text-slate-600 font-semibold text-sm sm:text-base">
+          Оберіть свою роль на уроці, щоб розпочати інтерактивну подорож!
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <button onclick="selectRole('teacher')" class="group p-5 rounded-3xl bg-gradient-to-br from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white text-left shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 cursor-pointer">
+          <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">👨‍🏫</div>
+          <div class="font-display font-extrabold text-lg mb-1">Я Вчитель</div>
+          <p class="text-indigo-100 text-xs font-semibold leading-snug">
+            Керувати слайдами для всього класу, запускати феєрверки та бачити конспект.
+          </p>
+        </button>
+
+        <button onclick="selectRole('student')" class="group p-5 rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-left shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 cursor-pointer">
+          <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">🎒</div>
+          <div class="font-display font-extrabold text-lg mb-1">Я Учень</div>
+          <p class="text-emerald-100 text-xs font-semibold leading-snug">
+            Приєднатися до уроку, відкривати картки, розв’язувати шаради та керувати симулятором ПК!
+          </p>
+        </button>
+      </div>
+
+      <!-- Швидке копіювання посилань прямо зі стартового вікна -->
+      <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 text-left space-y-2.5">
+        <div class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
+          🔗 Швидкі посилання для класу (кімната <span class="room-code-display text-indigo-600">3-KLAS-8</span>):
+        </div>
+        <div class="flex flex-col sm:flex-row gap-2">
+          <button onclick="copyRoleLink('teacher')" class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-indigo-200 hover:bg-indigo-50 text-indigo-700 font-bold text-xs transition cursor-pointer">
+            <span>📋 Скопіювати для Вчителя</span>
+          </button>
+          <button onclick="copyRoleLink('student')" class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-emerald-200 hover:bg-emerald-50 text-emerald-700 font-bold text-xs transition cursor-pointer">
+            <span>📋 Скопіювати для Учнів</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- МОДАЛЬНЕ ВІКНО «ПОСИЛАННЯ (ВЧИТЕЛЬ / УЧЕНЬ) ТА КОД КІМНАТИ» -->
+  <div id="links-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-7 shadow-2xl border-2 border-indigo-100 space-y-5">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="font-display font-extrabold text-xl text-slate-800 flex items-center gap-2">
+          <span>🔗 Посилання для уроку</span>
+        </h3>
+        <button onclick="closeLinksModal()" class="w-9 h-9 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold cursor-pointer">✕</button>
+      </div>
+
+      <!-- Вибір коду кімнати уроку -->
+      <div class="bg-indigo-50/70 rounded-2xl p-4 border border-indigo-100 space-y-2">
+        <label for="room-code-input" class="block text-xs font-extrabold uppercase tracking-wider text-indigo-700">
+          🏫 Код кімнати уроку (для синхронізації вчителя й учнів):
+        </label>
+        <div class="flex gap-2">
+          <input id="room-code-input" type="text" value="3-KLAS-8" class="flex-1 px-3.5 py-2 rounded-xl border-2 border-indigo-200 bg-white font-display font-extrabold text-slate-800 uppercase focus:outline-none focus:border-indigo-500" />
+          <button onclick="applyRoomCode()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm transition cursor-pointer">
+            Застосувати
+          </button>
+        </div>
+      </div>
+
+      <!-- Посилання для Вчителя -->
+      <div class="space-y-1.5">
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-extrabold text-indigo-700">👨‍🏫 Посилання для Вчителя (керування слайдами):</span>
+          <button onclick="switchRoleInstant('teacher')" class="text-xs font-bold text-indigo-600 underline cursor-pointer">Перейти в режим вчителя</button>
+        </div>
+        <div class="flex gap-2">
+          <input id="teacher-link-field" type="text" readonly class="flex-1 px-3 py-2 rounded-xl bg-slate-100 border border-slate-200 text-xs font-mono text-slate-600" />
+          <button onclick="copyRoleLink('teacher')" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs whitespace-nowrap transition cursor-pointer">
+            📋 Копіювати
+          </button>
+        </div>
+      </div>
+
+      <!-- Посилання для Учня -->
+      <div class="space-y-1.5">
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-extrabold text-emerald-700">🎒 Посилання для Учнів (інтерактивна участь):</span>
+          <button onclick="switchRoleInstant('student')" class="text-xs font-bold text-emerald-600 underline cursor-pointer">Перейти в режим учня</button>
+        </div>
+        <div class="flex gap-2">
+          <input id="student-link-field" type="text" readonly class="flex-1 px-3 py-2 rounded-xl bg-slate-100 border border-slate-200 text-xs font-mono text-slate-600" />
+          <button onclick="copyRoleLink('student')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs whitespace-nowrap transition cursor-pointer">
+            📋 Копіювати
+          </button>
+        </div>
+      </div>
+
+      <div class="text-xs text-slate-500 bg-amber-50 border border-amber-200 rounded-2xl p-3 font-semibold">
+        💡 <strong>Як це працює:</strong> Коли вчитель перемикає слайд у своїй версії, у всіх учнів, які відкрили учнівське посилання, слайд змінюється автоматично! При цьому кожен учень може самостійно відкривати картки, друкувати літери та працювати в симуляторі.
+      </div>
+    </div>
+  </div>
+
+  <!-- СКРИПТ ПРЕЗЕНТАЦІЇ, СИНХРОНІЗАЦІЇ, ЗВУКУ ТА ІНТЕРАКТИВНИХ СЛАЙДІВ -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, addDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    /* =========================================================================
+       1. ГЛОБАЛЬНИЙ СТАН ДОДАТКА
+       ========================================================================= */
+    const TOTAL_SLIDES = 13;
+    const state = {
+      role: null, // 'teacher' | 'student'
+      currentSlide: 1,
+      roomCode: '3-KLAS-8',
+      soundEnabled: true,
+      poppedEmojis: 0,
+      studentActivityCount: 0,
+      lastFireworkTs: 0,
+      sessionId: crypto.randomUUID(),
+      // Локальний прогрес учня на інтерактивних слайдах (зберігається під час уроку)
+      charade1Letters: ['', '', '', '', '', ''],
+      charade1Solved: false,
+      charade2Letters: ['', '', '', '', '', '', ''],
+      charade2Solved: false,
+      tuxFactIndex: 0,
+      selectedHotspot: 'this-pc',
+      selectedTaskbarZone: 'start',
+      taskbarLang: 'УКР',
+      mouseTrainerStep: 0, // 0: не виділено, 1: виділено, 2: відкрито
+      // Стан симулятора Робочого стола (Слайд 9)
+      sim: {
+        selectedIcon: null,
+        fileDeleted: false,
+        startMenuOpen: false,
+        windows: {
+          notepad: { open: false, minimized: false, x: 36, y: 24, text: 'Привіт, 3 клас! Я вивчаю Робочий стіл.' },
+          calc: { open: false, minimized: false, x: 145, y: 48, display: '0', prev: null, op: null, resetNext: false },
+          thispc: { open: false, minimized: false, x: 85, y: 36 },
+          games: { open: false, minimized: false, x: 115, y: 55 }
+        },
+        iconPositions: {
+          thispc: { x: 16, y: 14 },
+          notepad: { x: 16, y: 92 },
+          calc: { x: 16, y: 170 },
+          games: { x: 102, y: 14 },
+          oldfile: { x: 102, y: 92 },
+          bin: { x: 102, y: 170 }
+        },
+        missions: {
+          deletedFile: false,
+          typedNotepad: false,
+          openedCalc: false,
+          windowAction: false
+        }
+      },
+      // Стан фізкультхвилинки (Слайд 11)
+      warmupSeconds: 45,
+      warmupRunning: false,
+      // Стан математичних задач (Слайд 12)
+      bookLeft: '',
+      bookRight: '',
+      bookProduct: '',
+      bookSolved: false,
+      removedStickId: null,
+      sticksSolved: false,
+      // Стан конструктора значка (Слайд 13)
+      customApp: {
+        name: 'СуперМалювання',
+        desc: 'Програма для створення яскравих малюнків і листівок',
+        emoji: '🎨',
+        gradient: 'from-pink-500 to-rose-500'
+      }
+    };
+
+    /* =========================================================================
+       2. WEB AUDIO API (ЗВУКОВІ ЕФЕКТИ БЕЗ ЗОВНІШНІХ ФАЙЛІВ)
+       ========================================================================= */
+    let audioCtx = null;
+
+    function getAudioCtx() {
+      if (!state.soundEnabled) return null;
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioCtx = new AudioContextClass();
+        }
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+      }
+      return audioCtx;
+    }
+
+    function playPopSound() {
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      try {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        const now = ctx.currentTime;
+        osc.frequency.setValueAtTime(340, now);
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.09);
+        gain.gain.setValueAtTime(0.22, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.11);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.12);
+      } catch (e) {}
+    }
+
+    function playClickSound() {
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      try {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        const now = ctx.currentTime;
+        osc.frequency.setValueAtTime(520, now);
+        osc.frequency.exponentialRampToValueAtTime(660, now + 0.05);
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.07);
+      } catch (e) {}
+    }
+
+    function playSuccessSound() {
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      try {
+        const notes = [523.25, 659.25, 783.99, 1046.5];
+        notes.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          const start = ctx.currentTime + idx * 0.08;
+          osc.frequency.setValueAtTime(freq, start);
+          gain.gain.setValueAtTime(0.16, start);
+          gain.gain.exponentialRampToValueAtTime(0.001, start + 0.28);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(start);
+          osc.stop(start + 0.3);
+        });
+      } catch (e) {}
+    }
+
+    window.toggleSound = function () {
+      state.soundEnabled = !state.soundEnabled;
+      const btn = document.getElementById('btn-sound-toggle');
+      btn.textContent = state.soundEnabled ? '🔊' : '🔇';
+      if (state.soundEnabled) playClickSound();
+      showToast(state.soundEnabled ? '🔊 Звукові ефекти увімкнено' : '🔇 Звук вимкнено');
+    };
+
+    /* =========================================================================
+       3. СИСТЕМА СПОВІЩЕНЬ (ЗАМІСТЬ ALERT) ТА КОПІЮВАННЯ ПОСИЛАНЬ
+       ========================================================================= */
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const el = document.createElement('div');
+      const bgClass = type === 'success'
+        ? 'bg-emerald-600 text-white'
+        : type === 'warning'
+        ? 'bg-amber-500 text-white'
+        : 'bg-slate-800 text-white';
+      el.className = `${bgClass} px-4 py-2.5 rounded-2xl shadow-xl text-xs sm:text-sm font-extrabold tracking-wide transition-all duration-300 transform translate-y-0 opacity-100 text-center`;
+      el.textContent = message;
+      container.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(-10px)';
+        setTimeout(() => el.remove(), 300);
+      }, 2800);
+    }
+
+    function buildRoleUrl(role) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('role', role);
+      url.searchParams.set('room', state.roomCode);
+      url.hash = role;
+      return url.toString();
+    }
+
+    function updateLinkFields() {
+      const teacherField = document.getElementById('teacher-link-field');
+      const studentField = document.getElementById('student-link-field');
+      if (teacherField) teacherField.value = buildRoleUrl('teacher');
+      if (studentField) studentField.value = buildRoleUrl('student');
+      document.querySelectorAll('.room-code-display').forEach(el => {
+        el.textContent = state.roomCode;
+      });
+    }
+
+    window.copyRoleLink = function (role) {
+      const link = buildRoleUrl(role);
+      const tempInput = document.createElement('input');
+      tempInput.value = link;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      tempInput.setSelectionRange(0, 99999);
+      try {
+        document.execCommand('copy');
+        playSuccessSound();
+        showToast(
+          role === 'teacher'
+            ? '✅ Посилання для ВЧИТЕЛЯ скопійовано!'
+            : '✅ Посилання для УЧНІВ скопійовано!',
+          'success'
+        );
+      } catch (err) {
+        showToast('Не вдалося скопіювати автоматично — виділіть посилання в полі вище.', 'warning');
+      }
+      document.body.removeChild(tempInput);
+    };
+
+    window.openLinksModal = function () {
+      playClickSound();
+      updateLinkFields();
+      const modal = document.getElementById('links-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    };
+
+    window.closeLinksModal = function () {
+      playClickSound();
+      const modal = document.getElementById('links-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    };
+
+    window.applyRoomCode = function () {
+      const input = document.getElementById('room-code-input');
+      const val = (input.value || '').trim().toUpperCase().replace(/[^A-ZА-ЯІЇЄ0-9_-]/g, '');
+      if (!val) {
+        showToast('Введіть код кімнати уроку!', 'warning');
+        return;
+      }
+      state.roomCode = val;
+      updateLinkFields();
+      subscribeToRoom();
+      if (state.role === 'teacher') {
+        syncRoomStateToCloud();
+      }
+      showToast(`🏫 Код кімнати змінено на: ${state.roomCode}`, 'success');
+    };
+
+    /* =========================================================================
+       4. FIREBASE FIRESTORE + BROADCAST CHANNEL СИНХРОНІЗАЦІЯ
+       ========================================================================= */
+    let db = null;
+    let auth = null;
+    let currentUser = null;
+    let unsubscribeRoom = null;
+    let unsubscribeActivity = null;
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'nus-3klas-lesson8';
+    const localChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('nus_3klas_lesson8_sync') : null;
+
+    if (localChannel) {
+      localChannel.onmessage = (event) => {
+        const msg = event.data;
+        if (!msg || msg.roomCode !== state.roomCode) return;
+        if (msg.type === 'ROOM_UPDATE') {
+          if (state.role === 'student' && typeof msg.currentSlide === 'number' && msg.currentSlide !== state.currentSlide) {
+            state.currentSlide = msg.currentSlide;
+            renderCurrentSlide();
+            updateNavigationUI();
+          }
+          if (msg.fireworkTs && msg.fireworkTs > state.lastFireworkTs) {
+            state.lastFireworkTs = msg.fireworkTs;
+            launchConfettiBurst();
+            playSuccessSound();
+            showToast('🎉 Вчитель запустив святковий феєрверк для класу!', 'success');
+          }
+        } else if (msg.type === 'STUDENT_ACTIVITY' && state.role === 'teacher') {
+          state.studentActivityCount += 1;
+          document.getElementById('student-activity-count').textContent = state.studentActivityCount;
+          showToast(`🌟 Учень виконав завдання: ${msg.label}`, 'success');
+        }
+      };
+    }
+
+    async function initFirebaseSync() {
+      try {
+        if (typeof __firebase_config === 'undefined' || !__firebase_config) {
+          return;
+        }
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+
+        // RULE 3: Спочатку обов'язкова автентифікація
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
+        }
+        currentUser = auth.currentUser;
+        subscribeToRoom();
+      } catch (err) {
+        console.warn('Режим автономної синхронізації:', err);
+      }
+    }
+
+    function subscribeToRoom() {
+      if (!db || !currentUser) return;
+      if (unsubscribeRoom) unsubscribeRoom();
+      if (unsubscribeActivity) unsubscribeActivity();
+
+      // RULE 1: Строгий шлях /artifacts/{appId}/public/data/{collectionName}
+      const roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'lesson_rooms', state.roomCode);
+      unsubscribeRoom = onSnapshot(
+        roomDocRef,
+        (snapshot) => {
+          if (!snapshot.exists()) return;
+          const data = snapshot.data();
+          if (state.role === 'student' && typeof data.currentSlide === 'number' && data.currentSlide !== state.currentSlide) {
+            state.currentSlide = Math.min(Math.max(1, data.currentSlide), TOTAL_SLIDES);
+            renderCurrentSlide();
+            updateNavigationUI();
+          }
+          if (data.fireworkTs && data.fireworkTs > state.lastFireworkTs) {
+            state.lastFireworkTs = data.fireworkTs;
+            launchConfettiBurst();
+            playSuccessSound();
+            if (state.role === 'student') {
+              showToast('🎉 Вчитель запустив святковий феєрверк!', 'success');
+            }
+          }
+        },
+        (error) => {
+          console.error('Помилка підписки на кімнату:', error);
+        }
+      );
+
+      // RULE 2: Без складних query (без orderBy/where), фільтрація в пам'яті JS
+      const activityColRef = collection(db, 'artifacts', appId, 'public', 'data', 'lesson_activity');
+      unsubscribeActivity = onSnapshot(
+        activityColRef,
+        (snapshot) => {
+          let count = 0;
+          snapshot.forEach((docSnap) => {
+            const item = docSnap.data();
+            if (item && item.roomCode === state.roomCode) {
+              count++;
+            }
+          });
+          state.studentActivityCount = count;
+          const counterEl = document.getElementById('student-activity-count');
+          if (counterEl) counterEl.textContent = count;
+        },
+        (error) => {
+          console.error('Помилка читання активності учнів:', error);
+        }
+      );
+    }
+
+    async function syncRoomStateToCloud(extraFields = {}) {
+      const payload = {
+        currentSlide: state.currentSlide,
+        roomCode: state.roomCode,
+        updatedAt: Date.now(),
+        ...extraFields
+      };
+
+      if (localChannel) {
+        localChannel.postMessage({ type: 'ROOM_UPDATE', ...payload });
+      }
+
+      if (!db || !currentUser) return;
+      try {
+        const roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'lesson_rooms', state.roomCode);
+        await setDoc(roomDocRef, payload, { merge: true });
+      } catch (err) {
+        console.error('Помилка запису стану кімнати:', err);
+      }
+    }
+
+    async function reportStudentProgress(taskKey, label) {
+      // Уникаємо дублювання одного й того ж завдання від одного учня
+      state._reportedTasks = state._reportedTasks || {};
+      if (state._reportedTasks[taskKey]) return;
+      state._reportedTasks[taskKey] = true;
+
+      if (localChannel) {
+        localChannel.postMessage({
+          type: 'STUDENT_ACTIVITY',
+          roomCode: state.roomCode,
+          taskKey,
+          label
+        });
+      }
+
+      if (!db || !currentUser) return;
+      try {
+        const activityColRef = collection(db, 'artifacts', appId, 'public', 'data', 'lesson_activity');
+        await addDoc(activityColRef, {
+          roomCode: state.roomCode,
+          sessionId: state.sessionId,
+          taskKey,
+          label,
+          createdAt: Date.now()
+        });
+      } catch (err) {
+        console.error('Помилка відправки прогресу учня:', err);
+      }
+    }
+
+    window.triggerClassFireworks = function () {
+      const ts = Date.now();
+      state.lastFireworkTs = ts;
+      launchConfettiBurst();
+      playSuccessSound();
+      showToast('🎉 Феєрверк запущено для всього класу!', 'success');
+      syncRoomStateToCloud({ fireworkTs: ts });
+    };
+
+    /* =========================================================================
+       5. ПАДАЮЧІ ТЕМАТИЧНІ СМАЙЛИКИ З ВИБУХОМ ПРИ НАТИСКАННІ + КОНФЕТТІ
+       ========================================================================= */
+    const LESSON_EMOJIS = ['💻', '🖥️', '🖱️', '⌨️', '📁', '🗑️', '🐧', '🪟', '🚀', '💡'];
+    const rainLayer = document.getElementById('emoji-rain-layer');
+    const fxCanvas = document.getElementById('fx-canvas');
+    const fxCtx = fxCanvas.getContext('2d');
+    let particles = [];
+    let fallingItems = [];
+
+    function resizeFxCanvas() {
+      fxCanvas.width = window.innerWidth;
+      fxCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeFxCanvas);
+    resizeFxCanvas();
+
+    function spawnFallingEmoji() {
+      if (fallingItems.length > 18) return;
+      const el = document.createElement('span');
+      const emoji = LESSON_EMOJIS[Math.floor(Math.random() * LESSON_EMOJIS.length)];
+      const size = 28 + Math.floor(Math.random() * 16); // 28..44px
+      // Розподіляємо рівномірно по всій ширині, з акцентом на бокові поля, щоб зручно було ловити
+      let leftPercent;
+      const zoneRoll = Math.random();
+      if (zoneRoll < 0.35) {
+        leftPercent = 2 + Math.random() * 14; // лівий край
+      } else if (zoneRoll < 0.7) {
+        leftPercent = 84 + Math.random() * 13; // правий край
+      } else {
+        leftPercent = 18 + Math.random() * 64; // центр фону
+      }
+
+      el.className = 'falling-emoji';
+      el.textContent = emoji;
+      el.style.left = `${leftPercent}vw`;
+      el.style.fontSize = `${size}px`;
+
+      const item = {
+        el,
+        y: -55,
+        speed: 0.75 + Math.random() * 1.15,
+        angle: Math.random() * 360,
+        spin: (Math.random() - 0.5) * 1.8,
+        swayOffset: Math.random() * Math.PI * 2,
+        popped: false
+      };
+
+      const popHandler = (e) => {
+        e.stopPropagation();
+        if (item.popped) return;
+        item.popped = true;
+        const rect = el.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        explodeEmojiAt(cx, cy);
+        el.remove();
+        fallingItems = fallingItems.filter(i => i !== item);
+      };
+
+      el.addEventListener('pointerdown', popHandler);
+      rainLayer.appendChild(el);
+      fallingItems.push(item);
+    }
+
+    function explodeEmojiAt(x, y) {
+      playPopSound();
+      state.poppedEmojis += 1;
+      document.getElementById('popped-counter').textContent = state.poppedEmojis;
+
+      // Спалах 💥
+      const flash = document.createElement('div');
+      flash.className = 'emoji-boom-flash';
+      flash.textContent = '💥';
+      flash.style.left = `${x}px`;
+      flash.style.top = `${y}px`;
+      document.body.appendChild(flash);
+      setTimeout(() => flash.remove(), 580);
+
+      // 14 різнокольорових іскор із гравітацією
+      const colors = ['#f43f5e', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#facc15'];
+      for (let i = 0; i < 14; i++) {
+        const angle = (Math.PI * 2 * i) / 14 + (Math.random() - 0.5) * 0.3;
+        const velocity = 3 + Math.random() * 5.5;
+        particles.push({
+          x,
+          y,
+          vx: Math.cos(angle) * velocity,
+          vy: Math.sin(angle) * velocity - 1.5,
+          size: 4 + Math.random() * 4.5,
+          color: colors[i % colors.length],
+          alpha: 1,
+          gravity: 0.22,
+          isConfetti: false
+        });
+      }
+    }
+
+    function launchConfettiBurst() {
+      const colors = ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#06b6d4', '#f43f5e'];
+      for (let i = 0; i < 90; i++) {
+        particles.push({
+          x: Math.random() * fxCanvas.width,
+          y: -15 - Math.random() * 120,
+          vx: (Math.random() - 0.5) * 5,
+          vy: 2.5 + Math.random() * 4.5,
+          size: 6 + Math.random() * 6,
+          color: colors[i % colors.length],
+          alpha: 1,
+          gravity: 0.08,
+          rotation: Math.random() * 360,
+          vRot: (Math.random() - 0.5) * 10,
+          isConfetti: true
+        });
+      }
+    }
+
+    function animationLoop() {
+      // Оновлення падаючих смайликів
+      const maxH = window.innerHeight + 60;
+      for (let i = fallingItems.length - 1; i >= 0; i--) {
+        const item = fallingItems[i];
+        item.y += item.speed;
+        item.angle += item.spin;
+        const swayX = Math.sin(item.y * 0.015 + item.swayOffset) * 14;
+        item.el.style.transform = `translate3d(${swayX}px, ${item.y}px, 0) rotate(${item.angle}deg)`;
+        if (item.y > maxH) {
+          item.el.remove();
+          fallingItems.splice(i, 1);
+        }
+      }
+
+      // Малювання частинок вибуху та конфетті
+      fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += p.gravity;
+        p.alpha -= p.isConfetti ? 0.008 : 0.025;
+
+        if (p.alpha <= 0 || p.y > fxCanvas.height + 30) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        fxCtx.save();
+        fxCtx.globalAlpha = Math.max(0, p.alpha);
+        fxCtx.fillStyle = p.color;
+        if (p.isConfetti) {
+          p.rotation += p.vRot;
+          fxCtx.translate(p.x, p.y);
+          fxCtx.rotate((p.rotation * Math.PI) / 180);
+          fxCtx.fillRect(-p.size / 2, -p.size / 3, p.size, p.size * 0.6);
+        } else {
+          fxCtx.beginPath();
+          fxCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          fxCtx.fill();
+        }
+        fxCtx.restore();
+      }
+
+      requestAnimationFrame(animationLoop);
+    }
+
+    setInterval(spawnFallingEmoji, 1150);
+    // Одразу запустимо кілька смайликів на старті
+    for (let k = 0; k < 5; k++) {
+      setTimeout(spawnFallingEmoji, k * 250);
+    }
+    requestAnimationFrame(animationLoop);
+
+    /* =========================================================================
+       6. КОНСПЕКТ ВЧИТЕЛЯ ДЛЯ КОЖНОГО СЛАЙДА
+       ========================================================================= */
+    const TEACHER_NOTES = {
+      1: {
+        stage: 'І. Організаційний етап та мотивація',
+        tips: [
+          'Привітайте учнів з початком уроку інформатики (НУШ, 3 клас).',
+          'Поділіться учнівським посиланням (кнопка «🔗 Посилання» у верхній панелі), щоб діти підключилися зі своїх пристроїв.',
+          'Підкажіть дітям, що під час уроку можна натискати на інтерактивні картки та ловити падаючі смайлики!'
+        ]
+      },
+      2: {
+        stage: 'ІІ. Логічна розминка (Шарада №1)',
+        tips: [
+          'Поясніть, що шарада — це загадка, у якій слово складається з окремих частин.',
+          'Запропонуйте учням натиснути на дві картки-підказки («ЗА» + «ДАЧА») і ввести слово у клітинки.',
+          'Правильна відповідь: ЗАДАЧА.'
+        ]
+      },
+      3: {
+        stage: 'ІІ. Логічна розминка (Шарада №2)',
+        tips: [
+          'Розберіть разом другу віршовану шараду: прийменник з 3 букв (ПІД) + перші 2 літери «коней» (КО) + останні 2 літери «корова» (ВА).',
+          'Правильна відповідь: ПІДКОВА.'
+        ]
+      },
+      4: {
+        stage: 'ІІІ. Актуалізація опорних знань: Завантаження комп’ютера',
+        tips: [
+          'Запитайте клас: «Що таке системний блок? Яка кнопка вмикає комп’ютер? Як комп’ютер повідомляє, що готовий до роботи?»',
+          'Разом відкрийте картки сучасних операційних систем: Windows 11, Linux, macOS та мобільні ОС.'
+        ]
+      },
+      5: {
+        stage: 'IV. Довідничок юних дослідників',
+        tips: [
+          'Розкажіть кумедну історію про Лінуса Торвальдса та пінгвіна Такса (Tux).',
+          'Нехай діти натиснуть на пінгвіна на екрані, щоб дізнатися 3 цікаві факти!'
+        ]
+      },
+      6: {
+        stage: 'IV. Вивчення нового матеріалу: Робочий стіл',
+        tips: [
+          'Порівняйте звичайний письмовий стіл школяра та Робочий стіл на екрані монітора.',
+          'Натискайте по черзі на пульсуючі точки («Цей ПК», «Кошик», «Папки та значки», «Панель завдань»).'
+        ]
+      },
+      7: {
+        stage: 'IV. Панель завдань у деталях',
+        tips: [
+          'Розгляньте сучасну Панель завдань Windows 11 у нижній частині екрана.',
+          'Покажіть, де розташована кнопка «Пуск», індикатор мови (УКР/ENG), годинник і кнопка «Згорнути все» праворуч.'
+        ]
+      },
+      8: {
+        stage: 'V. Усвідомлення знань: Дії з об’єктами мишею',
+        tips: [
+          'Повторіть різницю між одинарним клацанням (виділити), перетягуванням і подвійним клацанням (відкрити/запустити).',
+          'Запропонуйте учням виконати 2 кроки на тренажері праворуч.'
+        ]
+      },
+      9: {
+        stage: 'VII. Практична робота: Симулятор Робочого стола',
+        tips: [
+          'Перед роботою нагадайте правила безпечної поведінки за комп’ютером!',
+          'Учні виконують 4 інтерактивні місії прямо в симуляторі: видаляють старий файл у Кошик, запускають Блокнот і Калькулятор (двома способами) та керують вікнами.'
+        ]
+      },
+      10: {
+        stage: 'Цікавинки: Еволюція інструментів письма',
+        tips: [
+          'Простежте шлях від графітового олівця (понад 500 років тому) до сучасних стилусів та штучного інтелекту 2026 року.'
+        ]
+      },
+      11: {
+        stage: 'VI. Фізкультхвилинка та гімнастика для очей',
+        tips: [
+          'Вийдіть із-за парт! Проведіть веселу фізкультхвилинку за віршем («Хто ж там, хто вже так втомився... Сонце спить, небо спить...»).',
+          'Обов’язково виконайте вправу для очей: заплющити та розплющити очі 3–4 рази.'
+        ]
+      },
+      12: {
+        stage: 'V. Запитання і завдання (Логіка та математика)',
+        tips: [
+          'Задача 1: сума двох сусідніх сторінок 25 → це сторінки 12 і 13. Добуток: 12 × 13 = 156.',
+          'Задача 2: приберіть одну з трьох зовнішніх паличок крайнього правого квадрата, щоб залишилося рівно 5 квадратів (4 маленьких + 1 великий).'
+        ]
+      },
+      13: {
+        stage: 'VIII. Підбиття підсумків уроку та рефлексія',
+        tips: [
+          'Перевірте відповіді на 3 контрольні запитання.',
+          'Запропонуйте учням створити власний значок програми у міні-студії та назвати її призначення. Підручник: с. 36.'
+        ]
+      }
+    };
+
+    window.toggleTeacherNotes = function () {
+      playClickSound();
+      const drawer = document.getElementById('teacher-notes-drawer');
+      drawer.classList.toggle('translate-x-full');
+    };
+
+    function updateTeacherNotesContent() {
+      const box = document.getElementById('teacher-notes-content');
+      if (!box) return;
+      const note = TEACHER_NOTES[state.currentSlide] || TEACHER_NOTES[1];
+      box.innerHTML = `
+        <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-3.5">
+          <div class="text-xs font-extrabold uppercase text-indigo-600 mb-1">Етап уроку • Слайд ${state.currentSlide}</div>
+          <div class="font-display font-extrabold text-slate-800 text-base">${note.stage}</div>
+        </div>
+        <div class="space-y-2.5">
+          <div class="font-extrabold text-slate-700">📌 Рекомендації та запитання класу:</div>
+          ${note.tips.map(t => `
+            <div class="flex items-start gap-2.5 bg-slate-50 p-3 rounded-2xl border border-slate-100">
+              <span class="text-indigo-500 font-black mt-0.5">•</span>
+              <span>${t}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    /* =========================================================================
+       7. КЕРУВАННЯ РОЛЯМИ ТА НАВІГАЦІЄЮ СЛАЙДІВ
+       ========================================================================= */
+    window.selectRole = function (role) {
+      playSuccessSound();
+      state.role = role;
+      const modal = document.getElementById('role-select-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+
+      try {
+        window.history.replaceState(null, '', buildRoleUrl(role));
+      } catch (e) {}
+
+      applyRoleUI();
+      if (role === 'teacher') {
+        syncRoomStateToCloud();
+      }
+    };
+
+    window.switchRoleInstant = function (role) {
+      closeLinksModal();
+      selectRole(role);
+    };
+
+    function applyRoleUI() {
+      const badge = document.getElementById('role-badge');
+      const teacherFooter = document.getElementById('teacher-footer');
+      const studentFooter = document.getElementById('student-footer');
+      const btnFirework = document.getElementById('btn-teacher-firework');
+      const btnNotes = document.getElementById('btn-teacher-notes');
+      const activityPill = document.getElementById('teacher-activity-pill');
+
+      if (state.role === 'teacher') {
+        badge.textContent = '👨‍🏫 Вчитель';
+        badge.className = 'text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800';
+        teacherFooter.classList.remove('hidden');
+        teacherFooter.classList.add('flex');
+        studentFooter.classList.add('hidden');
+        studentFooter.classList.remove('flex');
+        btnFirework.classList.remove('hidden');
+        btnFirework.classList.add('flex');
+        btnNotes.classList.remove('hidden');
+        btnNotes.classList.add('flex');
+        activityPill.classList.remove('hidden');
+        activityPill.classList.add('flex');
+      } else {
+        badge.textContent = '🎒 Учень';
+        badge.className = 'text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
+        studentFooter.classList.remove('hidden');
+        studentFooter.classList.add('flex');
+        teacherFooter.classList.add('hidden');
+        teacherFooter.classList.remove('flex');
+        btnFirework.classList.add('hidden');
+        btnFirework.classList.remove('flex');
+        btnNotes.classList.add('hidden');
+        btnNotes.classList.remove('flex');
+        activityPill.classList.add('hidden');
+        activityPill.classList.remove('flex');
+      }
+      updateNavigationUI();
+      updateTeacherNotesContent();
+    }
+
+    window.changeSlide = function (delta) {
+      if (state.role !== 'teacher') return;
+      const next = state.currentSlide + delta;
+      if (next < 1 || next > TOTAL_SLIDES) return;
+      goToSlide(next);
+    };
+
+    window.goToSlide = function (slideNum) {
+      if (state.role !== 'teacher') return;
+      playClickSound();
+      state.currentSlide = slideNum;
+      renderCurrentSlide();
+      updateNavigationUI();
+      updateTeacherNotesContent();
+      syncRoomStateToCloud();
+    };
+
+    function updateNavigationUI() {
+      const prevBtn = document.getElementById('btn-prev-slide');
+      const nextBtn = document.getElementById('btn-next-slide');
+      const dotsContainer = document.getElementById('slide-dots');
+      const studentLabel = document.getElementById('student-live-label');
+
+      if (prevBtn) prevBtn.disabled = state.currentSlide <= 1;
+      if (nextBtn) nextBtn.disabled = state.currentSlide >= TOTAL_SLIDES;
+
+      if (studentLabel) {
+        studentLabel.textContent = `🟢 Наживо з вчителем • Слайд ${state.currentSlide} з ${TOTAL_SLIDES}`;
+      }
+
+      if (dotsContainer) {
+        dotsContainer.innerHTML = '';
+        for (let i = 1; i <= TOTAL_SLIDES; i++) {
+          const dot = document.createElement('button');
+          const active = i === state.currentSlide;
+          dot.className = active
+            ? 'w-8 h-8 rounded-xl bg-indigo-600 text-white font-display font-extrabold text-xs shadow-sm scale-105 transition cursor-pointer'
+            : 'w-7 h-7 rounded-xl bg-slate-100 hover:bg-indigo-100 text-slate-600 font-bold text-xs transition cursor-pointer';
+          dot.textContent = i;
+          dot.onclick = () => goToSlide(i);
+          dotsContainer.appendChild(dot);
+        }
+      }
+    }
+
+    // Керування клавішами стрілок для вчителя (якщо не введено текст в інпут)
+    window.addEventListener('keydown', (e) => {
+      const tag = (e.target && e.target.tagName) || '';
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      if (state.role === 'teacher') {
+        if (e.key === 'ArrowRight') changeSlide(1);
+        if (e.key === 'ArrowLeft') changeSlide(-1);
+      }
+    });
+
+    /* =========================================================================
+       8. РЕНДЕРИНГ УСІХ 13 ІНТЕРАКТИВНИХ СЛАЙДІВ
+       ========================================================================= */
+    const UKR_LETTERS = [
+      'А','Б','В','Г','Д','Е','Є','Ж','З','И','І','Ї','Й',
+      'К','Л','М','Н','О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ь','Ю','Я'
+    ];
+
+    function renderCurrentSlide() {
+      const container = document.getElementById('slide-container');
+      container.classList.remove('slide-enter');
+      void container.offsetWidth; // перезапуск CSS-анімації
+      container.classList.add('slide-enter');
+
+      switch (state.currentSlide) {
+        case 1: renderSlide1(container); break;
+        case 2: renderSlide2(container); break;
+        case 3: renderSlide3(container); break;
+        case 4: renderSlide4(container); break;
+        case 5: renderSlide5(container); break;
+        case 6: renderSlide6(container); break;
+        case 7: renderSlide7(container); break;
+        case 8: renderSlide8(container); break;
+        case 9: renderSlide9(container); break;
+        case 10: renderSlide10(container); break;
+        case 11: renderSlide11(container); break;
+        case 12: renderSlide12(container); break;
+        case 13: renderSlide13(container); break;
+      }
+    }
+
+    /* ---------------- СЛАЙД 1: ТИТУЛЬНИЙ ---------------- */
+    function renderSlide1(el) {
+      el.innerHTML = `
+        <div class="flex-1 flex flex-col lg:flex-row items-center justify-between gap-8 py-2">
+          <div class="flex-1 space-y-5 text-center lg:text-left">
+            <div class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border border-indigo-200 text-indigo-700 px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold">
+              <span>🇺🇦 За програмою Нової української школи</span>
+              <span>•</span>
+              <span>Урок 8</span>
+            </div>
+
+            <h2 class="font-display font-black text-3xl sm:text-5xl text-slate-900 leading-tight">
+              Робочий стіл <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-500">комп’ютера</span>
+            </h2>
+
+            <p class="text-slate-600 text-base sm:text-lg font-semibold max-w-xl mx-auto lg:mx-0">
+              Сьогодні ми дізнаємося, як «оживає» екран монітора, навчимося вправно керувати значками й папками та попрацюємо в інтерактивному симуляторі!
+            </p>
+
+            <!-- Інтерактивні бейджі плану уроку -->
+            <div class="flex flex-wrap justify-center lg:justify-start gap-2.5 pt-1">
+              <button onclick="showToast('🧩 Розгадаємо дві цікаві віршовані шаради!')" class="px-3.5 py-2 rounded-2xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-extrabold text-xs sm:text-sm transition cursor-pointer">
+                🧩 Логічна розминка
+              </button>
+              <button onclick="showToast('🐧 Дізнаємося, чому пінгвін Такс став символом Linux!')" class="px-3.5 py-2 rounded-2xl bg-sky-100 hover:bg-sky-200 text-sky-900 font-extrabold text-xs sm:text-sm transition cursor-pointer">
+                🐧 Історія пінгвіна Такса
+              </button>
+              <button onclick="showToast('🖥️ Потренуємося відкривати вікна й перетягувати файли!')" class="px-3.5 py-2 rounded-2xl bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-extrabold text-xs sm:text-sm transition cursor-pointer">
+                🖥️ Симулятор Робочого стола
+              </button>
+            </div>
+
+            <div class="pt-3">
+              ${state.role === 'teacher'
+                ? `<button onclick="changeSlide(1)" class="inline-flex items-center gap-3 px-7 py-4 rounded-3xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-display font-extrabold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5 transition cursor-pointer">
+                    <span>🚀 Розпочати урок</span>
+                  </button>`
+                : `<button onclick="studentReadyCheckIn()" class="inline-flex items-center gap-3 px-7 py-4 rounded-3xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-display font-extrabold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5 transition cursor-pointer">
+                    <span>🙋‍♂️ Я готовий до уроку!</span>
+                  </button>`
+              }
+            </div>
+          </div>
+
+          <!-- Сучасна ілюстрація Робочого стола -->
+          <div class="w-full max-w-sm lg:max-w-md">
+            <div class="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-4 shadow-2xl border-4 border-slate-700">
+              <div class="aspect-video rounded-2xl bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 p-4 flex flex-col justify-between relative overflow-hidden">
+                <!-- Значки на екрані -->
+                <div class="grid grid-cols-3 gap-3 w-44">
+                  <div onclick="playPopSound()" class="bg-white/20 hover:bg-white/30 backdrop-blur-xs rounded-xl p-2 text-center text-white cursor-pointer transition transform hover:scale-105">
+                    <div class="text-2xl">🖥️</div>
+                    <div class="text-[10px] font-extrabold mt-0.5">Цей ПК</div>
+                  </div>
+                  <div onclick="playPopSound()" class="bg-white/20 hover:bg-white/30 backdrop-blur-xs rounded-xl p-2 text-center text-white cursor-pointer transition transform hover:scale-105">
+                    <div class="text-2xl">📁</div>
+                    <div class="text-[10px] font-extrabold mt-0.5">Проєкти</div>
+                  </div>
+                  <div onclick="playPopSound()" class="bg-white/20 hover:bg-white/30 backdrop-blur-xs rounded-xl p-2 text-center text-white cursor-pointer transition transform hover:scale-105">
+                    <div class="text-2xl">🗑️</div>
+                    <div class="text-[10px] font-extrabold mt-0.5">Кошик</div>
+                  </div>
+                </div>
+
+                <!-- Вітальне віконце -->
+                <div class="self-end bg-white/95 rounded-2xl p-3 shadow-lg max-w-[210px] border border-white">
+                  <div class="flex items-center gap-1.5 mb-1">
+                    <span class="w-2.5 h-2.5 rounded-full bg-rose-400"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                    <span class="text-[10px] font-extrabold text-slate-400 ml-1">Windows 11</span>
+                  </div>
+                  <div class="text-xs font-extrabold text-slate-800">Привіт, досліднику! 👋</div>
+                  <div class="text-[11px] text-slate-500 font-semibold">Робочий стіл готовий!</div>
+                </div>
+
+                <!-- Панель завдань -->
+                <div class="h-7 rounded-xl bg-slate-900/60 backdrop-blur-md px-3 flex items-center justify-between text-white text-xs">
+                  <div class="flex items-center gap-2">
+                    <span>🪟</span>
+                    <span>🔍</span>
+                    <span>📁</span>
+                    <span>🎨</span>
+                  </div>
+                  <span class="text-[10px] font-bold text-blue-200">УКР • 3 КЛАС</span>
+                </div>
+              </div>
+              <!-- Підставка монітора -->
+              <div class="w-20 h-4 bg-slate-700 mx-auto mt-1 rounded-b-lg"></div>
+              <div class="w-36 h-2 bg-slate-600 mx-auto rounded-full"></div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    window.studentReadyCheckIn = function () {
+      playSuccessSound();
+      launchConfettiBurst();
+      reportStudentProgress('ready_checkin', 'Готовий до уроку!');
+      showToast('🌟 Чудово! Вчитель бачить, що ти готовий до уроку!', 'success');
+    };
+
+    /* ---------------- ДОПОМІЖНИЙ РЕНДЕР ШАРАД (СЛАЙДИ 2 І 3) ---------------- */
+    function renderCharadeSlide(el, config) {
+      const letters = state[config.lettersKey];
+      const solved = state[config.solvedKey];
+
+      el.innerHTML = `
+        <div class="space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="text-xs font-extrabold uppercase tracking-wider text-amber-600 bg-amber-100 px-3 py-1 rounded-full">
+                🧩 Логічна розминка • ${config.badge}
+              </span>
+              <h2 class="font-display font-black text-2xl sm:text-3xl text-slate-800 mt-1.5">
+                ${config.title}
+              </h2>
+            </div>
+            ${config.introNote ? `<div class="bg-indigo-50 border border-indigo-200 rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold text-indigo-800 max-w-md">${config.introNote}</div>` : ''}
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+            <!-- Віршована загадка -->
+            <div class="lg:col-span-5 bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 rounded-3xl p-5 flex flex-col justify-between">
+              <div class="space-y-2">
+                <div class="text-xs font-extrabold uppercase text-amber-700">📜 Прочитай та відгадай:</div>
+                <p class="text-base sm:text-lg font-extrabold text-slate-800 leading-relaxed whitespace-pre-line">${config.poem}</p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-amber-200/70 flex items-center justify-between">
+                <span class="text-xs font-bold text-amber-800">💡 Натисни на картки праворуч для підказки!</span>
+                <span class="text-2xl">${config.poemEmoji}</span>
+              </div>
+            </div>
+
+            <!-- Інтерактивні картки-підказки та клітинки для букв -->
+            <div class="lg:col-span-7 flex flex-col justify-between gap-4">
+              <!-- Картки-підказки (перевертаються по кліку) -->
+              <div class="grid grid-cols-${config.hints.length} gap-3">
+                ${config.hints.map((h, idx) => `
+                  <div onclick="flipHintCard(this)" class="flip-card h-24 sm:h-28">
+                    <div class="flip-card-inner">
+                      <div class="flip-card-front bg-gradient-to-br from-indigo-500 to-blue-600 text-white p-3 flex flex-col items-center justify-center text-center shadow-md">
+                        <span class="text-xl mb-1">${h.icon}</span>
+                        <span class="text-xs font-extrabold leading-tight">${h.front}</span>
+                        <span class="text-[10px] text-indigo-200 mt-1">(натисни)</span>
+                      </div>
+                      <div class="flip-card-back bg-emerald-500 text-white p-3 flex flex-col items-center justify-center text-center shadow-md border-2 border-emerald-300">
+                        <span class="text-xs font-bold uppercase text-emerald-100">Частина ${idx + 1}</span>
+                        <span class="font-display font-black text-2xl sm:text-3xl tracking-wider mt-0.5">${h.back}</span>
+                      </div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+
+              <!-- Клітинки введення букв -->
+              <div class="bg-slate-50 border-2 ${solved ? 'border-emerald-400 bg-emerald-50/70' : 'border-indigo-100'} rounded-3xl p-4 text-center space-y-3 transition-colors">
+                <div class="text-xs font-extrabold uppercase tracking-wider ${solved ? 'text-emerald-700' : 'text-slate-500'}">
+                  ${solved ? '🎉 БРАВО! Слово відгадано правильно!' : `Введи слово з ${config.answer.length} букв:`}
+                </div>
+
+                <div class="flex justify-center flex-wrap gap-2">
+                  ${config.answer.split('').map((_, idx) => `
+                    <input
+                      type="text"
+                      maxlength="1"
+                      value="${letters[idx] || ''}"
+                      data-charade="${config.id}"
+                      data-index="${idx}"
+                      oninput="handleCharadeInput('${config.id}', ${idx}, this.value)"
+                      onkeydown="handleCharadeKeydown(event, '${config.id}', ${idx})"
+                      class="w-11 h-12 sm:w-13 sm:h-14 text-center font-display font-black text-xl sm:text-2xl uppercase rounded-2xl border-2 ${solved ? 'border-emerald-500 bg-emerald-500 text-white' : 'border-indigo-300 bg-white text-indigo-900 focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100'} outline-none transition"
+                    />
+                  `).join('')}
+                </div>
+
+                ${solved ? `
+                  <div class="inline-flex items-center gap-2 bg-emerald-600 text-white px-5 py-2 rounded-2xl font-extrabold text-sm sm:text-base shadow-md animate-bounce">
+                    <span>${config.winBanner}</span>
+                  </div>
+                ` : `
+                  <!-- Екранна клавіатура українських літер для планшетів та інтерактивних дошок -->
+                  <div class="pt-1">
+                    <div class="flex flex-wrap justify-center gap-1">
+                      ${UKR_LETTERS.map(ch => `
+                        <button onclick="typeCharadeLetter('${config.id}', '${ch}')" class="w-7 h-8 sm:w-8 sm:h-8 rounded-lg bg-white hover:bg-indigo-600 hover:text-white border border-slate-200 font-extrabold text-xs sm:text-sm text-slate-700 shadow-2xs transition cursor-pointer">
+                          ${ch}
+                        </button>
+                      `).join('')}
+                      <button onclick="backspaceCharadeLetter('${config.id}')" class="px-2.5 h-8 rounded-lg bg-rose-100 hover:bg-rose-500 hover:text-white text-rose-700 font-extrabold text-xs transition cursor-pointer">
+                        ⌫
+                      </button>
+                    </div>
+                  </div>
+                `}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    window.flipHintCard = function (el) {
+      playClickSound();
+      el.classList.toggle('flipped');
+    };
+
+    function getCharadeMeta(id) {
+      return id === 'c1'
+        ? { answer: 'ЗАДАЧА', lettersKey: 'charade1Letters', solvedKey: 'charade1Solved', taskKey: 'charade_1', label: 'Шарада №1 (ЗАДАЧА)' }
+        : { answer: 'ПІДКОВА', lettersKey: 'charade2Letters', solvedKey: 'charade2Solved', taskKey: 'charade_2', label: 'Шарада №2 (ПІДКОВА)' };
+    }
+
+    window.handleCharadeInput = function (id, idx, rawVal) {
+      const meta = getCharadeMeta(id);
+      if (state[meta.solvedKey]) return;
+      const clean = (rawVal || '').toUpperCase().replace(/[^А-ЯІЇЄҐ]/g, '').slice(-1);
+      state[meta.lettersKey][idx] = clean;
+      checkCharadeWin(id);
+      renderCurrentSlide();
+      // Переводимо фокус на наступну клітинку
+      if (clean && idx + 1 < meta.answer.length) {
+        const nextInput = document.querySelector(`input[data-charade="${id}"][data-index="${idx + 1}"]`);
+        if (nextInput) nextInput.focus();
+      }
+    };
+
+    window.handleCharadeKeydown = function (e, id, idx) {
+      const meta = getCharadeMeta(id);
+      if (e.key === 'Backspace' && !state[meta.lettersKey][idx] && idx > 0) {
+        state[meta.lettersKey][idx - 1] = '';
+        renderCurrentSlide();
+        const prevInput = document.querySelector(`input[data-charade="${id}"][data-index="${idx - 1}"]`);
+        if (prevInput) prevInput.focus();
+      }
+    };
+
+    window.typeCharadeLetter = function (id, letter) {
+      const meta = getCharadeMeta(id);
+      if (state[meta.solvedKey]) return;
+      playClickSound();
+      const emptyIdx = state[meta.lettersKey].findIndex(ch => !ch);
+      const targetIdx = emptyIdx === -1 ? meta.answer.length - 1 : emptyIdx;
+      state[meta.lettersKey][targetIdx] = letter;
+      checkCharadeWin(id);
+      renderCurrentSlide();
+    };
+
+    window.backspaceCharadeLetter = function (id) {
+      const meta = getCharadeMeta(id);
+      if (state[meta.solvedKey]) return;
+      playClickSound();
+      for (let i = meta.answer.length - 1; i >= 0; i--) {
+        if (state[meta.lettersKey][i]) {
+          state[meta.lettersKey][i] = '';
+          break;
+        }
+      }
+      renderCurrentSlide();
+    };
+
+    function checkCharadeWin(id) {
+      const meta = getCharadeMeta(id);
+      const word = state[meta.lettersKey].join('');
+      if (word === meta.answer) {
+        state[meta.solvedKey] = true;
+        playSuccessSound();
+        launchConfettiBurst();
+        reportStudentProgress(meta.taskKey, meta.label);
+        showToast(`🎉 Правильно! Це слово ${meta.answer}!`, 'success');
+      } else if (word.length === meta.answer.length) {
+        showToast('🤔 Майже! Перевір букви за підказками й спробуй ще раз!', 'warning');
+      }
+    }
+
+    /* ---------------- СЛАЙД 2: ШАРАДА №1 ---------------- */
+    function renderSlide2(el) {
+      renderCharadeSlide(el, {
+        id: 'c1',
+        badge: 'Шарада №1',
+        title: 'Розгадай першу шараду!',
+        introNote: '💡 <strong>Шарада</strong> — це загадка, в якій закодовано слово, що складається з кількох частин.',
+        poem: 'Спочатку прийменник з двох букв відгадай.\nБудинок за містом до нього додай.\nЦе слово всім добре відоме —\nТи з ним зустрічаєшся в класі й удома.',
+        poemEmoji: '🏡',
+        answer: 'ЗАДАЧА',
+        lettersKey: 'charade1Letters',
+        solvedKey: 'charade1Solved',
+        winBanner: '🏆 Молодець! ЗА + ДАЧА = ЗАДАЧА!',
+        hints: [
+          { icon: '🔤', front: 'Прийменник із 2 букв', back: 'ЗА' },
+          { icon: '🏡', front: 'Будинок за містом', back: 'ДАЧА' }
+        ]
+      });
+    }
+
+    /* ---------------- СЛАЙД 3: ШАРАДА №2 ---------------- */
+    function renderSlide3(el) {
+      renderCharadeSlide(el, {
+        id: 'c2',
+        badge: 'Шарада №2',
+        title: 'Розгадай другу шараду!',
+        introNote: '✨ Склади слово з трьох частин — і отримаєш талісман на удачу!',
+        poem: 'Спочатку прийменник з трьох букв відгадай,\nВід «коней» дві літери перші додай,\nВізьми дві останні від слова «корова» —\nІ ось ми отримали слово... .',
+        poemEmoji: '🧲',
+        answer: 'ПІДКОВА',
+        lettersKey: 'charade2Letters',
+        solvedKey: 'charade2Solved',
+        winBanner: '🧲✨ Золота ПІДКОВА на удачу в навчанні!',
+        hints: [
+          { icon: '3️⃣', front: 'Прийменник із 3 букв', back: 'ПІД' },
+          { icon: '🐎', front: 'Перші 2 літери «коней»', back: 'КО' },
+          { icon: '🐄', front: 'Останні 2 літери «корова»', back: 'ВА' }
+        ]
+      });
+    }
+
+    /* ---------------- СЛАЙД 4: ЗАВАНТАЖЕННЯ ПК ТА ОПЕРАЦІЙНІ СИСТЕМИ ---------------- */
+    function renderSlide4(el) {
+      const osList = [
+        {
+          id: 'win11',
+          icon: '🪟',
+          name: 'Windows 11',
+          tag: 'ПК і ноутбуки',
+          color: 'from-blue-500 to-indigo-600',
+          desc: 'Найпопулярніша операційна система для шкільних і домашніх комп’ютерів. Має зручне меню «Пуск» по центру та кольорові вікна.'
+        },
+        {
+          id: 'linux',
+          icon: '🐧',
+          name: 'Linux (Ubuntu)',
+          tag: 'Вільна система',
+          color: 'from-amber-500 to-orange-600',
+          desc: 'Безкоштовна й надійна операційна система, яку дуже люблять програмісти. Її веселий талісман — пінгвін Такс!'
+        },
+        {
+          id: 'macos',
+          icon: '🍏',
+          name: 'macOS',
+          tag: 'Комп’ютери Mac',
+          color: 'from-slate-700 to-slate-900',
+          desc: 'Операційна система для ноутбуків MacBook та моноблоків iMac від компанії Apple із панеллю Dock унизу.'
+        },
+        {
+          id: 'mobile',
+          icon: '📱',
+          name: 'Android / iPadOS / ChromeOS',
+          tag: 'Планшети й хромбуки',
+          color: 'from-emerald-500 to-teal-600',
+          desc: 'Сучасні системи для планшетів, смартфонів та навчальних хромбуків, якими зручно керувати дотиком пальця!'
+        }
+      ];
+
+      el.innerHTML = `
+        <div class="space-y-5">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-blue-600 bg-blue-100 px-3 py-1 rounded-full">
+              ⚡ Як прокидається комп’ютер?
+            </span>
+            <h2 class="font-display font-black text-2xl sm:text-3xl text-slate-800 mt-1.5">
+              Завантаження комп’ютера та Операційні системи
+            </h2>
+            <p class="text-slate-600 font-semibold text-sm sm:text-base mt-1">
+              Комп’ютер не може працювати без програм. Під час увімкнення спеціальні програми перевіряють, чи готові монітор, клавіатура й миша, а потім запускають <strong>операційну систему</strong>.
+            </p>
+          </div>
+
+          <div class="text-xs font-extrabold text-indigo-600 uppercase tracking-wider">
+            👆 Натисни на кожну картку, щоб відкрити опис сучасної системи:
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            ${osList.map(os => `
+              <div onclick="flipHintCard(this)" class="flip-card h-56">
+                <div class="flip-card-inner">
+                  <div class="flip-card-front bg-gradient-to-br ${os.color} text-white p-5 flex flex-col items-center justify-center text-center shadow-lg">
+                    <div class="text-5xl mb-3">${os.icon}</div>
+                    <div class="font-display font-extrabold text-lg">${os.name}</div>
+                    <span class="mt-2 px-3 py-0.5 rounded-full bg-white/20 text-xs font-bold">${os.tag}</span>
+                    <span class="mt-3 text-[11px] text-white/80 font-semibold">Натисни, щоб дізнатися більше ✨</span>
+                  </div>
+                  <div class="flip-card-back bg-white border-2 border-indigo-200 p-4 flex flex-col justify-between shadow-lg">
+                    <div>
+                      <div class="flex items-center gap-2 mb-2">
+                        <span class="text-2xl">${os.icon}</span>
+                        <span class="font-display font-extrabold text-sm text-slate-800">${os.name}</span>
+                      </div>
+                      <p class="text-xs sm:text-sm font-semibold text-slate-600 leading-relaxed">${os.desc}</p>
+                    </div>
+                    <div class="text-[11px] font-extrabold text-indigo-600 text-right">Натисни ще раз ↺</div>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    /* ---------------- СЛАЙД 5: ІСТОРІЯ ПІНГВІНА ТАКСА ---------------- */
+    function renderSlide5(el) {
+      const tuxFacts = [
+        '🐧 Ім’я Такс (Tux) походить від англійського слова «Tuxedo» — смокінг, бо чорно-білий пінгвін нагадує джентльмена у фраку!',
+        '❄️ Лінус Торвальдс створив ядро Linux у 1991 році, коли був студентом у Фінляндії, і подарував систему всьому світові.',
+        '🚀 Сьогодні системи на основі Linux керують суперкомп’ютерами, космічними ракетами та навіть марсоходами NASA!'
+      ];
+
+      el.innerHTML = `
+        <div class="space-y-5">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-sky-700 bg-sky-100 px-3 py-1 rounded-full">
+              🔎 Довідничок юних дослідників
+            </span>
+            <h2 class="font-display font-black text-2xl sm:text-3xl text-slate-800 mt-1.5">
+              Чому у комп’ютерах живе пінгвін Такс? 🐧
+            </h2>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            <!-- Інтерактивний пінгвін Такс -->
+            <div class="lg:col-span-5 flex flex-col items-center">
+              <button id="tux-avatar-btn" onclick="petTuxPenguin()" class="group relative bg-gradient-to-b from-sky-100 to-blue-200 border-4 border-white rounded-3xl p-6 shadow-xl hover:shadow-2xl transition cursor-pointer w-full max-w-xs flex flex-col items-center">
+                <!-- Малюнок пінгвіна Такса -->
+                <svg viewBox="0 0 180 180" class="w-40 h-40 drop-shadow-md">
+                  <ellipse cx="90" cy="162" rx="48" ry="10" fill="rgba(15,23,42,0.12)" />
+                  <!-- Лапки -->
+                  <ellipse cx="64" cy="152" rx="22" ry="11" fill="#f59e0b" />
+                  <ellipse cx="116" cy="152" rx="22" ry="11" fill="#f59e0b" />
+                  <!-- Тіло -->
+                  <ellipse cx="90" cy="100" rx="46" ry="56" fill="#1e293b" />
+                  <!-- Крила -->
+                  <ellipse cx="42" cy="102" rx="13" ry="34" transform="rotate(18 42 102)" fill="#0f172a" />
+                  <ellipse cx="138" cy="102" rx="13" ry="34" transform="rotate(-18 138 102)" fill="#0f172a" />
+                  <!-- Білий животик -->
+                  <ellipse cx="90" cy="106" rx="33" ry="43" fill="#ffffff" />
+                  <!-- Голова -->
+                  <circle cx="90" cy="52" r="32" fill="#1e293b" />
+                  <!-- Очі -->
+                  <ellipse cx="79" cy="46" rx="8" ry="10" fill="#ffffff" />
+                  <ellipse cx="101" cy="46" rx="8" ry="10" fill="#ffffff" />
+                  <circle cx="81" cy="47" r="4" fill="#0f172a" />
+                  <circle cx="99" cy="47" r="4" fill="#0f172a" />
+                  <circle cx="82" cy="45" r="1.5" fill="#ffffff" />
+                  <circle cx="100" cy="45" r="1.5" fill="#ffffff" />
+                  <!-- Дзьоб -->
+                  <path d="M74 58 Q90 52 106 58 Q90 73 74 58 Z" fill="#fbbf24" stroke="#d97706" stroke-width="2" />
+                </svg>
+
+                <span class="mt-2 px-4 py-1.5 rounded-full bg-indigo-600 group-hover:bg-indigo-700 text-white font-extrabold text-xs sm:text-sm shadow">
+                  👆 Натисни на Такса!
+                </span>
+              </button>
+            </div>
+
+            <!-- Історія та перемикач міні-фактів -->
+            <div class="lg:col-span-7 space-y-4">
+              <div class="bg-white border-2 border-sky-100 rounded-3xl p-5 shadow-xs space-y-2">
+                <p class="text-slate-700 font-bold text-base leading-relaxed">
+                  Кажуть, що одного разу <strong>Лінуса Торвальдса</strong> — творця операційної системи <strong>Linux</strong> — у зоопарку Австралії дружелюбно клюнув за палець маленький пінгвін!
+                </p>
+                <p class="text-slate-600 font-semibold text-sm sm:text-base">
+                  Ця кумедна пригода так сподобалася програмісту, що він обрав кумедного ситого пінгвіна на ім’я <strong>Такс (Tux)</strong> офіційним значком-талісманом своєї операційної системи.
+                </p>
+              </div>
+
+              <!-- Картка міні-фактів -->
+              <div class="bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-200 rounded-3xl p-4 sm:p-5">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-extrabold uppercase text-amber-800">
+                    ✨ Цікавий факт ${state.tuxFactIndex + 1} з ${tuxFacts.length}:
+                  </span>
+                  <button onclick="petTuxPenguin()" class="text-xs font-extrabold text-indigo-600 hover:underline cursor-pointer">
+                    Наступний факт ➡️
+                  </button>
+                </div>
+                <p class="text-slate-800 font-extrabold text-sm sm:text-base">
+                  ${tuxFacts[state.tuxFactIndex]}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    window.petTuxPenguin = function () {
+      playPopSound();
+      state.tuxFactIndex = (state.tuxFactIndex + 1) % 3;
+      renderCurrentSlide();
+      const btn = document.getElementById('tux-avatar-btn');
+      if (btn) {
+        btn.classList.add('tux-happy');
+      }
+    };
+
+    /* ---------------- СЛАЙД 6: ЩО ТАКЕ РОБОЧИЙ СТІЛ (ІНТЕРАКТИВНА СХЕМА) ---------------- */
+    function renderSlide6(el) {
+      const hotspots = {
+        'this-pc': {
+          icon: '🖥️',
+          title: 'Значок «Цей ПК» (Цей комп’ютер)',
+          badge: 'Системний значок',
+          desc: 'Відкриває доступ до всіх дисків, папок і файлів, які зберігаються в пам’яті комп’ютера чи на підключеній флешці.'
+        },
+        'bin': {
+          icon: '🗑️',
+          title: 'Значок «Кошик»',
+          badge: 'Тимчасове сховище',
+          desc: 'Сюди потрапляють файли та папки, які вже не потрібні. Якщо ти видалив щось випадково — з Кошика об’єкт можна відновити!'
+        },
+        'folders': {
+          icon: '📁',
+          title: 'Папки та значки (ярлики) програм',
+          badge: 'Порядок на столі',
+          desc: 'Як у твоєму портфелі є теки для зошитів, так і на Робочому столі папки допомагають охайно зберігати малюнки, тексти та ігри.'
+        },
+        'taskbar': {
+          icon: '📊',
+          title: 'Панель завдань',
+          badge: 'Головна смужка керування',
+          desc: 'Розташована в нижній частині Робочого стола. Допомагає запускати програми, перемикатися між вікнами, перевіряти час і мову.'
+        }
+      };
+
+      const currentInfo = hotspots[state.selectedHotspot];
+
+      el.innerHTML = `
+        <div class="space-y-4">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600 bg-indigo-100 px-3 py-1 rounded-full">
+              🖥️ Вивчаємо нове • Інтерактивна схема
+            </span>
+            <h2 class="font-display font-black text-2xl sm:text-3xl text-slate-800 mt-1.5">
+              Що таке Робочий стіл комп’ютера?
+            </h2>
+            <p class="text-slate-600 font-semibold text-sm sm:text-base">
+              Після завантаження комп’ютера на екрані з’являється <strong>Робочий стіл</strong> — головний екран, на якому розташовані значки програм, папок і файлів.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+            <!-- Інтерактивний макет екрана з пульсуючими точками -->
+            <div class="lg:col-span-7 bg-slate-900 rounded-3xl p-3 shadow-xl border-4 border-slate-700">
+              <div class="aspect-video rounded-2xl bg-gradient-to-br from-cyan-500 via-blue-600 to-indigo-700 p-4 flex flex-col justify-between relative">
+                <div class="grid grid-cols-2 gap-4 w-56">
+                  <!-- Точка 1: Цей ПК -->
+                  <button onclick="selectDesktopHotspot('this-pc')" class="relative flex flex-col items-center p-2.5 rounded-2xl ${state.selectedHotspot === 'this-pc' ? 'bg-white/35 ring-2 ring-amber-300' : 'bg-white/15 hover:bg-white/25'} text-white transition cursor-pointer">
+                    <span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-400 hotspot-ring"></span>
+                    <span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-400 border-2 border-white"></span>
+                    <span class="text-3xl">🖥️</span>
+                    <span class="text-xs font-extrabold mt-1">Цей ПК</span>
+                  </button>
+
+                  <!-- Точка 3: Папки та значки -->
+                  <button onclick="selectDesktopHotspot('folders')" class="relative flex flex-col items-center p-2.5 rounded-2xl ${state.selectedHotspot === 'folders' ? 'bg-white/35 ring-2 ring-amber-300' : 'bg-white/15 hover:bg-white/25'} text-white transition cursor-pointer">
+                    <span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-400 hotspot-ring"></span>
+                    <span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-400 border-2 border-white"></span>
+                    <span class="text-3xl">📁</span>
+                    <span class="text-xs font-extrabold mt-1">Мої папки</span>
+                  </button>
+
+                  <!-- Точка 2: Кошик -->
+                  <button onclick="selectDesktopHotspot('bin')" class="relative flex flex-col items-center p-2.5 rounded-2xl ${state.selectedHotspot === 'bin' ? 'bg-white/35 ring-2 ring-amber-300' : 'bg-white/15 hover:bg-white/25'} text-white transition cursor-pointer">
+                    <span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-400 hotspot-ring"></span>
+                    <span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-400 border-2 border-white"></span>
+                    <span class="text-3xl">🗑️</span>
+                    <span class="text-xs font-extrabold mt-1">Кошик</span>
+                  </button>
+                </div>
+
+                <!-- Точка 4: Панель завдань -->
+                <button onclick="selectDesktopHotspot('taskbar')" class="relative w-full h-9 rounded-xl ${state.selectedHotspot === 'taskbar' ? 'bg-slate-900 ring-2 ring-amber-300' : 'bg-slate-900/75 hover:bg-slate-900'} px-3 flex items-center justify-between text-white text-xs transition cursor-pointer">
+                  <span class="absolute -top-1.5 right-6 w-4 h-4 rounded-full bg-amber-400 hotspot-ring"></span>
+                  <span class="absolute -top-1.5 right-6 w-4 h-4 rounded-full bg-amber-400 border-2 border-white"></span>
+                  <div class="flex items-center gap-2 font-bold">
+                    <span>🪟 Пуск</span>
+                    <span>🔍 Пошук</span>
+                    <span>📁</span>
+                    <span>🌐</span>
+                  </div>
+                  <span class="text-[11px] font-extrabold text-amber-300">Панель завдань 👆</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Картка пояснення обраного елемента -->
+            <div class="lg:col-span-5 bg-gradient-to-br from-indigo-50 to-blue-50 border-2 border-indigo-200 rounded-3xl p-6 space-y-4">
+              <div class="inline-flex items-center gap-2 bg-white px-3 py-1 rounded-full text-xs font-extrabold text-indigo-600 shadow-2xs">
+                ${currentInfo.badge}
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-3xl shadow-sm">
+                  ${currentInfo.icon}
+                </div>
+                <h3 class="font-display font-extrabold text-lg sm:text-xl text-slate-800 leading-snug">
+                  ${currentInfo.title}
+                </h3>
+              </div>
+              <p class="text-slate-700 font-semibold text-sm sm:text-base leading-relaxed">
+                ${currentInfo.desc}
+              </p>
+              <div class="pt-2 flex flex-wrap gap-1.5">
+                ${Object.keys(hotspots).map(key => `
+                  <button onclick="selectDesktopHotspot('${key}')" class="px-3 py-1.5 rounded-xl text-xs font-extrabold transition cursor-pointer ${state.selectedHotspot === key ? 'bg-indigo-600 text-white' : 'bg-white text-slate-600 hover:bg-indigo-100'}">
+                    ${hotspots[key].icon}
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    window.selectDesktopHotspot = function (key) {
+      playClickSound();
+      state.selectedHotspot = key;
+      renderCurrentSlide();
+    };
+
+    /* ---------------- СЛАЙД 7: ПАНЕЛЬ ЗАВДАНЬ У ДЕТАЛЯХ ---------------- */
+    function renderSlide7(el) {
+      const zones = {
+        start: {
+          title: 'Кнопка «Пуск» 🪟',
+          desc: 'Головне меню комп’ютера! Натиснувши на неї, можна знайти та запустити будь-яку програму, відкрити налаштування або правильно вимкнути комп’ютер.'
+        },
+        quick: {
+          title: 'Пошук та Панель швидкого доступу 🔍📁',
+          desc: 'Тут закріплено значки найпотрібніших програм (Провідник, Браузер, Paint, Word, PowerPoint), щоб запускати їх одним клацанням миші!'
+        },
+        lang: {
+          title: 'Індикатор мови клавіатури (УКР / ENG) 🌐',
+          desc: 'Показує, якою мовою зараз друкуватиме клавіатура — українською (УКР) чи англійською (ENG). Натисни на кнопку мови на панелі вище, щоб перемкнути!'
+        },
+        tray: {
+          title: 'Звук, Wi-Fi та заряд батареї 🔊📶🔋',
+          desc: 'Область сповіщень допомагає перевірити підключення до інтернету, відрегулювати гучність динаміків і подивитися рівень заряду ноутбука.'
+        },
+        clock: {
+          title: 'Дата, час та кнопка «Згорнути все» 🕒',
+          desc: 'Показує поточний час і календар. А вузька смужка у правому кутку («Згорнути все») миттєво ховає всі відкриті вікна, показуючи Робочий стіл!'
+        }
+      };
+
+      const z = zones[state.selectedTaskbarZone];
+
+      el.innerHTML = `
+        <div class="space-y-6">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-blue-600 bg-blue-100 px-3 py-1 rounded-full">
+              🔍 Детальний огляд
+            </span>
+            <h2 class="font-display font-black text-2xl sm:text-3xl text-slate-800 mt-1.5">
+              Панель завдань Windows 11
+            </h2>
+            <p class="text-slate-600 font-semibold text-sm sm:text-base">
+              Натисни на будь-яку частину Панелі завдань нижче, щоб дізнатися її призначення:
+            </p>
+          </div>
+
+          <!-- Інтерактивна Панель завдань Windows 11 -->
+          <div class="bg-gradient-to-r from-sky-200 via-indigo-200 to-purple-200 p-4 sm:p-6 rounded-3xl border-2 border-white shadow-inner">
+            <div class="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-slate-200 px-3 py-2.5 flex flex-wrap items-center justify-between gap-2">
+              <!-- Лівий віджет погоди -->
+              <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-sky-50 text-sky-800 text-xs font-extrabold">
+                <span>⛅ +18°C</span>
+              </div>
+
+              <!-- Центр: Кнопка Пуск + Швидкий доступ -->
+              <div class="flex items-center gap-1.5 sm:gap-2">
+                <button onclick="selectTaskbarZone('start')" class="px-3 py-2 rounded-xl font-extrabold text-sm flex items-center gap-1.5 transition cursor-pointer ${state.selectedTaskbarZone === 'start' ? 'bg-blue-600 text-white ring-4 ring-blue-200 scale-105' : 'bg-blue-50 hover:bg-blue-100 text-blue-700'}">
+                  <span>🪟</span>
+                  <span class="text-xs">Пуск</span>
+                </button>
+
+                <button onclick="selectTaskbarZone('quick')" class="px-3 py-2 rounded-xl flex items-center gap-2 transition cursor-pointer ${state.selectedTaskbarZone === 'quick' ? 'bg-indigo-600 text-white ring-4 ring-indigo-200 scale-105' : 'bg-slate-100 hover:bg-indigo-50 text-slate-700'}">
+                  <span title="Пошук">🔍</span>
+                  <span title="Провідник">📁</span>
+                  <span title="Браузер">🌐</span>
+                  <span title="Paint">🎨</span>
+                  <span title="Word">📘</span>
+                  <span title="PowerPoint">📙</span>
+                </button>
+              </div>
+
+              <!-- Правий системний трей -->
+              <div class="flex items-center gap-1.5">
+                <button onclick="toggleTaskbarLanguage()" class="px-2.5 py-1.5 rounded-xl font-display font-extrabold text-xs transition cursor-pointer ${state.selectedTaskbarZone === 'lang' ? 'bg-emerald-600 text-white ring-4 ring-emerald-200' : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800'}" title="Натисни, щоб змінити мову!">
+                  ${state.taskbarLang}
+                </button>
+
+                <button onclick="selectTaskbarZone('tray')" class="px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${state.selectedTaskbarZone === 'tray' ? 'bg-amber-500 text-white ring-4 ring-amber-200' : 'bg-slate-100 hover:bg-amber-50 text-slate-700'}">
+                  <span>📶</span>
+                  <span>🔊</span>
+                  <span>🔋</span>
+                </button>
+
+                <button onclick="selectTaskbarZone('clock')" class="px-2.5 py-1 rounded-xl text-right leading-tight transition cursor-pointer ${state.selectedTaskbarZone === 'clock' ? 'bg-purple-600 text-white ring-4 ring-purple-200' : 'bg-slate-100 hover:bg-purple-50 text-slate-700'}">
+                  <div class="text-[11px] font-extrabold">10:30</div>
+                  <div class="text-[9px] font-bold opacity-80">Сьогодні</div>
+                </button>
+
+                <!-- Кнопка Згорнути все -->
+                <button onclick="selectTaskbarZone('clock')" class="w-2.5 h-8 rounded-full bg-indigo-400 hover:bg-indigo-600 transition cursor-pointer" title="Кнопка «Згорнути все»"></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Картка пояснення -->
+          <div class="bg-indigo-50/80 border-2 border-indigo-200 rounded-3xl p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="space-y-1.5">
+              <h3 class="font-display font-extrabold text-xl text-indigo-900">${z.title}</h3>
+              <p class="text-slate-700 font-semibold text-sm sm:text-base leading-relaxed">${z.desc}</p>
+            </div>
+            <div class="shrink-0 bg-white px-4 py-2.5 rounded-2xl border border-indigo-100 text-center">
+              <div class="text-[10px] font-extrabold uppercase text-slate-400">Активна мова</div>
+              <div class="font-display font-black text-lg text-emerald-600">${state.taskbarLang === 'УКР' ? '🇺🇦 УКР' : '🇬🇧 ENG'}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    window.selectTaskbarZone = function (zone) {
+      playClickSound();
+      state.selectedTaskbarZone = zone;
+      renderCurrentSlide();
+    };
+
+    window.toggleTaskbarLanguage = function () {
+      playPopSound();
+      state.selectedTaskbarZone = 'lang';
+      state.taskbarLang = state.taskbarLang === 'УКР' ? 'ENG' : 'УКР';
+      renderCurrentSlide();
+      showToast(`⌨️ Мову клавіатури перемкнуто на ${state.taskbarLang}!`);
+    };
+
+    /* ---------------- СЛАЙД 8: ДІЇ З ОБ'ЄКТАМИ ЗА ДОПОМОГОЮ МИШІ ---------------- */
+    function renderSlide8(el) {
+      const actions = [
+        { action: 'Вибрати (виділити) об’єкт', mouse: 'Навести вказівник миші на об’єкт і 1 раз клацнути лівою кнопкою миші.', badge: '1 клік 👆' },
+        { action: 'Перетягнути об’єкт', mouse: 'Вибрати об’єкт і з натиснутою лівою кнопкою перемістити його в потрібне місце.', badge: 'Затиснути й тягнути ✊' },
+        { action: 'Відкрити папку або документ', mouse: 'Навести вказівник миші на об’єкт і двічі швидко клацнути лівою кнопкою.', badge: '2 кліки ⚡' },
+        { action: 'Запустити програму', mouse: 'Двічі клацнути по значку на Робочому столі або 1 раз у меню «Пуск».', badge: '2 кліки ⚡' }
+      ];
+
+      el.innerHTML = `
+        <div class="space-y-4">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-purple-600 bg-purple-100 px-3 py-1 rounded-full">
+              🖱️ Керування комп’ютерною мишею
+            </span>
+            <h2 class="font-display font-black text-2xl sm:text-3xl text-slate-800 mt-1.5">
+              Які дії можна виконувати з об’єктами?
+            </h2>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+            <!-- Таблиця 4 дій -->
+            <div class="lg:col-span-7 space-y-2.5">
+              ${actions.map(item => `
+                <div class="bg-slate-50 hover:bg-indigo-50/60 border border-slate-200 rounded-2xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 transition">
+                  <div>
+                    <div class="font-display font-extrabold text-sm sm:text-base text-slate-800">${item.action}</div>
+                    <div class="text-xs sm:text-sm font-semibold text-slate-600 mt-0.5">${item.mouse}</div>
+                  </div>
+                  <span class="self-start sm:self-center shrink-0 px-3 py-1 rounded-xl bg-indigo-100 text-indigo-700 font-extrabold text-xs">
+                    ${item.badge}
+                  </span>
+                </div>
+              `).join('')}
+            </div>
+
+            <!-- Міні-тренажер кліків -->
+            <div class="lg:col-span-5 bg-gradient-to-br from-blue-50 to-indigo-100 border-2 border-indigo-200 rounded-3xl p-5 flex flex-col items-center justify-between text-center">
+              <div class="text-xs font-extrabold uppercase text-indigo-700">
+                🎮 Міні-тренажер миші
+              </div>
+
+              <!-- Схема лівої кнопки миші -->
+              <div class="flex items-center gap-3 bg-white/80 px-4 py-2 rounded-2xl border border-indigo-100">
+                <svg viewBox="0 0 60 80" class="w-10 h-12">
+                  <rect x="10" y="6" width="40" height="68" rx="20" fill="#e2e8f0" stroke="#475569" stroke-width="3" />
+                  <path d="M10 26 Q10 6 30 6 L30 34 L10 34 Z" fill="#3b82f6" />
+                  <line x1="30" y1="6" x2="30" y2="34" stroke="#475569" stroke-width="2.5" />
+                  <line x1="10" y1="34" x2="50" y2="34" stroke="#475569" stroke-width="2.5" />
+                </svg>
+                <div class="text-left text-xs font-bold text-slate-700">
+                  Синім кольором позначено<br/><strong>ліву кнопку миші</strong>!
+                </div>
+              </div>
+
+              <!-- Інтерактивна папка -->
+              <div class="my-2">
+                ${state.mouseTrainerStep < 2 ? `
+                  <button
+                    onclick="handleTrainerSingleClick()"
+                    ondblclick="handleTrainerDoubleClick()"
+                    class="p-4 rounded-2xl transition cursor-pointer flex flex-col items-center ${state.mouseTrainerStep === 1 ? 'bg-blue-500/25 border-2 border-blue-500 shadow-md scale-105' : 'bg-white/70 hover:bg-white border-2 border-transparent'}"
+                  >
+                    <span class="text-5xl">📁</span>
+                    <span class="font-extrabold text-sm text-slate-800 mt-1">Мої малюнки</span>
+                  </button>
+                ` : `
+                  <div class="bg-white rounded-2xl p-4 border-2 border-emerald-400 shadow-md space-y-2">
+                    <div class="text-xs font-extrabold text-emerald-700">📂 Папку відкрито! Усередині:</div>
+                    <div class="flex justify-center gap-3 text-2xl">
+                      <span title="Котик.png">🐱</span>
+                      <span title="Ракета.png">🚀</span>
+                      <span title="Веселка.png">🌈</span>
+                    </div>
+                    <button onclick="resetMouseTrainer()" class="text-xs font-bold text-indigo-600 underline cursor-pointer">Спробувати ще раз</button>
+                  </div>
+                `}
+              </div>
+
+              <div class="text-xs font-extrabold text-slate-700 bg-white/90 px-3.5 py-2 rounded-xl w-full">
+                ${state.mouseTrainerStep === 0
+                  ? 'Крок 1: Натисни 1 раз на папку, щоб виділити її 👆'
+                  : state.mouseTrainerStep === 1
+                  ? 'Чудово! Папку виділено! Крок 2: Двічі швидко натисни, щоб відкрити ⚡'
+                  : '🎉 Ти вправно володієш комп’ютерною мишею!'}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    let trainerTapTimer = null;
+    window.handleTrainerSingleClick = function () {
+      playClickSound();
+      if (state.mouseTrainerStep === 0) {
+        state.mouseTrainerStep = 1;
+        renderCurrentSlide();
+      } else if (state.mouseTrainerStep === 1) {
+        // Підтримка швидкого подвійного тапу на сенсорних екранах
+        if (trainerTapTimer) {
+          clearTimeout(trainerTapTimer);
+          trainerTapTimer = null;
+          handleTrainerDoubleClick();
+        } else {
+          trainerTapTimer = setTimeout(() => {
+            trainerTapTimer = null;
+          }, 450);
+        }
+      }
+    };
+
+    window.handleTrainerDoubleClick = function () {
+      playSuccessSound();
+      state.mouseTrainerStep = 2;
+      renderCurrentSlide();
+    };
+
+    window.resetMouseTrainer = function () {
+      playClickSound();
+      state.mouseTrainerStep = 0;
+      renderCurrentSlide();
+    };
+
+    /* ---------------- СЛАЙД 9: ПРАКТИКУМ — СИМУЛЯТОР РОБОЧОГО СТОЛА ---------------- */
+    function renderSlide9(el) {
+      const s = state.sim;
+      const missionsList = [
+        { done: s.missions.deletedFile, text: 'Перетягни «Старий_файл.txt» у Кошик 🗑️' },
+        { done: s.missions.typedNotepad, text: 'Відкрий Блокнот 📝 і надрукуй будь-що' },
+        { done: s.missions.openedCalc, text: 'Запусти Калькулятор 🧮 (зі столу або меню Пуск)' },
+        { done: s.missions.windowAction, text: 'Згорни всі вікна кнопкою праворуч на панелі' }
+      ];
+      const allDone = missionsList.every(m => m.done);
+      if (allDone) {
+        reportStudentProgress('desktop_sim_all', 'Усі 4 місії симулятора Робочого стола!');
+      }
+
+      el.innerHTML = `
+        <div class="space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">
+                🖥️ Практична робота за комп’ютером
+              </span>
+              <h2 class="font-display font-black text-xl sm:text-2xl text-slate-800 mt-1">
+                Інтерактивний симулятор Робочого стола
+              </h2>
+            </div>
+            <button onclick="resetDesktopSimulator()" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs transition cursor-pointer">
+              🔄 Скинути стіл
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+            <!-- ЕКРАН СИМУЛЯТОРА РОБОЧОГО СТОЛА -->
+            <div class="lg:col-span-8 bg-slate-900 rounded-3xl p-2.5 shadow-xl border-4 border-slate-700">
+              <div id="sim-desktop-area" onclick="deselectSimDesktop(event)" class="relative h-[340px] sm:h-[360px] rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-700 overflow-hidden select-none">
+
+                <!-- Значки на Робочому столі (можна виділяти, перетягувати й відкривати) -->
+                ${renderSimIcon('thispc', '🖥️', 'Цей ПК', () => openSimWindow('thispc'))}
+                ${renderSimIcon('notepad', '📝', 'Блокнот', () => openSimWindow('notepad'))}
+                ${renderSimIcon('calc', '🧮', 'Калькулятор', () => openSimWindow('calc'))}
+                ${renderSimIcon('games', '📁', 'Ігри', () => openSimWindow('games'))}
+                ${!s.fileDeleted ? renderSimIcon('oldfile', '📄', 'Старий_файл.txt', () => showToast('💡 Перетягни цей файл на Кошик, щоб видалити!')) : ''}
+                ${renderSimIcon('bin', s.fileDeleted ? '♻️' : '🗑️', s.fileDeleted ? 'Кошик (1)' : 'Кошик', () => showToast(s.fileDeleted ? '♻️ У Кошику лежить Старий_файл.txt!' : '🗑️ Кошик порожній.'))}
+
+                <!-- ВІКНО: БЛОКНОТ -->
+                ${s.windows.notepad.open && !s.windows.notepad.minimized ? `
+                  <div style="left:${s.windows.notepad.x}px; top:${s.windows.notepad.y}px;" class="sim-win absolute w-64 sm:w-72 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-20">
+                    <div onpointerdown="startDragSimWindow(event, 'notepad')" class="bg-slate-100 px-3 py-1.5 flex items-center justify-between cursor-move border-b border-slate-200">
+                      <span class="text-xs font-extrabold text-slate-700">📝 Блокнот</span>
+                      <div class="flex items-center gap-1">
+                        <button onclick="minimizeSimWindow('notepad')" class="w-6 h-6 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-800 font-black text-xs cursor-pointer">—</button>
+                        <button onclick="closeSimWindow('notepad')" class="w-6 h-6 rounded-lg bg-rose-100 hover:bg-rose-500 hover:text-white text-rose-700 font-black text-xs cursor-pointer">✕</button>
+                      </div>
+                    </div>
+                    <div class="p-2.5">
+                      <textarea oninput="handleNotepadType(this.value)" rows="4" class="w-full text-xs sm:text-sm font-semibold text-slate-800 bg-slate-50 border border-slate-200 rounded-xl p-2 focus:outline-none focus:border-indigo-500">${s.windows.notepad.text}</textarea>
+                    </div>
+                  </div>
+                ` : ''}
+
+                <!-- ВІКНО: КАЛЬКУЛЯТОР -->
+                ${s.windows.calc.open && !s.windows.calc.minimized ? `
+                  <div style="left:${s.windows.calc.x}px; top:${s.windows.calc.y}px;" class="sim-win absolute w-52 bg-slate-800 text-white rounded-2xl shadow-2xl border border-slate-600 overflow-hidden z-20">
+                    <div onpointerdown="startDragSimWindow(event, 'calc')" class="bg-slate-900 px-3 py-1.5 flex items-center justify-between cursor-move">
+                      <span class="text-xs font-extrabold text-slate-200">🧮 Калькулятор</span>
+                      <div class="flex items-center gap-1">
+                        <button onclick="minimizeSimWindow('calc')" class="w-6 h-6 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-bold cursor-pointer">—</button>
+                        <button onclick="closeSimWindow('calc')" class="w-6 h-6 rounded-lg bg-rose-500/80 hover:bg-rose-600 text-xs font-bold cursor-pointer">✕</button>
+                      </div>
+                    </div>
+                    <div class="p-2.5 space-y-2">
+                      <div class="bg-slate-950 rounded-xl px-3 py-1.5 text-right font-mono font-bold text-lg text-emerald-400 truncate">
+                        ${s.windows.calc.display}
+                      </div>
+                      <div class="grid grid-cols-4 gap-1 text-xs font-extrabold">
+                        ${['7','8','9','+','4','5','6','-','1','2','3','×','C','0','=','÷'].map(btn => `
+                          <button onclick="pressSimCalc('${btn}')" class="py-1.5 rounded-lg ${btn === '=' ? 'bg-emerald-500 text-white' : btn === 'C' ? 'bg-rose-500 text-white' : 'bg-slate-700 hover:bg-slate-600'} cursor-pointer">
+                            ${btn}
+                          </button>
+                        `).join('')}
+                      </div>
+                    </div>
+                  </div>
+                ` : ''}
+
+                <!-- ВІКНО: ЦЕЙ ПК -->
+                ${s.windows.thispc.open && !s.windows.thispc.minimized ? `
+                  <div style="left:${s.windows.thispc.x}px; top:${s.windows.thispc.y}px;" class="sim-win absolute w-64 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-20">
+                    <div onpointerdown="startDragSimWindow(event, 'thispc')" class="bg-blue-50 px-3 py-1.5 flex items-center justify-between cursor-move border-b border-blue-100">
+                      <span class="text-xs font-extrabold text-blue-800">🖥️ Цей ПК</span>
+                      <button onclick="closeSimWindow('thispc')" class="w-6 h-6 rounded-lg bg-rose-100 hover:bg-rose-500 hover:text-white text-rose-700 font-black text-xs cursor-pointer">✕</button>
+                    </div>
+                    <div class="p-3 space-y-2 text-xs font-bold text-slate-700">
+                      <div class="p-2 rounded-xl bg-slate-50 border border-slate-200">💽 Локальний диск (C:) — 120 ГБ вільно</div>
+                      <div class="p-2 rounded-xl bg-slate-50 border border-slate-200">📁 Документи • 🖼️ Зображення</div>
+                    </div>
+                  </div>
+                ` : ''}
+
+                <!-- ВІКНО: ПАПКА ІГРИ -->
+                ${s.windows.games.open && !s.windows.games.minimized ? `
+                  <div style="left:${s.windows.games.x}px; top:${s.windows.games.y}px;" class="sim-win absolute w-60 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-20">
+                    <div onpointerdown="startDragSimWindow(event, 'games')" class="bg-amber-50 px-3 py-1.5 flex items-center justify-between cursor-move border-b border-amber-100">
+                      <span class="text-xs font-extrabold text-amber-800">📁 Папка «Ігри»</span>
+                      <button onclick="closeSimWindow('games')" class="w-6 h-6 rounded-lg bg-rose-100 hover:bg-rose-500 hover:text-white text-rose-700 font-black text-xs cursor-pointer">✕</button>
+                    </div>
+                    <div class="p-3 flex justify-around text-center text-xs font-extrabold text-slate-700">
+                      <div><div class="text-2xl">🎲</div>GCompris</div>
+                      <div><div class="text-2xl">🐱</div>Scratch</div>
+                    </div>
+                  </div>
+                ` : ''}
+
+                <!-- МЕНЮ ПУСК СИМУЛЯТОРА -->
+                ${s.startMenuOpen ? `
+                  <div onclick="event.stopPropagation()" class="absolute bottom-11 left-3 w-56 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-200 p-3 z-30 space-y-2">
+                    <div class="text-[10px] font-extrabold uppercase text-slate-400 px-1">Усі програми</div>
+                    <button onclick="openSimWindow('notepad')" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-indigo-50 text-left text-xs font-extrabold text-slate-800 cursor-pointer">
+                      <span>📝</span> Блокнот
+                    </button>
+                    <button onclick="openSimWindow('calc')" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-indigo-50 text-left text-xs font-extrabold text-slate-800 cursor-pointer">
+                      <span>🧮</span> Калькулятор
+                    </button>
+                    <button onclick="openSimWindow('thispc')" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-indigo-50 text-left text-xs font-extrabold text-slate-800 cursor-pointer">
+                      <span>🖥️</span> Цей ПК
+                    </button>
+                  </div>
+                ` : ''}
+
+                <!-- ПАНЕЛЬ ЗАВДАНЬ СИМУЛЯТОРА -->
+                <div onclick="event.stopPropagation()" class="absolute bottom-0 inset-x-0 h-9 bg-slate-900/85 backdrop-blur-md px-2.5 flex items-center justify-between text-white z-30">
+                  <div class="flex items-center gap-1.5">
+                    <button onclick="toggleSimStartMenu()" class="px-2.5 py-1 rounded-lg ${s.startMenuOpen ? 'bg-blue-600' : 'bg-white/15 hover:bg-white/25'} text-xs font-extrabold flex items-center gap-1 cursor-pointer">
+                      <span>🪟</span>
+                      <span>Пуск</span>
+                    </button>
+
+                    <!-- Відкриті / згорнуті вікна на панелі завдань -->
+                    ${s.windows.notepad.open ? `
+                      <button onclick="restoreOrToggleSimWindow('notepad')" class="px-2 py-1 rounded-lg text-[11px] font-bold ${s.windows.notepad.minimized ? 'bg-white/10 text-slate-300' : 'bg-indigo-500 text-white'} cursor-pointer">
+                        📝 Блокнот
+                      </button>
+                    ` : ''}
+                    ${s.windows.calc.open ? `
+                      <button onclick="restoreOrToggleSimWindow('calc')" class="px-2 py-1 rounded-lg text-[11px] font-bold ${s.windows.calc.minimized ? 'bg-white/10 text-slate-300' : 'bg-indigo-500 text-white'} cursor-pointer">
+                        🧮 Калькулятор
+                      </button>
+                    ` : ''}
+                  </div>
+
+                  <div class="flex items-center gap-2">
+                    <span class="text-[10px] font-bold text-blue-200 hidden sm:inline">УКР • 3-А</span>
+                    <!-- Кнопка «Згорнути все» -->
+                    <button onclick="minimizeAllSimWindows()" class="px-2 py-1 rounded-lg bg-amber-400/20 hover:bg-amber-400/40 text-amber-200 text-[10px] font-extrabold cursor-pointer" title="Згорнути все">
+                      Згорнути все
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ЧЕК-ЛИСТ МІСІЙ ДЛЯ УЧНЯ -->
+            <div class="lg:col-span-4 bg-slate-50 border-2 border-indigo-100 rounded-3xl p-4 flex flex-col justify-between space-y-3">
+              <div class="space-y-2.5">
+                <div class="font-display font-extrabold text-base text-slate-800 flex items-center justify-between">
+                  <span>🎯 Твої місії:</span>
+                  <span class="text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700">
+                    ${missionsList.filter(m => m.done).length} / 4
+                  </span>
+                </div>
+                <p class="text-[11px] font-bold text-slate-500">
+                  Підказка: значки можна перетягувати, а відкривати подвійним натисканням або через «🪟 Пуск»!
+                </p>
+                <div class="space-y-2">
+                  ${missionsList.map(m => `
+                    <div class="p-2.5 rounded-2xl border text-xs font-extrabold flex items-start gap-2 transition ${m.done ? 'bg-emerald-50 border-emerald-300 text-emerald-800' : 'bg-white border-slate-200 text-slate-700'}">
+                      <span class="text-base leading-none">${m.done ? '✅' : '⬜'}</span>
+                      <span>${m.text}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+
+              ${allDone ? `
+                <div class="bg-emerald-600 text-white rounded-2xl p-3 text-center text-xs font-extrabold shadow-md">
+                  🏆 Усі місії виконано! Ти справжній майстер Робочого стола!
+                </div>
+              ` : `
+                <div class="text-[11px] font-bold text-indigo-600 bg-indigo-50 rounded-xl p-2.5 text-center">
+                  Виконуй завдання прямо на екрані ліворуч!
+                </div>
+              `}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSimIcon(id, emoji, label, openCallback) {
+      const pos = state.sim.iconPositions[id];
+      const selected = state.sim.selectedIcon === id;
+      window._simOpenCallbacks = window._simOpenCallbacks || {};
+      window._simOpenCallbacks[id] = openCallback;
+
+      return `
+        <div
+          id="sim-icon-${id}"
+          style="left:${pos.x}px; top:${pos.y}px;"
+          onpointerdown="startDragSimIcon(event, '${id}')"
+          ondblclick="triggerSimIconOpen('${id}')"
+          class="absolute w-20 p-1.5 rounded-xl flex flex-col items-center text-center cursor-pointer transition-colors ${selected ? 'bg-white/30 ring-2 ring-amber-300' : 'hover:bg-white/15'}"
+        >
+          <span class="text-3xl pointer-events-none drop-shadow">${emoji}</span>
+          <span class="text-[11px] font-extrabold text-white leading-tight mt-1 pointer-events-none drop-shadow">${label}</span>
+        </div>
+      `;
+    }
+
+    let lastIconTap = { id: null, time: 0 };
+    window.startDragSimIcon = function (e, id) {
+      e.stopPropagation();
+      playClickSound();
+      state.sim.selectedIcon = id;
+      state.sim.startMenuOpen = false;
+
+      // Підтримка подвійного тапу для відкриття на сенсорних екранах
+      const now = Date.now();
+      if (lastIconTap.id === id && now - lastIconTap.time < 420) {
+        lastIconTap = { id: null, time: 0 };
+        triggerSimIconOpen(id);
+        return;
+      }
+      lastIconTap = { id, time: now };
+
+      const desktop = document.getElementById('sim-desktop-area');
+      const iconEl = document.getElementById(`sim-icon-${id}`);
+      if (!desktop || !iconEl) return;
+
+      const startX = e.clientX;
+      const startY = e.clientY;
+      const origX = state.sim.iconPositions[id].x;
+      const origY = state.sim.iconPositions[id].y;
+      let moved = false;
+
+      const onMove = (ev) => {
+        const dx = ev.clientX - startX;
+        const dy = ev.clientY - startY;
+        if (Math.abs(dx) > 4 || Math.abs(dy) > 4) moved = true;
+        const maxX = desktop.clientWidth - 84;
+        const maxY = desktop.clientHeight - 105;
+        const nx = Math.max(6, Math.min(maxX, origX + dx));
+        const ny = Math.max(6, Math.min(maxY, origY + dy));
+        state.sim.iconPositions[id] = { x: nx, y: ny };
+        iconEl.style.left = `${nx}px`;
+        iconEl.style.top = `${ny}px`;
+      };
+
+      const onUp = () => {
+        window.removeEventListener('pointermove', onMove);
+        window.removeEventListener('pointerup', onUp);
+
+        // Перевірка: чи перетягнули «Старий_файл.txt» на «Кошик»
+        if (id === 'oldfile' && moved) {
+          const fPos = state.sim.iconPositions.oldfile;
+          const bPos = state.sim.iconPositions.bin;
+          const dist = Math.hypot(fPos.x - bPos.x, fPos.y - bPos.y);
+          if (dist < 58) {
+            state.sim.fileDeleted = true;
+            state.sim.missions.deletedFile = true;
+            playSuccessSound();
+            showToast('🗑️ Файл переміщено у Кошик! Місію №1 виконано!', 'success');
+          }
+        }
+        renderCurrentSlide();
+      };
+
+      window.addEventListener('pointermove', onMove);
+      window.addEventListener('pointerup', onUp);
+    };
+
+    window.triggerSimIconOpen = function (id) {
+      if (window._simOpenCallbacks && window._simOpenCallbacks[id]) {
+        window._simOpenCallbacks[id]();
+      }
+    };
+
+    window.deselectSimDesktop = function () {
+      state.sim.selectedIcon = null;
+      state.sim.startMenuOpen = false;
+      renderCurrentSlide();
+    };
+
+    window.toggleSimStartMenu = function () {
+      playClickSound();
+      state.sim.startMenuOpen = !state.sim.startMenuOpen;
+      renderCurrentSlide();
+    };
+
+    window.openSimWindow = function (winKey) {
+      playPopSound();
+      state.sim.startMenuOpen = false;
+      state.sim.windows[winKey].open = true;
+      state.sim.windows[winKey].minimized = false;
+      if (winKey === 'calc') {
+        state.sim.missions.openedCalc = true;
+      }
+      renderCurrentSlide();
+    };
+
+    window.closeSimWindow = function (winKey) {
+      playClickSound();
+      state.sim.windows[winKey].open = false;
+      renderCurrentSlide();
+    };
+
+    window.minimizeSimWindow = function (winKey) {
+      playClickSound();
+      state.sim.windows[winKey].minimized = true;
+      state.sim.missions.windowAction = true;
+      renderCurrentSlide();
+    };
+
+    window.restoreOrToggleSimWindow = function (winKey) {
+      playClickSound();
+      state.sim.windows[winKey].minimized = !state.sim.windows[winKey].minimized;
+      renderCurrentSlide();
+    };
+
+    window.minimizeAllSimWindows = function () {
+      playClickSound();
+      let hadOpen = false;
+      Object.keys(state.sim.windows).forEach(k => {
+        if (state.sim.windows[k].open) {
+          state.sim.windows[k].minimized = true;
+          hadOpen = true;
+        }
+      });
+      if (hadOpen) {
+        state.sim.missions.windowAction = true;
+        showToast('✨ Усі вікна згорнуто на Панель завдань!', 'success');
+      } else {
+        showToast('💡 Спочатку відкрий будь-яке вікно (Блокнот чи Калькулятор)!');
+      }
+      renderCurrentSlide();
+    };
+
+    window.startDragSimWindow = function (e, winKey) {
+      e.stopPropagation();
+      const desktop = document.getElementById('sim-desktop-area');
+      const winEl = e.currentTarget.parentElement;
+      if (!desktop || !winEl) return;
+
+      const startX = e.clientX;
+      const startY = e.clientY;
+      const origX = state.sim.windows[winKey].x;
+      const origY = state.sim.windows[winKey].y;
+
+      const onMove = (ev) => {
+        const nx = Math.max(4, Math.min(desktop.clientWidth - 180, origX + (ev.clientX - startX)));
+        const ny = Math.max(4, Math.min(desktop.clientHeight - 120, origY + (ev.clientY - startY)));
+        state.sim.windows[winKey].x = nx;
+        state.sim.windows[winKey].y = ny;
+        winEl.style.left = `${nx}px`;
+        winEl.style.top = `${ny}px`;
+      };
+
+      const onUp = () => {
+        window.removeEventListener('pointermove', onMove);
+        window.removeEventListener('pointerup', onUp);
+        state.sim.missions.windowAction = true;
+      };
+
+      window.addEventListener('pointermove', onMove);
+      window.addEventListener('pointerup', onUp);
+    };
+
+    window.handleNotepadType = function (val) {
+      state.sim.windows.notepad.text = val;
+      if (!state.sim.missions.typedNotepad && val.trim().length > 0) {
+        state.sim.missions.typedNotepad = true;
+        playSuccessSound();
+        renderCurrentSlide();
+      }
+    };
+
+    window.pressSimCalc = function (btn) {
+      playClickSound();
+      const c = state.sim.windows.calc;
+      if (btn === 'C') {
+        c.display = '0';
+        c.prev = null;
+        c.op = null;
+      } else if (['+', '-', '×', '÷'].includes(btn)) {
+        c.prev = parseFloat(c.display);
+        c.op = btn;
+        c.resetNext = true;
+      } else if (btn === '=') {
+        if (c.prev !== null && c.op) {
+          const cur = parseFloat(c.display);
+          let res = cur;
+          if (c.op === '+') res = c.prev + cur;
+          if (c.op === '-') res = c.prev - cur;
+          if (c.op === '×') res = c.prev * cur;
+          if (c.op === '÷') res = cur !== 0 ? +(c.prev / cur).toFixed(2) : 'Помилка';
+          c.display = String(res);
+          c.prev = null;
+          c.op = null;
+          c.resetNext = true;
+        }
+      } else {
+        if (c.display === '0' || c.resetNext) {
+          c.display = btn;
+          c.resetNext = false;
+        } else if (c.display.length < 9) {
+          c.display += btn;
+        }
+      }
+      renderCurrentSlide();
+    };
+
+    window.resetDesktopSimulator = function () {
+      playClickSound();
+      state.sim.fileDeleted = false;
+      state.sim.selectedIcon = null;
+      state.sim.startMenuOpen = false;
+      state.sim.iconPositions.oldfile = { x: 102, y: 92 };
+      Object.keys(state.sim.windows).forEach(k => {
+        state.sim.windows[k].open = false;
+        state.sim.windows[k].minimized = false;
+      });
+      renderCurrentSlide();
+    };
+
+    /* ---------------- СЛАЙД 10: ЦІКАВИНКИ (ВІД ОЛІВЦЯ ДО ШТУЧНОГО ІНТЕЛЕКТУ 2026) ---------------- */
+    function renderSlide10(el) {
+      const eras = [
+        {
+          year: 'Понад 500 років тому',
+          icon: '✏️',
+          title: 'Графітовий олівець',
+          color: 'from-amber-400 to-orange-500',
+          text: 'Люди почали використовувати графітові стрижні у дерев’яній оправі для письма та малювання.'
+        },
+        {
+          year: 'Більш ніж 200 років тому',
+          icon: '🖋️',
+          title: 'Зручна авторучка',
+          color: 'from-blue-500 to-indigo-600',
+          text: 'З’явилися перші ручки із запасом чорнила всередині, якими вже не потрібно було постійно вмокати перо в чорнильницю.'
+        },
+        {
+          year: '2011 рік',
+          icon: '🖊️',
+          title: 'Цифрова «диворучка»',
+          color: 'from-purple-500 to-pink-600',
+          text: 'Винайшли електронні ручки, які вміли миттєво перетворювати написані від руки літери на комп’ютерний текст.'
+        },
+        {
+          year: 'Сьогодні • 2026 рік',
+          icon: '🤖✨',
+          title: 'Стилуси та Штучний інтелект',
+          color: 'from-emerald-500 to-teal-600',
+          text: 'Сенсорні екрани, розумні стилуси та штучний інтелект (ШІ) миттєво розпізнають почерк, озвучують текст і допомагають створювати малюнки!'
+        }
+      ];
+
+      el.innerHTML = `
+        <div class="space-y-5">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-pink-600 bg-pink-100 px-3 py-1 rounded-full">
+              🚀 Подорож у часі
+            </span>
+            <h2 class="font-display font-black text-2xl sm:text-3xl text-slate-800 mt-1.5">
+              Цікавинки: від олівця до штучного інтелекту 2026
+            </h2>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            ${eras.map(era => `
+              <div onclick="playPopSound()" class="bg-white border-2 border-slate-100 hover:border-indigo-300 rounded-3xl p-4 shadow-sm hover:shadow-lg transition transform hover:-translate-y-1 cursor-pointer flex flex-col justify-between">
+                <div>
+                  <div class="inline-block px-3 py-1 rounded-full bg-gradient-to-r ${era.color} text-white text-xs font-extrabold mb-3">
+                    ${era.year}
+                  </div>
+                  <div class="text-4xl mb-2">${era.icon}</div>
+                  <h3 class="font-display font-extrabold text-base text-slate-800 mb-1.5">${era.title}</h3>
+                  <p class="text-xs sm:text-sm font-semibold text-slate-600 leading-relaxed">${era.text}</p>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+
+          <!-- Інтерактивна демонстрація ШІ-перетворення рукописного тексту -->
+          <div class="bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-2 border-indigo-200 rounded-3xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <span class="text-3xl">🪄</span>
+              <div>
+                <div class="font-display font-extrabold text-sm sm:text-base text-slate-800">
+                  Спробуй магію стилуса та ШІ 2026!
+                </div>
+                <div class="text-xs font-semibold text-slate-600">
+                  Натисни кнопку, щоб перетворити рукописну нотатку на охайний друкований текст:
+                </div>
+              </div>
+            </div>
+            <button onclick="demoAiHandwriting(this)" class="shrink-0 px-5 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs sm:text-sm shadow transition cursor-pointer">
+              ✍️ «Привіт, комп’ютер!» → ✨ Розпізнати
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    window.demoAiHandwriting = function (btn) {
+      playSuccessSound();
+      btn.textContent = '✅ Розпізнано: «ПРИВІТ, КОМП’ЮТЕР! 🚀»';
+      btn.className = 'shrink-0 px-5 py-2.5 rounded-2xl bg-emerald-600 text-white font-extrabold text-xs sm:text-sm shadow';
+      showToast('🤖 Штучний інтелект миттєво розпізнав рукописний запис!', 'success');
+    };
+
+    /* ---------------- СЛАЙД 11: ФІЗКУЛЬТХВИЛИНКА ТА ГІМНАСТИКА ДЛЯ ОЧЕЙ ---------------- */
+    let warmupInterval = null;
+
+    function renderSlide11(el) {
+      el.innerHTML = `
+        <div class="space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">
+                🤸‍♂️ Час відпочити й порухатися!
+              </span>
+              <h2 class="font-display font-black text-2xl sm:text-3xl text-slate-800 mt-1">
+                Фізкультхвилинка та вправа для очей
+              </h2>
+            </div>
+
+            <!-- Таймер розминки -->
+            <div class="flex items-center gap-2 bg-amber-50 border-2 border-amber-200 px-4 py-2 rounded-2xl">
+              <span class="font-display font-black text-xl text-amber-700" id="warmup-timer-display">00:${String(state.warmupSeconds).padStart(2, '0')}</span>
+              <button onclick="toggleWarmupTimer()" class="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs sm:text-sm transition cursor-pointer">
+                ${state.warmupRunning ? '⏸ Пауза' : '▶️ Старт розминки!'}
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+            <!-- Віршована фізкультхвилинка з конспекту -->
+            <div class="lg:col-span-7 bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-emerald-200 rounded-3xl p-5 space-y-3">
+              <div class="text-xs font-extrabold uppercase text-emerald-700">🎶 Виходимо з-за парт і повторюємо рухи:</div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm font-bold text-slate-700">
+                <div onclick="playPopSound()" class="bg-white/90 p-3 rounded-2xl border border-emerald-100 cursor-pointer hover:scale-[1.02] transition">
+                  🙆‍♂️ Хто ж там, хто вже так втомився<br/>І ліворуч нахилився?<br/>Треба дружно всім нам встати,<br/>Фізкультпаузу почати!
+                </div>
+                <div onclick="playPopSound()" class="bg-white/90 p-3 rounded-2xl border border-emerald-100 cursor-pointer hover:scale-[1.02] transition">
+                  🙈 Сонце спить, небо спить <em>(очі закрити долонями)</em>,<br/>Навіть вітер не шумить <em>(присісти)</em>.
+                </div>
+                <div onclick="playPopSound()" class="bg-white/90 p-3 rounded-2xl border border-emerald-100 cursor-pointer hover:scale-[1.02] transition">
+                  ☀️ Рано-вранці сонце встало <em>(піднятися на носки, руки вгору)</em>,<br/>Помахало промінцями!
+                </div>
+                <div onclick="playPopSound()" class="bg-white/90 p-3 rounded-2xl border border-emerald-100 cursor-pointer hover:scale-[1.02] transition">
+                  🌧️ Хмарка сонечко закрила, слізки срібні зронила.<br/>Ми ті слізки пошукаємо, у травичці позбираємо <em>(присідання)</em>!
+                </div>
+              </div>
+            </div>
+
+            <!-- Гімнастика для очей -->
+            <div class="lg:col-span-5 bg-gradient-to-br from-sky-50 to-indigo-50 border-2 border-sky-200 rounded-3xl p-5 flex flex-col justify-between text-center">
+              <div class="space-y-3">
+                <span class="inline-block px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-extrabold">
+                  👀 Бережемо зір
+                </span>
+                <div class="text-5xl my-2">👁️✨👁️</div>
+                <h3 class="font-display font-extrabold text-lg text-slate-800">
+                  Вправа для профілактики втоми очей
+                </h3>
+                <p class="text-sm font-bold text-slate-600 leading-relaxed">
+                  Сядьте зручно на стілець. Міцно заплющте очі на 3 секунди, а потім широко розплющте їх. Повторіть <strong>3–4 рази</strong> у середньому темпі!
+                </p>
+              </div>
+              <button onclick="playSuccessSound(); showToast('👀 Молодці! Очі відпочили й готові до завдань!', 'success')" class="mt-4 w-full py-2.5 rounded-2xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-sm transition cursor-pointer">
+                ✅ Вправу для очей виконано!
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    window.toggleWarmupTimer = function () {
+      playClickSound();
+      if (state.warmupRunning) {
+        state.warmupRunning = false;
+        clearInterval(warmupInterval);
+      } else {
+        if (state.warmupSeconds <= 0) state.warmupSeconds = 45;
+        state.warmupRunning = true;
+        warmupInterval = setInterval(() => {
+          state.warmupSeconds -= 1;
+          const disp = document.getElementById('warmup-timer-display');
+          if (disp) disp.textContent = `00:${String(Math.max(0, state.warmupSeconds)).padStart(2, '0')}`;
+          if (state.warmupSeconds <= 0) {
+            clearInterval(warmupInterval);
+            state.warmupRunning = false;
+            playSuccessSound();
+            launchConfettiBurst();
+            showToast('🎉 Чудова розминка! Повертаємося до роботи!', 'success');
+            if (state.currentSlide === 11) renderCurrentSlide();
+          }
+        }, 1000);
+      }
+      renderCurrentSlide();
+    };
+
+    /* ---------------- СЛАЙД 12: ЗАПИТАННЯ І ЗАВДАННЯ (КНИГА ТА ПАЛИЧКИ) ---------------- */
+    function renderSlide12(el) {
+      // Координати 15 паличок: сітка 2x2 (12 паличок = 5 квадратів) + 3 палички справа (6-й квадрат)
+      const sticks = [
+        // Горизонтальні палички сітки 2x2
+        { id: 'h1', x1: 30, y1: 30, x2: 95, y2: 30, removable: false },
+        { id: 'h2', x1: 95, y1: 30, x2: 160, y2: 30, removable: false },
+        { id: 'h3', x1: 30, y1: 95, x2: 95, y2: 95, removable: false },
+        { id: 'h4', x1: 95, y1: 95, x2: 160, y2: 95, removable: false },
+        { id: 'h5', x1: 30, y1: 160, x2: 95, y2: 160, removable: false },
+        { id: 'h6', x1: 95, y1: 160, x2: 160, y2: 160, removable: false },
+        // Вертикальні палички сітки 2x2
+        { id: 'v1', x1: 30, y1: 30, x2: 30, y2: 95, removable: false },
+        { id: 'v2', x1: 30, y1: 95, x2: 30, y2: 160, removable: false },
+        { id: 'v3', x1: 95, y1: 30, x2: 95, y2: 95, removable: false },
+        { id: 'v4', x1: 95, y1: 95, x2: 95, y2: 160, removable: false },
+        { id: 'v5', x1: 160, y1: 30, x2: 160, y2: 95, removable: false },
+        { id: 'v6', x1: 160, y1: 95, x2: 160, y2: 160, removable: false },
+        // 3 зовнішні палички 6-го квадрата справа
+        { id: 'r_top', x1: 160, y1: 30, x2: 225, y2: 30, removable: true },
+        { id: 'r_bot', x1: 160, y1: 95, x2: 225, y2: 95, removable: true },
+        { id: 'r_right', x1: 225, y1: 30, x2: 225, y2: 95, removable: true }
+      ];
+
+      el.innerHTML = `
+        <div class="space-y-4">
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-600 bg-indigo-100 px-3 py-1 rounded-full">
+              🧠 Запитання і завдання
+            </span>
+            <h2 class="font-display font-black text-2xl sm:text-3xl text-slate-800 mt-1">
+              Перевір свою кмітливість!
+            </h2>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 items-stretch">
+            <!-- ЗАДАЧА 1: КНИГА ГАННУСІ -->
+            <div class="bg-amber-50/80 border-2 ${state.bookSolved ? 'border-emerald-400' : 'border-amber-200'} rounded-3xl p-5 flex flex-col justify-between space-y-3">
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-extrabold uppercase text-amber-800 bg-amber-200/70 px-2.5 py-0.5 rounded-lg">📖 Задача 1</span>
+                  <button onclick="showToast('💡 Сторінки в книзі йдуть підряд: 12 + 13 = 25!')" class="text-xs font-extrabold text-indigo-600 hover:underline cursor-pointer">💡 Підказка</button>
+                </div>
+                <p class="text-sm sm:text-base font-bold text-slate-800 leading-snug">
+                  Ганнуся відкрила книгу навмання і побачила, що сума номерів правої й лівої сторінок дорівнює <strong>25</strong>. Чому дорівнює <strong>добуток</strong> номерів цих сторінок?
+                </p>
+              </div>
+
+              <div class="bg-white rounded-2xl p-3.5 border border-amber-200 space-y-3">
+                <div class="grid grid-cols-3 gap-2 text-center">
+                  <div>
+                    <label class="block text-[10px] font-extrabold text-slate-500 uppercase mb-1">Ліва стор.</label>
+                    <input type="number" value="${state.bookLeft}" oninput="state.bookLeft=this.value" placeholder="?" class="w-full py-2 text-center font-display font-black text-base rounded-xl border-2 border-slate-200 focus:border-indigo-500 outline-none" />
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-extrabold text-slate-500 uppercase mb-1">Права стор.</label>
+                    <input type="number" value="${state.bookRight}" oninput="state.bookRight=this.value" placeholder="?" class="w-full py-2 text-center font-display font-black text-base rounded-xl border-2 border-slate-200 focus:border-indigo-500 outline-none" />
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-extrabold text-indigo-600 uppercase mb-1">Добуток (×)</label>
+                    <input type="number" value="${state.bookProduct}" oninput="state.bookProduct=this.value" placeholder="?" class="w-full py-2 text-center font-display font-black text-base rounded-xl border-2 border-indigo-300 focus:border-indigo-600 outline-none" />
+                  </div>
+                </div>
+
+                ${state.bookSolved ? `
+                  <div class="bg-emerald-600 text-white py-2 px-3 rounded-xl text-center text-xs sm:text-sm font-extrabold">
+                    🎉 Правильно! 12 × 13 = 156!
+                  </div>
+                ` : `
+                  <button onclick="checkBookPuzzle()" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-sm transition cursor-pointer">
+                    ✨ Перевірити відповідь
+                  </button>
+                `}
+              </div>
+            </div>
+
+            <!-- ЗАДАЧА 2: ГОЛОВОЛОМКА З ПАЛИЧКАМИ -->
+            <div class="bg-indigo-50/80 border-2 ${state.sticksSolved ? 'border-emerald-400' : 'border-indigo-200'} rounded-3xl p-5 flex flex-col justify-between space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-extrabold uppercase text-indigo-800 bg-indigo-200/70 px-2.5 py-0.5 rounded-lg">🥢 Задача 2</span>
+                ${state.removedStickId ? `<button onclick="resetStickPuzzle()" class="text-xs font-extrabold text-indigo-600 underline cursor-pointer">🔄 Повернути паличку</button>` : ''}
+              </div>
+              <p class="text-sm sm:text-base font-bold text-slate-800 leading-snug">
+                Закресли (натисни) <strong>одну паличку</strong> так, щоб залишилося рівно <strong>п’ять квадратів</strong>!
+              </p>
+
+              <!-- Інтерактивна SVG-фігура з паличок -->
+              <div class="bg-white rounded-2xl p-2 border border-indigo-100 flex flex-col items-center">
+                <svg viewBox="0 0 255 190" class="w-full max-w-[270px] h-40">
+                  <!-- Підсвічування 5 квадратів при розв'язанні (4 маленьких + 1 великий) -->
+                  ${state.sticksSolved ? `
+                    <rect x="34" y="34" width="57" height="57" rx="6" fill="rgba(16, 185, 129, 0.22)" />
+                    <rect x="99" y="34" width="57" height="57" rx="6" fill="rgba(59, 130, 246, 0.22)" />
+                    <rect x="34" y="99" width="57" height="57" rx="6" fill="rgba(245, 158, 11, 0.22)" />
+                    <rect x="99" y="99" width="57" height="57" rx="6" fill="rgba(236, 72, 153, 0.22)" />
+                    <rect x="27" y="27" width="136" height="136" rx="10" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="6 4" />
+                  ` : ''}
+
+                  ${sticks.map(st => {
+                    const isRemoved = state.removedStickId === st.id;
+                    if (isRemoved) {
+                      return `
+                        <g opacity="0.3">
+                          <line x1="${st.x1}" y1="${st.y1}" x2="${st.x2}" y2="${st.y2}" stroke="#ef4444" stroke-width="6" stroke-dasharray="5 5" stroke-linecap="round" />
+                        </g>
+                      `;
+                    }
+                    return `
+                      <g onclick="clickPuzzleStick('${st.id}', ${st.removable})" class="cursor-pointer group">
+                        <!-- Невидима широка зона для легкого натискання -->
+                        <line x1="${st.x1}" y1="${st.y1}" x2="${st.x2}" y2="${st.y2}" stroke="transparent" stroke-width="20" />
+                        <!-- Сама паличка -->
+                        <line x1="${st.x1}" y1="${st.y1}" x2="${st.x2}" y2="${st.y2}" stroke="#4f46e5" stroke-width="8" stroke-linecap="round" class="group-hover:stroke-amber-500 transition-colors" />
+                        <!-- Голівка сірника -->
+                        <circle cx="${st.x1}" cy="${st.y1}" r="5.5" fill="#f43f5e" />
+                      </g>
+                    `;
+                  }).join('')}
+                </svg>
+
+                <div class="text-xs font-extrabold text-center px-2 py-1 ${state.sticksSolved ? 'text-emerald-700' : 'text-slate-500'}">
+                  ${state.sticksSolved
+                    ? '🎉 Браво! Залишилося 4 маленькі квадрати + 1 великий = 5 квадратів!'
+                    : '👆 Натисни на паличку, яку хочеш закреслити'}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    window.checkBookPuzzle = function () {
+      const prod = Number(state.bookProduct);
+      const l = Number(state.bookLeft);
+      const r = Number(state.bookRight);
+      if (prod === 156 && (!l || !r || (l + r === 25 && l * r === 156))) {
+        state.bookSolved = true;
+        playSuccessSound();
+        launchConfettiBurst();
+        reportStudentProgress('math_book', 'Задача про книгу (156)');
+        renderCurrentSlide();
+        showToast('🎉 Супер! 12 × 13 = 156!', 'success');
+      } else {
+        playClickSound();
+        showToast('🤔 Поміркуй: які два сусідні числа дають у сумі 25? (12 і 13)', 'warning');
+      }
+    };
+
+    window.clickPuzzleStick = function (id, removable) {
+      if (state.sticksSolved) return;
+      if (removable) {
+        state.removedStickId = id;
+        state.sticksSolved = true;
+        playSuccessSound();
+        launchConfettiBurst();
+        reportStudentProgress('math_sticks', 'Головоломка з паличками (5 квадратів)');
+        renderCurrentSlide();
+        showToast('🎉 Точно в ціль! Залишилося рівно 5 квадратів!', 'success');
+      } else {
+        playClickSound();
+        showToast('😅 Якщо прибрати цю паличку, зруйнується великий квадрат! Спробуй прибрати паличку справа.', 'warning');
+      }
+    };
+
+    window.resetStickPuzzle = function () {
+      playClickSound();
+      state.removedStickId = null;
+      state.sticksSolved = false;
+      renderCurrentSlide();
+    };
+
+    /* ---------------- СЛАЙД 13: ПІДСУМОК УРОКУ ТА КОНСТРУКТОР ВЛАСНОГО ЗНАЧКА ---------------- */
+    function renderSlide13(el) {
+      const questions = [
+        {
+          q: 'Що таке робочий стіл комп’ютера?',
+          a: 'Це головний екран монітора, який з’являється після завантаження комп’ютера і містить значки програм, папок та панель завдань.'
+        },
+        {
+          q: 'Для чого призначені «Цей ПК», «Кошик» і «Панель завдань»?',
+          a: '«Цей ПК» відкриває доступ до всіх файлів, «Кошик» зберігає видалені об’єкти, а «Панель завдань» допомагає керувати програмами.'
+        },
+        {
+          q: 'Як виділити об’єкт, а як — відкрити програму?',
+          a: 'Щоб виділити — 1 раз клацнути лівою кнопкою миші. Щоб відкрити — двічі швидко клацнути лівою кнопкою!'
+        }
+      ];
+
+      const appIcons = ['🎨', '🚀', '🎮', '📚', '🤖', '🎵', '🌟', '🐾'];
+      const gradients = [
+        'from-pink-500 to-rose-500',
+        'from-indigo-500 to-blue-600',
+        'from-emerald-500 to-teal-600',
+        'from-amber-500 to-orange-500',
+        'from-purple-500 to-violet-600'
+      ];
+
+      el.innerHTML = `
+        <div class="space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="text-xs font-extrabold uppercase tracking-wider text-amber-700 bg-amber-100 px-3 py-1 rounded-full">
+                🏆 Підсумок уроку • Самоперевірка
+              </span>
+              <h2 class="font-display font-black text-2xl sm:text-3xl text-slate-800 mt-1">
+                Ти молодець! Перевір свої знання
+              </h2>
+            </div>
+            <div class="bg-indigo-50 border border-indigo-200 px-3.5 py-2 rounded-2xl text-xs font-extrabold text-indigo-800">
+              📘 Підручник: «Я досліджую світ» • 3 кл., 2 ч., <strong>с. 36</strong>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+            <!-- 3 картки самоперевірки -->
+            <div class="lg:col-span-6 space-y-2.5">
+              <div class="text-xs font-extrabold text-slate-500 uppercase">👆 Натисни на запитання, щоб перевірити відповідь:</div>
+              ${questions.map((item, i) => `
+                <details onclick="playClickSound()" class="group bg-slate-50 open:bg-emerald-50/70 border border-slate-200 open:border-emerald-300 rounded-2xl p-3.5 transition cursor-pointer">
+                  <summary class="font-display font-extrabold text-sm text-slate-800 list-none flex items-center justify-between gap-2">
+                    <span>${i + 1}. ${item.q}</span>
+                    <span class="text-indigo-500 group-open:rotate-180 transition-transform">▼</span>
+                  </summary>
+                  <p class="mt-2 pt-2 border-t border-emerald-200/70 text-xs sm:text-sm font-semibold text-emerald-900">
+                    ✅ ${item.a}
+                  </p>
+                </details>
+              `).join('')}
+
+              <div class="bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-2xl p-4 text-center font-display font-black text-lg shadow-md">
+                🌟 Успіхів у навчанні! 🌟
+              </div>
+            </div>
+
+            <!-- Творча міні-студія: Створи свій значок програми -->
+            <div class="lg:col-span-6 bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 rounded-3xl p-4 sm:p-5 flex flex-col justify-between space-y-3">
+              <div>
+                <div class="text-xs font-extrabold uppercase text-purple-700">🎨 Творче завдання</div>
+                <h3 class="font-display font-extrabold text-lg text-slate-800">Створи свій значок програми!</h3>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+                <!-- Налаштування значка -->
+                <div class="sm:col-span-7 space-y-2.5">
+                  <div>
+                    <label class="block text-[10px] font-extrabold uppercase text-slate-500 mb-1">1. Обери символ:</label>
+                    <div class="flex flex-wrap gap-1">
+                      ${appIcons.map(ic => `
+                        <button onclick="updateCustomApp('emoji', '${ic}')" class="w-8 h-8 rounded-xl ${state.customApp.emoji === ic ? 'bg-purple-600 text-white scale-110' : 'bg-white hover:bg-purple-100'} text-base transition cursor-pointer">
+                          ${ic}
+                        </button>
+                      `).join('')}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="block text-[10px] font-extrabold uppercase text-slate-500 mb-1">2. Обери колір:</label>
+                    <div class="flex gap-1.5">
+                      ${gradients.map(gr => `
+                        <button onclick="updateCustomApp('gradient', '${gr}')" class="w-7 h-7 rounded-full bg-gradient-to-br ${gr} ${state.customApp.gradient === gr ? 'ring-4 ring-purple-300 scale-110' : ''} transition cursor-pointer"></button>
+                      `).join('')}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="block text-[10px] font-extrabold uppercase text-slate-500 mb-1">3. Назва та призначення:</label>
+                    <input type="text" value="${state.customApp.name}" oninput="state.customApp.name=this.value; updateCustomAppPreview()" placeholder="Назва програми..." class="w-full px-3 py-1.5 rounded-xl bg-white border border-purple-200 text-xs font-extrabold text-slate-800 mb-1.5 focus:outline-none focus:border-purple-500" />
+                    <input type="text" value="${state.customApp.desc}" oninput="state.customApp.desc=this.value; updateCustomAppPreview()" placeholder="Для чого ця програма?" class="w-full px-3 py-1.5 rounded-xl bg-white border border-purple-200 text-xs font-semibold text-slate-600 focus:outline-none focus:border-purple-500" />
+                  </div>
+                </div>
+
+                <!-- Попередній перегляд значка -->
+                <div class="sm:col-span-5 bg-white rounded-2xl p-3 border border-purple-200 text-center flex flex-col items-center justify-center shadow-sm">
+                  <div class="w-16 h-16 rounded-2xl bg-gradient-to-br ${state.customApp.gradient} text-white flex items-center justify-center text-3xl shadow-md mb-2">
+                    ${state.customApp.emoji}
+                  </div>
+                  <div id="custom-app-name-preview" class="font-display font-extrabold text-xs text-slate-800 break-words w-full">
+                    ${state.customApp.name || 'Моя програма'}
+                  </div>
+                  <div id="custom-app-desc-preview" class="text-[10px] font-semibold text-slate-500 mt-1 line-clamp-2">
+                    ${state.customApp.desc}
+                  </div>
+                </div>
+              </div>
+
+              <button onclick="saveCustomAppBadge()" class="w-full py-2.5 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-extrabold text-xs sm:text-sm shadow transition cursor-pointer">
+                ✨ Готово! Показати свій значок класу
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    window.updateCustomApp = function (key, val) {
+      playClickSound();
+      state.customApp[key] = val;
+      renderCurrentSlide();
+    };
+
+    window.updateCustomAppPreview = function () {
+      const n = document.getElementById('custom-app-name-preview');
+      const d = document.getElementById('custom-app-desc-preview');
+      if (n) n.textContent = state.customApp.name || 'Моя програма';
+      if (d) d.textContent = state.customApp.desc || '';
+    };
+
+    window.saveCustomAppBadge = function () {
+      playSuccessSound();
+      launchConfettiBurst();
+      reportStudentProgress('custom_icon', `Власний значок «${state.customApp.name}»`);
+      showToast(`🎨 Супер! Значок «${state.customApp.name}» створено!`, 'success');
+    };
+
+    /* =========================================================================
+       9. ІНІЦІАЛІЗАЦІЯ ПРИ ЗАВАНТАЖЕННІ СТОРІНКИ
+       ========================================================================= */
+    function initApp() {
+      const params = new URLSearchParams(window.location.search);
+      const roleParam = (params.get('role') || '').toLowerCase();
+      const roomParam = params.get('room');
+      const hash = (window.location.hash || '').toLowerCase();
+
+      if (roomParam) {
+        state.roomCode = roomParam.toUpperCase();
+        const roomInput = document.getElementById('room-code-input');
+        if (roomInput) roomInput.value = state.roomCode;
+      }
+
+      if (roleParam === 'teacher' || hash.includes('teacher')) {
+        state.role = 'teacher';
+        applyRoleUI();
+      } else if (roleParam === 'student' || hash.includes('student')) {
+        state.role = 'student';
+        applyRoleUI();
+      } else {
+        // Показуємо вікно вибору ролі, якщо посилання відкрито без параметрів
+        const modal = document.getElementById('role-select-modal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+
+      updateLinkFields();
+      renderCurrentSlide();
+      initFirebaseSync();
+    }
+
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>
