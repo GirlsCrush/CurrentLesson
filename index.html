@@ -6,6 +6,8 @@
   <title>Урок 8: Робочий стіл комп’ютера — 3 клас НУШ</title>
   <!-- Підключення Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Підключення MQTT.js для синхронізації в реальному часі між пристроями в класі (з резервним CDN) -->
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/mqtt/dist/mqtt.min.js';"></script>
   <!-- Підключення дружніх українських шрифтів Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -281,15 +283,19 @@
           <span id="popped-counter" class="text-amber-600 text-base">0</span>
         </div>
 
-        <!-- Живий лічильник активності учнів (видно вчителю) -->
-        <div id="teacher-activity-pill" class="hidden items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-800 px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-extrabold" title="Кількість виконаних інтерактивних завдань учнями">
-          <span>🏆 Відповіді учнів:</span>
-          <span id="student-activity-count" class="text-emerald-600 text-base">0</span>
+        <!-- Живий індикатор ефіру та кількості учнів онлайн (видно вчителю) -->
+        <div id="teacher-live-pill" class="hidden items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-800 px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-extrabold" title="Статус підключення класу в реальному часі">
+          <span id="teacher-live-text">🟡 Підключення • Кімната: ---- • Учнів онлайн: 0</span>
         </div>
 
-        <!-- Кнопка феєрверку для класу (тільки для вчителя) -->
+        <!-- Перемикач режиму навігації учнів: Вести клас за собою / Вільний перегляд (тільки для вчителя) -->
+        <button id="btn-sync-lock" onclick="toggleSyncLock()" class="hidden items-center gap-1.5 bg-slate-800 hover:bg-slate-900 text-white px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-extrabold shadow-sm active:scale-95 transition cursor-pointer" title="Керування доступом учнів до перемикання слайдів">
+          <span>🔒 Вести клас за собою</span>
+        </button>
+
+        <!-- Кнопка салюту для класу (тільки для вчителя) -->
         <button id="btn-teacher-firework" onclick="triggerClassFireworks()" class="hidden items-center gap-1.5 bg-gradient-to-r from-pink-500 to-amber-500 hover:from-pink-600 hover:to-amber-600 text-white px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-extrabold shadow-sm active:scale-95 transition cursor-pointer">
-          <span>🎉 Феєрверк</span>
+          <span>🎉 Салют усім!</span>
         </button>
 
         <!-- Кнопка Конспекту вчителя (тільки для вчителя) -->
@@ -297,9 +303,9 @@
           <span>📋 Конспект</span>
         </button>
 
-        <!-- Кнопка Посилання (Вчитель / Учень) -->
+        <!-- Кнопка Посилання та QR-код (Вчитель / Учень) -->
         <button onclick="openLinksModal()" class="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-extrabold shadow-sm active:scale-95 transition cursor-pointer">
-          <span>🔗 Посилання</span>
+          <span>🔗 Посилання для класу</span>
         </button>
 
         <!-- Кнопка увімкнення/вимкнення звуку -->
@@ -336,19 +342,31 @@
 
       <!-- Панель статусу УЧНЯ -->
       <div id="student-footer" class="hidden flex-wrap items-center justify-between gap-2">
-        <div class="flex items-center gap-2.5">
-          <span class="relative flex h-3 w-3">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+        <div class="flex items-center flex-wrap gap-2.5">
+          <span id="student-conn-dot" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-extrabold">
+            🟡 Підключення...
           </span>
           <span id="student-live-label" class="font-extrabold text-sm sm:text-base text-slate-700">
-            🟢 Наживо з вчителем • Слайд 1 з 13
+            📡 Керує вчитель • Слайд 1 з 13
           </span>
         </div>
 
-        <div class="flex items-center gap-2">
+        <!-- Кнопки навігації учня (з'являються лише коли вчитель увімкнув «Вільний перегляд учнями») -->
+        <div id="student-free-nav" class="hidden items-center gap-2">
+          <button id="btn-student-prev" onclick="studentChangeSlide(-1)" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-indigo-100 text-slate-700 font-extrabold text-xs sm:text-sm disabled:opacity-40 cursor-pointer">
+            ⬅️ Назад
+          </button>
+          <button id="btn-student-follow" onclick="studentJumpToTeacher()" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs sm:text-sm cursor-pointer">
+            📡 До вчителя (Слайд 1)
+          </button>
+          <button id="btn-student-next" onclick="studentChangeSlide(1)" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-indigo-100 text-slate-700 font-extrabold text-xs sm:text-sm disabled:opacity-40 cursor-pointer">
+            Далі ➡️
+          </button>
+        </div>
+
+        <div id="student-interactive-hint" class="flex items-center gap-2">
           <span class="text-xs sm:text-sm font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-xl">
-            ✨ Усі картки та завдання на екрані активні — натискай і виконуй!
+            ✨ Усі картки та завдання активні — натискай і виконуй!
           </span>
         </div>
       </div>
@@ -371,7 +389,7 @@
 
   <!-- СТАРТОВЕ ВІКНО ВИБОРУ РОЛІ (Якщо відкрито без параметрів) -->
   <div id="role-select-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border-2 border-indigo-100 text-center space-y-6 animate-bounce-once">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border-2 border-indigo-100 text-center space-y-5">
       <div class="inline-flex items-center gap-2 bg-indigo-50 text-indigo-700 px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-wider">
         НУШ • 3 клас • Інформатика / ЯДС
       </div>
@@ -380,7 +398,7 @@
           Урок 8: Робочий стіл комп’ютера 🖥️
         </h2>
         <p class="text-slate-600 font-semibold text-sm sm:text-base">
-          Оберіть свою роль на уроці, щоб розпочати інтерактивну подорож!
+          Оберіть свою роль на уроці, щоб підключитися до живого класу!
         </p>
       </div>
 
@@ -389,101 +407,475 @@
           <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">👨‍🏫</div>
           <div class="font-display font-extrabold text-lg mb-1">Я Вчитель</div>
           <p class="text-indigo-100 text-xs font-semibold leading-snug">
-            Керувати слайдами для всього класу, запускати феєрверки та бачити конспект.
+            Створити кімнату, перемикати слайди для всього класу та запускати салюти.
           </p>
         </button>
 
-        <button onclick="selectRole('student')" class="group p-5 rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-left shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 cursor-pointer">
-          <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">🎒</div>
-          <div class="font-display font-extrabold text-lg mb-1">Я Учень</div>
-          <p class="text-emerald-100 text-xs font-semibold leading-snug">
-            Приєднатися до уроку, відкривати картки, розв’язувати шаради та керувати симулятором ПК!
-          </p>
-        </button>
+        <div class="p-5 rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white text-left shadow-lg flex flex-col justify-between space-y-3">
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="text-4xl">🎒</span>
+              <span class="text-[10px] font-extrabold uppercase bg-white/20 px-2.5 py-0.5 rounded-full">Вхід для учня</span>
+            </div>
+            <div class="font-display font-extrabold text-lg mt-2">Я Учень</div>
+            <p class="text-emerald-100 text-xs font-semibold leading-snug">
+              Введи 4-символьний код кімнати з дошки вчителя:
+            </p>
+          </div>
+          <div class="flex gap-2">
+            <input id="start-student-room-input" type="text" maxlength="4" placeholder="XXXX" class="w-24 px-2.5 py-2 rounded-xl bg-white text-slate-900 font-display font-black text-center text-base uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-amber-300" />
+            <button onclick="joinAsStudentFromModal()" class="flex-1 px-3 py-2 rounded-xl bg-slate-900/85 hover:bg-slate-900 text-white font-extrabold text-xs sm:text-sm transition cursor-pointer">
+              Увійти 🚀
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Швидке копіювання посилань прямо зі стартового вікна -->
       <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 text-left space-y-2.5">
         <div class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
-          🔗 Швидкі посилання для класу (кімната <span class="room-code-display text-indigo-600">3-KLAS-8</span>):
+          🔗 Швидкі посилання для класу (кімната <span class="room-code-display text-indigo-600 font-black">----</span>):
         </div>
         <div class="flex flex-col sm:flex-row gap-2">
           <button onclick="copyRoleLink('teacher')" class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-indigo-200 hover:bg-indigo-50 text-indigo-700 font-bold text-xs transition cursor-pointer">
-            <span>📋 Скопіювати для Вчителя</span>
+            <span>📋 Посилання Вчителя</span>
           </button>
           <button onclick="copyRoleLink('student')" class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-emerald-200 hover:bg-emerald-50 text-emerald-700 font-bold text-xs transition cursor-pointer">
-            <span>📋 Скопіювати для Учнів</span>
+            <span>📋 Посилання Учням</span>
           </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- МОДАЛЬНЕ ВІКНО «ПОСИЛАННЯ (ВЧИТЕЛЬ / УЧЕНЬ) ТА КОД КІМНАТИ» -->
+  <!-- МОДАЛЬНЕ ВІКНО «ПОСИЛАННЯ ДЛЯ КЛАСУ (ВЧИТЕЛЬ / УЧЕНЬ), КОД КІМНАТИ ТА QR-КОД» -->
   <div id="links-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-7 shadow-2xl border-2 border-indigo-100 space-y-5">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-5 sm:p-7 shadow-2xl border-2 border-indigo-100 space-y-4 max-h-[92vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
         <h3 class="font-display font-extrabold text-xl text-slate-800 flex items-center gap-2">
-          <span>🔗 Посилання для уроку</span>
+          <span>🔗 Посилання для класу</span>
         </h3>
         <button onclick="closeLinksModal()" class="w-9 h-9 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold cursor-pointer">✕</button>
       </div>
 
-      <!-- Вибір коду кімнати уроку -->
-      <div class="bg-indigo-50/70 rounded-2xl p-4 border border-indigo-100 space-y-2">
-        <label for="room-code-input" class="block text-xs font-extrabold uppercase tracking-wider text-indigo-700">
-          🏫 Код кімнати уроку (для синхронізації вчителя й учнів):
-        </label>
-        <div class="flex gap-2">
-          <input id="room-code-input" type="text" value="3-KLAS-8" class="flex-1 px-3.5 py-2 rounded-xl border-2 border-indigo-200 bg-white font-display font-extrabold text-slate-800 uppercase focus:outline-none focus:border-indigo-500" />
-          <button onclick="applyRoomCode()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm transition cursor-pointer">
-            Застосувати
-          </button>
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+        <!-- Ліва колонка: Великий код кімнати та готові посилання -->
+        <div class="md:col-span-7 space-y-3.5">
+          <!-- Великий 4-символьний код кімнати -->
+          <div class="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-2xl p-4 border-2 border-indigo-200 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-700">
+                🏫 Код кімнати уроку:
+              </span>
+              <button onclick="regenerateRoomCode()" class="text-xs font-extrabold text-indigo-600 hover:underline cursor-pointer">
+                🎲 Новий код
+              </button>
+            </div>
+            <div class="flex items-center gap-2">
+              <input id="room-code-input" type="text" maxlength="4" value="" class="w-32 px-3 py-2 rounded-xl border-2 border-indigo-300 bg-white font-display font-black text-2xl text-center tracking-widest text-indigo-700 uppercase focus:outline-none focus:border-indigo-600" />
+              <button onclick="applyRoomCode()" class="flex-1 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm transition cursor-pointer">
+                Застосувати
+              </button>
+            </div>
+          </div>
+
+          <!-- Посилання для Учня -->
+          <div class="space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="text-xs sm:text-sm font-extrabold text-emerald-700">🎒 Посилання для Учнів:</span>
+              <button onclick="switchRoleInstant('student')" class="text-xs font-bold text-emerald-600 underline cursor-pointer">Відкрити як учень</button>
+            </div>
+            <div class="flex gap-2">
+              <input id="student-link-field" type="text" readonly class="flex-1 px-3 py-2 rounded-xl bg-slate-100 border border-slate-200 text-xs font-mono text-slate-600" />
+              <button onclick="copyRoleLink('student')" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs whitespace-nowrap transition cursor-pointer">
+                📋 Копіювати
+              </button>
+            </div>
+          </div>
+
+          <!-- Посилання для Вчителя -->
+          <div class="space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="text-xs sm:text-sm font-extrabold text-indigo-700">👨‍🏫 Посилання для Вчителя:</span>
+              <button onclick="switchRoleInstant('teacher')" class="text-xs font-bold text-indigo-600 underline cursor-pointer">Відкрити як вчитель</button>
+            </div>
+            <div class="flex gap-2">
+              <input id="teacher-link-field" type="text" readonly class="flex-1 px-3 py-2 rounded-xl bg-slate-100 border border-slate-200 text-xs font-mono text-slate-600" />
+              <button onclick="copyRoleLink('teacher')" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs whitespace-nowrap transition cursor-pointer">
+                📋 Копіювати
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Права колонка: Вбудований QR-код для учнівських планшетів і телефонів -->
+        <div class="md:col-span-5 bg-slate-50 border-2 border-slate-200 rounded-3xl p-4 flex flex-col items-center justify-center text-center space-y-2">
+          <div class="text-xs font-extrabold uppercase tracking-wider text-slate-600">
+            📱 QR-код для учнів
+          </div>
+          <div class="bg-white p-2.5 rounded-2xl shadow-sm border border-slate-200">
+            <canvas id="qr-canvas" width="172" height="172" class="block mx-auto"></canvas>
+          </div>
+          <div class="text-[11px] font-bold text-slate-500 leading-tight">
+            Наведіть камеру планшета чи телефона, щоб миттєво увійти в кімнату <strong class="room-code-display text-indigo-600">----</strong>
+          </div>
         </div>
       </div>
 
-      <!-- Посилання для Вчителя -->
-      <div class="space-y-1.5">
-        <div class="flex items-center justify-between">
-          <span class="text-sm font-extrabold text-indigo-700">👨‍🏫 Посилання для Вчителя (керування слайдами):</span>
-          <button onclick="switchRoleInstant('teacher')" class="text-xs font-bold text-indigo-600 underline cursor-pointer">Перейти в режим вчителя</button>
-        </div>
-        <div class="flex gap-2">
-          <input id="teacher-link-field" type="text" readonly class="flex-1 px-3 py-2 rounded-xl bg-slate-100 border border-slate-200 text-xs font-mono text-slate-600" />
-          <button onclick="copyRoleLink('teacher')" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs whitespace-nowrap transition cursor-pointer">
-            📋 Копіювати
-          </button>
-        </div>
-      </div>
-
-      <!-- Посилання для Учня -->
-      <div class="space-y-1.5">
-        <div class="flex items-center justify-between">
-          <span class="text-sm font-extrabold text-emerald-700">🎒 Посилання для Учнів (інтерактивна участь):</span>
-          <button onclick="switchRoleInstant('student')" class="text-xs font-bold text-emerald-600 underline cursor-pointer">Перейти в режим учня</button>
-        </div>
-        <div class="flex gap-2">
-          <input id="student-link-field" type="text" readonly class="flex-1 px-3 py-2 rounded-xl bg-slate-100 border border-slate-200 text-xs font-mono text-slate-600" />
-          <button onclick="copyRoleLink('student')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs whitespace-nowrap transition cursor-pointer">
-            📋 Копіювати
-          </button>
-        </div>
-      </div>
-
-      <div class="text-xs text-slate-500 bg-amber-50 border border-amber-200 rounded-2xl p-3 font-semibold">
-        💡 <strong>Як це працює:</strong> Коли вчитель перемикає слайд у своїй версії, у всіх учнів, які відкрили учнівське посилання, слайд змінюється автоматично! При цьому кожен учень може самостійно відкривати картки, друкувати літери та працювати в симуляторі.
+      <div class="text-xs text-slate-600 bg-amber-50 border border-amber-200 rounded-2xl p-3 font-semibold">
+        📡 <strong>Синхронізація в реальному часі:</strong> Працює автоматично через Інтернет між усіма пристроями класу! Коли вчитель перемикає слайд або натискає «🎉 Салют усім!», це миттєво відображається в усіх учнів.
       </div>
     </div>
   </div>
 
-  <!-- СКРИПТ ПРЕЗЕНТАЦІЇ, СИНХРОНІЗАЦІЇ, ЗВУКУ ТА ІНТЕРАКТИВНИХ СЛАЙДІВ -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, addDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
+  <!-- СКРИПТ ПРЕЗЕНТАЦІЇ, REAL-TIME MQTT СИНХРОНІЗАЦІЇ, QR-ГЕНЕРАТОРА ТА ІНТЕРАКТИВНИХ СЛАЙДІВ -->
+  <script>
     /* =========================================================================
        1. ГЛОБАЛЬНИЙ СТАН ДОДАТКА
+       ========================================================================= */
+    const TOTAL_SLIDES = 13;
+
+    function generateShortRoomCode() {
+      const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let code = '';
+      for (let i = 0; i < 4; i++) {
+        code += alphabet[Math.floor(Math.random() * alphabet.length)];
+      }
+      return code;
+    }
+
+    const state = {
+      role: null, // 'teacher' | 'student'
+      currentSlide: 1,
+      teacherSlide: 1,
+      syncLock: true, // true = «Вести клас за собою», false = «Вільний перегляд учнями»
+      celebrateId: 0,
+      roomCode: generateShortRoomCode(),
+      mqttStatus: 'connecting', // 'connecting' | 'connected' | 'offline'
+      activeBrokerIndex: 0,
+      onlineStudents: {}, // { clientId: lastSeenTimestamp }
+      soundEnabled: true,
+      poppedEmojis: 0,
+      sessionId: 'st-' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36),
+      // Локальний прогрес учня на інтерактивних слайдах
+      charade1Letters: ['', '', '', '', '', ''],
+      charade1Solved: false,
+      charade2Letters: ['', '', '', '', '', '', ''],
+      charade2Solved: false,
+      bootStep: 3,
+      tuxFactIndex: 0,
+      selectedHotspot: 'this-pc',
+      selectedTaskbarZone: 'start',
+      taskbarLang: 'УКР',
+      taskbarStartOpen: false,
+      mouseTrainerStep: 0,
+      mouseRightMenuOpen: false,
+      // Стан симулятора Робочого стола (Слайд 9)
+      sim: {
+        selectedIcon: null,
+        fileDeleted: false,
+        startMenuOpen: false,
+        windows: {
+          notepad: { open: false, minimized: false, x: 36, y: 24, text: 'Привіт, 3 клас! Я вивчаю Робочий стіл.' },
+          calc: { open: false, minimized: false, x: 145, y: 48, display: '0', prev: null, op: null, resetNext: false },
+          thispc: { open: false, minimized: false, x: 85, y: 36 },
+          games: { open: false, minimized: false, x: 115, y: 55 }
+        },
+        iconPositions: {
+          thispc: { x: 16, y: 14 },
+          notepad: { x: 16, y: 92 },
+          calc: { x: 16, y: 170 },
+          games: { x: 102, y: 14 },
+          oldfile: { x: 102, y: 92 },
+          bin: { x: 102, y: 170 }
+        },
+        missions: {
+          deletedFile: false,
+          typedNotepad: false,
+          openedCalc: false,
+          windowAction: false
+        }
+      },
+      // Стан фізкультхвилинки (Слайд 11)
+      warmupSeconds: 45,
+      warmupRunning: false,
+      // Стан математичних задач (Слайд 12)
+      bookLeft: '',
+      bookRight: '',
+      bookProduct: '',
+      bookSolved: false,
+      removedStickId: null,
+      sticksSolved: false,
+      // Стан конструктора значка (Слайд 13)
+      customApp: {
+        name: 'СуперМалювання',
+        desc: 'Програма для створення яскравих малюнків і листівок',
+        emoji: '🎨',
+        gradient: 'from-pink-500 to-rose-500'
+      }
+    };
+
+    /* =========================================================================
+       2. ВБУДОВАНИЙ ЧИСТИЙ JS-ГЕНЕРАТОР QR-КОДУ НА CANVAS (ISO/IEC 18004)
+       ========================================================================= */
+    const PureQR = (function () {
+      const GF_EXP = new Uint8Array(512);
+      const GF_LOG = new Uint8Array(256);
+      let x = 1;
+      for (let i = 0; i < 255; i++) {
+        GF_EXP[i] = x;
+        GF_LOG[x] = i;
+        x <<= 1;
+        if (x & 0x100) x ^= 0x11d;
+      }
+      for (let i = 255; i < 512; i++) GF_EXP[i] = GF_EXP[i - 255];
+
+      function gfMul(a, b) {
+        return a === 0 || b === 0 ? 0 : GF_EXP[GF_LOG[a] + GF_LOG[b]];
+      }
+
+      function rsGeneratorPoly(degree) {
+        let poly = [1];
+        for (let i = 0; i < degree; i++) {
+          const next = new Array(poly.length + 1).fill(0);
+          const factor = GF_EXP[i];
+          for (let j = 0; j < poly.length; j++) {
+            next[j] ^= poly[j];
+            next[j + 1] ^= gfMul(poly[j], factor);
+          }
+          poly = next;
+        }
+        return poly;
+      }
+
+      function rsComputeEcc(data, eccLen) {
+        const gen = rsGeneratorPoly(eccLen);
+        const res = new Array(eccLen).fill(0);
+        for (let i = 0; i < data.length; i++) {
+          const coef = data[i] ^ res[0];
+          res.shift();
+          res.push(0);
+          for (let j = 0; j < eccLen; j++) {
+            res[j] ^= gfMul(gen[j + 1], coef);
+          }
+        }
+        return res;
+      }
+
+      // Таблиця версій 1..8 (ECC Level L)
+      const VERSIONS = [
+        null,
+        { size: 21, total: 26, data: 19, ecc: 7, blocks: 1, align: [], verBits: 0 },
+        { size: 25, total: 44, data: 34, ecc: 10, blocks: 1, align: [6, 18], verBits: 0 },
+        { size: 29, total: 70, data: 55, ecc: 15, blocks: 1, align: [6, 22], verBits: 0 },
+        { size: 33, total: 100, data: 80, ecc: 20, blocks: 1, align: [6, 26], verBits: 0 },
+        { size: 37, total: 134, data: 108, ecc: 26, blocks: 1, align: [6, 30], verBits: 0 },
+        { size: 41, total: 172, data: 136, ecc: 36, blocks: 1, align: [6, 34], verBits: 0 },
+        { size: 45, total: 196, data: 156, ecc: 40, blocks: 2, align: [6, 22, 38], verBits: 0x07c94 },
+        { size: 49, total: 242, data: 194, ecc: 48, blocks: 2, align: [6, 24, 42], verBits: 0x085bc }
+      ];
+
+      function encodeBytes(text) {
+        const bytes = new TextEncoder().encode(text);
+        let ver = 1;
+        while (ver <= 8 && bytes.length > VERSIONS[ver].data - 2) ver++;
+        if (ver > 8) ver = 8;
+        const spec = VERSIONS[ver];
+        const maxBytes = spec.data - 2;
+        const payload = bytes.slice(0, maxBytes);
+
+        const bits = [];
+        const pushBits = (val, len) => {
+          for (let i = len - 1; i >= 0; i--) bits.push((val >> i) & 1);
+        };
+
+        // Режим Byte (0100) + 8-бітна довжина
+        pushBits(0b0100, 4);
+        pushBits(payload.length, 8);
+        for (const b of payload) pushBits(b, 8);
+        // Термінатор та вирівнювання по байту
+        pushBits(0, Math.min(4, spec.data * 8 - bits.length));
+        while (bits.length % 8 !== 0) bits.push(0);
+
+        const dataCodewords = [];
+        for (let i = 0; i < bits.length; i += 8) {
+          let byte = 0;
+          for (let b = 0; b < 8; b++) byte = (byte << 1) | bits[i + b];
+          dataCodewords.push(byte);
+        }
+        const padBytes = [0xec, 0x11];
+        let pIdx = 0;
+        while (dataCodewords.length < spec.data) {
+          dataCodewords.push(padBytes[pIdx % 2]);
+          pIdx++;
+        }
+
+        // Розбиття на блоки та обчислення Reed-Solomon ECC
+        const bCount = spec.blocks;
+        const bDataLen = Math.floor(spec.data / bCount);
+        const bEccLen = Math.floor(spec.ecc / bCount);
+        const dataBlocks = [];
+        const eccBlocks = [];
+        for (let b = 0; b < bCount; b++) {
+          const slice = dataCodewords.slice(b * bDataLen, (b + 1) * bDataLen);
+          dataBlocks.push(slice);
+          eccBlocks.push(rsComputeEcc(slice, bEccLen));
+        }
+
+        const finalCodewords = [];
+        for (let i = 0; i < bDataLen; i++) {
+          for (let b = 0; b < bCount; b++) finalCodewords.push(dataBlocks[b][i]);
+        }
+        for (let i = 0; i < bEccLen; i++) {
+          for (let b = 0; b < bCount; b++) finalCodewords.push(eccBlocks[b][i]);
+        }
+
+        return { ver, spec, codewords: finalCodewords };
+      }
+
+      function buildMatrix(text) {
+        const { ver, spec, codewords } = encodeBytes(text);
+        const N = spec.size;
+        const grid = Array.from({ length: N }, () => new Int8Array(N).fill(-1));
+        const isFunc = Array.from({ length: N }, () => new Uint8Array(N));
+
+        const setMod = (r, c, val, func = true) => {
+          if (r < 0 || c < 0 || r >= N || c >= N) return;
+          grid[r][c] = val ? 1 : 0;
+          if (func) isFunc[r][c] = 1;
+        };
+
+        // Пошукові візерунки (Finder patterns)
+        const drawFinder = (r0, c0) => {
+          for (let dr = -1; dr <= 7; dr++) {
+            for (let dc = -1; dc <= 7; dc++) {
+              const r = r0 + dr;
+              const c = c0 + dc;
+              if (r < 0 || c < 0 || r >= N || c >= N) continue;
+              const inOuter = dr >= 0 && dr <= 6 && dc >= 0 && dc <= 6;
+              const onBorder = dr === 0 || dr === 6 || dc === 0 || dc === 6;
+              const inInner = dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4;
+              setMod(r, c, inOuter && (onBorder || inInner), true);
+            }
+          }
+        };
+        drawFinder(0, 0);
+        drawFinder(0, N - 7);
+        drawFinder(N - 7, 0);
+
+        // Візерунки вирівнювання (Alignment patterns)
+        const coords = spec.align;
+        for (let i = 0; i < coords.length; i++) {
+          for (let j = 0; j < coords.length; j++) {
+            const rCenter = coords[i];
+            const cCenter = coords[j];
+            if (isFunc[rCenter][cCenter]) continue;
+            for (let dr = -2; dr <= 2; dr++) {
+              for (let dc = -2; dc <= 2; dc++) {
+                const dark = Math.abs(dr) === 2 || Math.abs(dc) === 2 || (dr === 0 && dc === 0);
+                setMod(rCenter + dr, cCenter + dc, dark, true);
+              }
+            }
+          }
+        }
+
+        // Лінії синхронізації (Timing patterns)
+        for (let i = 8; i < N - 8; i++) {
+          setMod(6, i, i % 2 === 0, true);
+          setMod(i, 6, i % 2 === 0, true);
+        }
+
+        // Резервування зон формату та версії
+        for (let i = 0; i < 9; i++) {
+          if (i !== 6) {
+            isFunc[8][i] = 1;
+            isFunc[i][8] = 1;
+          }
+        }
+        for (let i = 0; i < 8; i++) {
+          isFunc[8][N - 1 - i] = 1;
+          isFunc[N - 1 - i][8] = 1;
+        }
+        setMod(N - 8, 8, 1, true); // Dark module
+
+        if (ver >= 7) {
+          for (let i = 0; i < 18; i++) {
+            const bit = (spec.verBits >> i) & 1;
+            const r = Math.floor(i / 3);
+            const c = N - 11 + (i % 3);
+            setMod(r, c, bit, true);
+            setMod(c, r, bit, true);
+          }
+        }
+
+        // Розміщення бітів даних зигзагом + маска 0 ((r + c) % 2 === 0)
+        const allBits = [];
+        for (const cw of codewords) {
+          for (let b = 7; b >= 0; b--) allBits.push((cw >> b) & 1);
+        }
+
+        let bitIdx = 0;
+        let upward = true;
+        for (let right = N - 1; right >= 1; right -= 2) {
+          if (right === 6) right = 5;
+          for (let step = 0; step < N; step++) {
+            const r = upward ? N - 1 - step : step;
+            for (let dx = 0; dx < 2; dx++) {
+              const c = right - dx;
+              if (!isFunc[r][c]) {
+                const rawBit = bitIdx < allBits.length ? allBits[bitIdx++] : 0;
+                const maskedBit = ((r + c) % 2 === 0) ? (rawBit ^ 1) : rawBit;
+                grid[r][c] = maskedBit;
+              }
+            }
+          }
+          upward = !upward;
+        }
+
+        // Запис бітів формату для ECC Level L + Mask 0 (0x77C4)
+        const fmt = 0x77c4;
+        for (let i = 0; i <= 5; i++) setMod(8, i, (fmt >> (14 - i)) & 1, true);
+        setMod(8, 7, (fmt >> 8) & 1, true);
+        setMod(8, 8, (fmt >> 7) & 1, true);
+        setMod(7, 8, (fmt >> 6) & 1, true);
+        for (let i = 9; i <= 14; i++) setMod(14 - i, 8, (fmt >> (14 - i)) & 1, true);
+
+        for (let i = 0; i <= 7; i++) setMod(N - 1 - i, 8, (fmt >> (14 - i)) & 1, true);
+        for (let i = 8; i <= 14; i++) setMod(8, N - 15 + i, (fmt >> (14 - i)) & 1, true);
+
+        return grid;
+      }
+
+      function renderToCanvas(canvas, text) {
+        if (!canvas) return;
+        const grid = buildMatrix(text);
+        const N = grid.length;
+        const quiet = 3;
+        const totalModules = N + quiet * 2;
+        const scale = Math.max(3, Math.floor(canvas.width / totalModules));
+        const realSize = totalModules * scale;
+        canvas.width = realSize;
+        canvas.height = realSize;
+
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, realSize, realSize);
+
+        ctx.fillStyle = '#1e1b4b';
+        for (let r = 0; r < N; r++) {
+          for (let c = 0; c < N; c++) {
+            if (grid[r][c] === 1) {
+              ctx.fillRect((c + quiet) * scale, (r + quiet) * scale, scale, scale);
+            }
+          }
+        }
+      }
+
+      return { renderToCanvas };
+    })();
+
+    /* =========================================================================
+       3. WEB AUDIO API (ЗВУКОВІ ЕФЕКТИ БЕЗ ЗОВНІШНІХ ФАЙЛІВ)
        ========================================================================= */
     const TOTAL_SLIDES = 13;
     const state = {
@@ -661,18 +1053,32 @@
       const url = new URL(window.location.href);
       url.searchParams.set('role', role);
       url.searchParams.set('room', state.roomCode);
-      url.hash = role;
+      url.hash = '';
       return url.toString();
     }
 
     function updateLinkFields() {
       const teacherField = document.getElementById('teacher-link-field');
       const studentField = document.getElementById('student-link-field');
-      if (teacherField) teacherField.value = buildRoleUrl('teacher');
-      if (studentField) studentField.value = buildRoleUrl('student');
+      const roomInput = document.getElementById('room-code-input');
+      const startStudentInput = document.getElementById('start-student-room-input');
+      const qrCanvas = document.getElementById('qr-canvas');
+
+      const studentUrl = buildRoleUrl('student');
+      const teacherUrl = buildRoleUrl('teacher');
+
+      if (teacherField) teacherField.value = teacherUrl;
+      if (studentField) studentField.value = studentUrl;
+      if (roomInput) roomInput.value = state.roomCode;
+      if (startStudentInput && !startStudentInput.value) startStudentInput.value = state.roomCode;
+
       document.querySelectorAll('.room-code-display').forEach(el => {
         el.textContent = state.roomCode;
       });
+
+      if (qrCanvas) {
+        PureQR.renderToCanvas(qrCanvas, studentUrl);
+      }
     }
 
     window.copyRoleLink = function (role) {
@@ -714,22 +1120,350 @@
 
     window.applyRoomCode = function () {
       const input = document.getElementById('room-code-input');
-      const val = (input.value || '').trim().toUpperCase().replace(/[^A-ZА-ЯІЇЄ0-9_-]/g, '');
-      if (!val) {
-        showToast('Введіть код кімнати уроку!', 'warning');
+      const val = (input.value || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 4);
+      if (val.length < 3) {
+        showToast('Введіть 4-символьний код кімнати (наприклад, K7M4)!', 'warning');
         return;
       }
       state.roomCode = val;
+      state.onlineStudents = {};
+      try {
+        if (state.role) {
+          window.history.replaceState(null, '', buildRoleUrl(state.role));
+        }
+      } catch (e) {}
       updateLinkFields();
-      subscribeToRoom();
+      connectMqttBroker();
       if (state.role === 'teacher') {
-        syncRoomStateToCloud();
+        publishTeacherState();
       }
+      updatePresenceUI();
       showToast(`🏫 Код кімнати змінено на: ${state.roomCode}`, 'success');
     };
 
+    window.regenerateRoomCode = function () {
+      playClickSound();
+      const input = document.getElementById('room-code-input');
+      if (input) {
+        input.value = generateShortRoomCode();
+        applyRoomCode();
+      }
+    };
+
     /* =========================================================================
-       4. FIREBASE FIRESTORE + BROADCAST CHANNEL СИНХРОНІЗАЦІЯ
+       5. СИНХРОНІЗАЦІЯ В РЕАЛЬНОМУ ЧАСІ: MQTT OVER WEBSOCKET + BROADCASTCHANNEL
+       ========================================================================= */
+    const MQTT_BROKERS = [
+      'wss://broker.emqx.io:8084/mqtt',
+      'wss://broker.hivemq.com:8884/mqtt'
+    ];
+    let mqttClient = null;
+    let mqttConnectTimeout = null;
+    let heartbeatInterval = null;
+    const localChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('nus_3klas_lesson8_sync') : null;
+
+    function getTopics(room) {
+      return {
+        state: `nush3-lesson8-desktop/${room}/state`,
+        presence: `nush3-lesson8-desktop/${room}/presence`,
+        activity: `nush3-lesson8-desktop/${room}/activity`
+      };
+    }
+
+    function applyIncomingTeacherState(data, sourceLabel = '') {
+      if (!data || typeof data.slide !== 'number') return;
+
+      const targetSlide = Math.min(Math.max(1, data.slide), TOTAL_SLIDES);
+      const prevSyncLock = state.syncLock;
+      if (typeof data.syncLock === 'boolean') {
+        state.syncLock = data.syncLock;
+      }
+
+      // Перевірка запуску салюту вчителем
+      if (typeof data.celebrateId === 'number' && data.celebrateId > state.celebrateId) {
+        state.celebrateId = data.celebrateId;
+        launchConfettiBurst();
+        playSuccessSound();
+        if (state.role === 'student') {
+          showToast('🎉 Вчитель запустив салют для всього класу!', 'success');
+        }
+      }
+
+      if (state.role === 'student') {
+        const slideChanged = targetSlide !== state.teacherSlide || (state.syncLock && targetSlide !== state.currentSlide);
+        state.teacherSlide = targetSlide;
+
+        if (prevSyncLock !== state.syncLock) {
+          showToast(
+            state.syncLock
+              ? '🔒 Вчитель увімкнув режим спільного перегляду'
+              : '🆓 Вчитель дозволив вільний перегляд слайдів!',
+            'info'
+          );
+        }
+
+        if (state.syncLock && state.currentSlide !== targetSlide) {
+          state.currentSlide = targetSlide;
+          renderCurrentSlide();
+          showToast(`📡 Вчитель перейшов на слайд ${targetSlide}`);
+        } else if (slideChanged && !state.syncLock) {
+          showToast(`📡 Вчитель зараз на слайді ${targetSlide}`);
+        }
+        updateNavigationUI();
+      }
+    }
+
+    function handleIncomingPresence(data) {
+      if (!data || !data.clientId || data.clientId === state.sessionId) return;
+      if (data.offline) {
+        delete state.onlineStudents[data.clientId];
+      } else {
+        state.onlineStudents[data.clientId] = Date.now();
+      }
+      updatePresenceUI();
+    }
+
+    function pruneStaleStudents() {
+      const now = Date.now();
+      let changed = false;
+      Object.keys(state.onlineStudents).forEach(id => {
+        if (now - state.onlineStudents[id] > 25000) {
+          delete state.onlineStudents[id];
+          changed = true;
+        }
+      });
+      if (changed) updatePresenceUI();
+    }
+    setInterval(pruneStaleStudents, 5000);
+
+    function updatePresenceUI() {
+      const count = Object.keys(state.onlineStudents).length;
+      const teacherText = document.getElementById('teacher-live-text');
+      const teacherPill = document.getElementById('teacher-live-pill');
+      const studentDot = document.getElementById('student-conn-dot');
+
+      if (teacherText && teacherPill) {
+        if (state.mqttStatus === 'connected') {
+          teacherPill.className = 'flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-800 px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-extrabold';
+          teacherText.textContent = `🟢 В ефірі • Кімната: ${state.roomCode} • Учнів онлайн: ${count}`;
+        } else if (state.mqttStatus === 'connecting') {
+          teacherPill.className = 'flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-800 px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-extrabold';
+          teacherText.textContent = `🟡 Підключення... • Кімната: ${state.roomCode}`;
+        } else {
+          teacherPill.className = 'flex items-center gap-1.5 bg-rose-50 border border-rose-200 text-rose-800 px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-extrabold';
+          teacherText.textContent = `🟠 Локальний режим • Кімната: ${state.roomCode}`;
+        }
+      }
+
+      if (studentDot) {
+        if (state.mqttStatus === 'connected') {
+          studentDot.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold';
+          studentDot.textContent = `🟢 Клас ${state.roomCode}`;
+        } else if (state.mqttStatus === 'connecting') {
+          studentDot.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-extrabold';
+          studentDot.textContent = `🟡 Підключення (${state.roomCode})...`;
+        } else {
+          studentDot.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 text-xs font-extrabold';
+          studentDot.textContent = `🟠 Офлайн (${state.roomCode})`;
+        }
+      }
+    }
+
+    // Локальний BroadcastChannel для миттєвого обміну між вкладками одного ПК
+    if (localChannel) {
+      localChannel.onmessage = (event) => {
+        const msg = event.data;
+        if (!msg || msg.roomCode !== state.roomCode) return;
+        if (msg.type === 'STATE') {
+          applyIncomingTeacherState(msg.payload, 'local');
+        } else if (msg.type === 'PRESENCE') {
+          handleIncomingPresence(msg.payload);
+        } else if (msg.type === 'ACTIVITY' && state.role === 'teacher') {
+          showToast(`🌟 Учень виконав завдання: ${msg.label}`, 'success');
+        }
+      };
+    }
+
+    function connectMqttBroker(brokerIdx = 0) {
+      if (mqttConnectTimeout) clearTimeout(mqttConnectTimeout);
+      if (mqttClient) {
+        try { mqttClient.end(true); } catch (e) {}
+        mqttClient = null;
+      }
+
+      state.activeBrokerIndex = brokerIdx;
+      state.mqttStatus = 'connecting';
+      updatePresenceUI();
+
+      if (typeof window.mqtt === 'undefined') {
+        state.mqttStatus = 'offline';
+        updatePresenceUI();
+        return;
+      }
+
+      const brokerUrl = MQTT_BROKERS[brokerIdx % MQTT_BROKERS.length];
+      const topics = getTopics(state.roomCode);
+
+      try {
+        const client = window.mqtt.connect(brokerUrl, {
+          clientId: `nus3_${state.role || 'guest'}_${state.sessionId}`,
+          clean: true,
+          connectTimeout: 5500,
+          reconnectPeriod: 4000,
+          will: state.role === 'student' ? {
+            topic: topics.presence,
+            payload: JSON.stringify({ clientId: state.sessionId, offline: true }),
+            qos: 0,
+            retain: false
+          } : undefined
+        });
+
+        mqttClient = client;
+
+        // Автоперемикання на резервний брокер HiveMQ, якщо EMQX не відповів за 6 секунд
+        mqttConnectTimeout = setTimeout(() => {
+          if (state.mqttStatus !== 'connected' && brokerIdx + 1 < MQTT_BROKERS.length) {
+            connectMqttBroker(brokerIdx + 1);
+          }
+        }, 6000);
+
+        client.on('connect', () => {
+          if (mqttConnectTimeout) clearTimeout(mqttConnectTimeout);
+          state.mqttStatus = 'connected';
+          updatePresenceUI();
+
+          client.subscribe([topics.state, topics.presence, topics.activity], { qos: 1 }, () => {
+            if (state.role === 'teacher') {
+              publishTeacherState();
+            } else if (state.role === 'student') {
+              sendStudentHeartbeat();
+            }
+          });
+        });
+
+        client.on('message', (topic, messageBuffer) => {
+          try {
+            const data = JSON.parse(messageBuffer.toString());
+            if (topic === topics.state) {
+              applyIncomingTeacherState(data, 'mqtt');
+            } else if (topic === topics.presence) {
+              handleIncomingPresence(data);
+            } else if (topic === topics.activity && state.role === 'teacher') {
+              showToast(`🌟 Учень виконав: ${data.label}`, 'success');
+            }
+          } catch (e) {}
+        });
+
+        client.on('offline', () => {
+          state.mqttStatus = 'connecting';
+          updatePresenceUI();
+        });
+
+        client.on('error', () => {
+          if (state.mqttStatus !== 'connected' && brokerIdx + 1 < MQTT_BROKERS.length) {
+            connectMqttBroker(brokerIdx + 1);
+          }
+        });
+      } catch (err) {
+        state.mqttStatus = 'offline';
+        updatePresenceUI();
+      }
+    }
+
+    function publishTeacherState() {
+      if (state.role !== 'teacher') return;
+      const payload = {
+        slide: state.currentSlide,
+        syncLock: state.syncLock,
+        celebrateId: state.celebrateId,
+        ts: Date.now()
+      };
+      const topics = getTopics(state.roomCode);
+
+      if (localChannel) {
+        localChannel.postMessage({ type: 'STATE', roomCode: state.roomCode, payload });
+      }
+      if (mqttClient && mqttClient.connected) {
+        mqttClient.publish(topics.state, JSON.stringify(payload), { qos: 1, retain: true });
+      }
+    }
+
+    function sendStudentHeartbeat() {
+      if (state.role !== 'student') return;
+      const payload = {
+        clientId: state.sessionId,
+        role: 'student',
+        ts: Date.now()
+      };
+      const topics = getTopics(state.roomCode);
+
+      if (localChannel) {
+        localChannel.postMessage({ type: 'PRESENCE', roomCode: state.roomCode, payload });
+      }
+      if (mqttClient && mqttClient.connected) {
+        mqttClient.publish(topics.presence, JSON.stringify(payload), { qos: 0, retain: false });
+      }
+    }
+
+    function startStudentHeartbeatLoop() {
+      if (heartbeatInterval) clearInterval(heartbeatInterval);
+      sendStudentHeartbeat();
+      heartbeatInterval = setInterval(sendStudentHeartbeat, 10000);
+    }
+
+    window.addEventListener('beforeunload', () => {
+      if (state.role === 'student') {
+        const topics = getTopics(state.roomCode);
+        const offlinePayload = { clientId: state.sessionId, offline: true };
+        if (localChannel) {
+          localChannel.postMessage({ type: 'PRESENCE', roomCode: state.roomCode, payload: offlinePayload });
+        }
+        if (mqttClient && mqttClient.connected) {
+          mqttClient.publish(topics.presence, JSON.stringify(offlinePayload), { qos: 0 });
+        }
+      }
+    });
+
+    function reportStudentProgress(taskKey, label) {
+      state._reportedTasks = state._reportedTasks || {};
+      if (state._reportedTasks[taskKey]) return;
+      state._reportedTasks[taskKey] = true;
+
+      const topics = getTopics(state.roomCode);
+      const payload = { sessionId: state.sessionId, taskKey, label, ts: Date.now() };
+
+      if (localChannel) {
+        localChannel.postMessage({ type: 'ACTIVITY', roomCode: state.roomCode, label });
+      }
+      if (mqttClient && mqttClient.connected) {
+        mqttClient.publish(topics.activity, JSON.stringify(payload), { qos: 0 });
+      }
+    }
+
+    window.toggleSyncLock = function () {
+      if (state.role !== 'teacher') return;
+      playClickSound();
+      state.syncLock = !state.syncLock;
+      applyRoleUI();
+      publishTeacherState();
+      showToast(
+        state.syncLock
+          ? '🔒 Увімкнено: слайди учнів слідують за вами'
+          : '🆓 Увімкнено: учні можуть вільно гортати слайди',
+        'info'
+      );
+    };
+
+    window.triggerClassFireworks = function () {
+      state.celebrateId += 1;
+      launchConfettiBurst();
+      playSuccessSound();
+      showToast('🎉 Салют запущено для всього класу!', 'success');
+      publishTeacherState();
+    };
+
+    /* =========================================================================
+       6. ПАДАЮЧІ ТЕМАТИЧНІ СМАЙЛИКИ З ВИБУХОМ ПРИ НАТИСКАННІ + КОНФЕТТІ
        ========================================================================= */
     let db = null;
     let auth = null;
@@ -1197,7 +1931,7 @@
     }
 
     /* =========================================================================
-       7. КЕРУВАННЯ РОЛЯМИ ТА НАВІГАЦІЄЮ СЛАЙДІВ
+       8. КЕРУВАННЯ РОЛЯМИ ТА НАВІГАЦІЄЮ СЛАЙДІВ
        ========================================================================= */
     window.selectRole = function (role) {
       playSuccessSound();
@@ -1211,9 +1945,25 @@
       } catch (e) {}
 
       applyRoleUI();
+      connectMqttBroker(0);
       if (role === 'teacher') {
-        syncRoomStateToCloud();
+        publishTeacherState();
+      } else {
+        startStudentHeartbeatLoop();
       }
+    };
+
+    window.joinAsStudentFromModal = function () {
+      const inp = document.getElementById('start-student-room-input');
+      const code = (inp && inp.value ? inp.value : '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 4);
+      if (code.length < 3) {
+        showToast('Введіть 4-символьний код кімнати з дошки вчителя!', 'warning');
+        if (inp) inp.focus();
+        return;
+      }
+      state.roomCode = code;
+      updateLinkFields();
+      selectRole('student');
     };
 
     window.switchRoleInstant = function (role) {
@@ -1227,7 +1977,8 @@
       const studentFooter = document.getElementById('student-footer');
       const btnFirework = document.getElementById('btn-teacher-firework');
       const btnNotes = document.getElementById('btn-teacher-notes');
-      const activityPill = document.getElementById('teacher-activity-pill');
+      const livePill = document.getElementById('teacher-live-pill');
+      const btnSyncLock = document.getElementById('btn-sync-lock');
 
       if (state.role === 'teacher') {
         badge.textContent = '👨‍🏫 Вчитель';
@@ -1240,8 +1991,18 @@
         btnFirework.classList.add('flex');
         btnNotes.classList.remove('hidden');
         btnNotes.classList.add('flex');
-        activityPill.classList.remove('hidden');
-        activityPill.classList.add('flex');
+        livePill.classList.remove('hidden');
+        livePill.classList.add('flex');
+        btnSyncLock.classList.remove('hidden');
+        btnSyncLock.classList.add('flex');
+
+        if (state.syncLock) {
+          btnSyncLock.className = 'flex items-center gap-1.5 bg-slate-800 hover:bg-slate-900 text-white px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-extrabold shadow-sm active:scale-95 transition cursor-pointer';
+          btnSyncLock.innerHTML = '<span>🔒 Вести клас за собою</span>';
+        } else {
+          btnSyncLock.className = 'flex items-center gap-1.5 bg-teal-600 hover:bg-teal-700 text-white px-3 py-1.5 rounded-2xl text-xs sm:text-sm font-extrabold shadow-sm active:scale-95 transition cursor-pointer';
+          btnSyncLock.innerHTML = '<span>🆓 Вільний перегляд учнями</span>';
+        }
       } else {
         badge.textContent = '🎒 Учень';
         badge.className = 'text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
@@ -1253,9 +2014,12 @@
         btnFirework.classList.remove('flex');
         btnNotes.classList.add('hidden');
         btnNotes.classList.remove('flex');
-        activityPill.classList.add('hidden');
-        activityPill.classList.remove('flex');
+        livePill.classList.add('hidden');
+        livePill.classList.remove('flex');
+        btnSyncLock.classList.add('hidden');
+        btnSyncLock.classList.remove('flex');
       }
+      updatePresenceUI();
       updateNavigationUI();
       updateTeacherNotesContent();
     }
@@ -1274,7 +2038,25 @@
       renderCurrentSlide();
       updateNavigationUI();
       updateTeacherNotesContent();
-      syncRoomStateToCloud();
+      publishTeacherState();
+    };
+
+    window.studentChangeSlide = function (delta) {
+      if (state.role !== 'student' || state.syncLock) return;
+      const next = state.currentSlide + delta;
+      if (next < 1 || next > TOTAL_SLIDES) return;
+      playClickSound();
+      state.currentSlide = next;
+      renderCurrentSlide();
+      updateNavigationUI();
+    };
+
+    window.studentJumpToTeacher = function () {
+      if (state.role !== 'student') return;
+      playClickSound();
+      state.currentSlide = state.teacherSlide;
+      renderCurrentSlide();
+      updateNavigationUI();
     };
 
     function updateNavigationUI() {
@@ -1282,12 +2064,36 @@
       const nextBtn = document.getElementById('btn-next-slide');
       const dotsContainer = document.getElementById('slide-dots');
       const studentLabel = document.getElementById('student-live-label');
+      const studentFreeNav = document.getElementById('student-free-nav');
+      const studentHint = document.getElementById('student-interactive-hint');
+      const btnStudentPrev = document.getElementById('btn-student-prev');
+      const btnStudentNext = document.getElementById('btn-student-next');
+      const btnStudentFollow = document.getElementById('btn-student-follow');
 
       if (prevBtn) prevBtn.disabled = state.currentSlide <= 1;
       if (nextBtn) nextBtn.disabled = state.currentSlide >= TOTAL_SLIDES;
 
       if (studentLabel) {
-        studentLabel.textContent = `🟢 Наживо з вчителем • Слайд ${state.currentSlide} з ${TOTAL_SLIDES}`;
+        studentLabel.textContent = state.syncLock
+          ? `📡 Керує вчитель • Слайд ${state.currentSlide} з ${TOTAL_SLIDES}`
+          : `🆓 Вільний перегляд • Слайд ${state.currentSlide} з ${TOTAL_SLIDES}`;
+      }
+
+      if (studentFreeNav && studentHint) {
+        if (state.syncLock) {
+          studentFreeNav.classList.add('hidden');
+          studentFreeNav.classList.remove('flex');
+          studentHint.classList.remove('hidden');
+          studentHint.classList.add('flex');
+        } else {
+          studentFreeNav.classList.remove('hidden');
+          studentFreeNav.classList.add('flex');
+          studentHint.classList.add('hidden');
+          studentHint.classList.remove('flex');
+          if (btnStudentPrev) btnStudentPrev.disabled = state.currentSlide <= 1;
+          if (btnStudentNext) btnStudentNext.disabled = state.currentSlide >= TOTAL_SLIDES;
+          if (btnStudentFollow) btnStudentFollow.textContent = `📡 До вчителя (Слайд ${state.teacherSlide})`;
+        }
       }
 
       if (dotsContainer) {
@@ -1665,6 +2471,12 @@
 
     /* ---------------- СЛАЙД 4: ЗАВАНТАЖЕННЯ ПК ТА ОПЕРАЦІЙНІ СИСТЕМИ ---------------- */
     function renderSlide4(el) {
+      const bootStages = [
+        { step: 1, icon: '🔘', title: '1. Кнопка живлення', desc: 'Натискаємо кнопку вмикання на системному блоці або ноутбуці — живлення подається на всі деталі.' },
+        { step: 2, icon: '🔍', title: '2. Перевірка пристроїв (POST)', desc: 'Спеціальні програми перевіряють, чи готові до роботи процесор, пам’ять, клавіатура й монітор.' },
+        { step: 3, icon: '🚀', title: '3. Запуск Операційної системи', desc: 'Завантажується операційна система (Windows, Linux або macOS), і на екрані з’являється Робочий стіл!' }
+      ];
+
       const osList = [
         {
           id: 'win11',
@@ -1700,41 +2512,60 @@
         }
       ];
 
+      const activeStage = bootStages.find(s => s.step === state.bootStep) || bootStages[2];
+
       el.innerHTML = `
-        <div class="space-y-5">
+        <div class="space-y-4">
           <div>
             <span class="text-xs font-extrabold uppercase tracking-wider text-blue-600 bg-blue-100 px-3 py-1 rounded-full">
               ⚡ Як прокидається комп’ютер?
             </span>
-            <h2 class="font-display font-black text-2xl sm:text-3xl text-slate-800 mt-1.5">
+            <h2 class="font-display font-black text-2xl sm:text-3xl text-slate-800 mt-1">
               Завантаження комп’ютера та Операційні системи
             </h2>
-            <p class="text-slate-600 font-semibold text-sm sm:text-base mt-1">
-              Комп’ютер не може працювати без програм. Під час увімкнення спеціальні програми перевіряють, чи готові монітор, клавіатура й миша, а потім запускають <strong>операційну систему</strong>.
-            </p>
+          </div>
+
+          <!-- Інтерактивна анімація 3 етапів завантаження ПК -->
+          <div class="bg-slate-50 border-2 border-blue-100 rounded-3xl p-3.5 sm:p-4 space-y-2.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex flex-wrap gap-2">
+                ${bootStages.map(st => `
+                  <button onclick="setBootStage(${st.step})" class="px-3 py-1.5 rounded-xl text-xs font-extrabold transition cursor-pointer ${state.bootStep === st.step ? 'bg-blue-600 text-white shadow-sm' : 'bg-white hover:bg-blue-50 text-slate-700 border border-slate-200'}">
+                    ${st.icon} ${st.title}
+                  </button>
+                `).join('')}
+              </div>
+              <button onclick="runBootAnimation()" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs transition cursor-pointer">
+                ▶️ Запустити анімацію
+              </button>
+            </div>
+            <div class="bg-white rounded-2xl px-4 py-2.5 border border-blue-100 flex items-center gap-3">
+              <span class="text-2xl">${activeStage.icon}</span>
+              <p class="text-xs sm:text-sm font-bold text-slate-700">${activeStage.desc}</p>
+            </div>
           </div>
 
           <div class="text-xs font-extrabold text-indigo-600 uppercase tracking-wider">
             👆 Натисни на кожну картку, щоб відкрити опис сучасної системи:
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
             ${osList.map(os => `
-              <div onclick="flipHintCard(this)" class="flip-card h-56">
+              <div onclick="flipHintCard(this)" class="flip-card h-44 sm:h-48">
                 <div class="flip-card-inner">
-                  <div class="flip-card-front bg-gradient-to-br ${os.color} text-white p-5 flex flex-col items-center justify-center text-center shadow-lg">
-                    <div class="text-5xl mb-3">${os.icon}</div>
-                    <div class="font-display font-extrabold text-lg">${os.name}</div>
-                    <span class="mt-2 px-3 py-0.5 rounded-full bg-white/20 text-xs font-bold">${os.tag}</span>
-                    <span class="mt-3 text-[11px] text-white/80 font-semibold">Натисни, щоб дізнатися більше ✨</span>
+                  <div class="flip-card-front bg-gradient-to-br ${os.color} text-white p-4 flex flex-col items-center justify-center text-center shadow-lg">
+                    <div class="text-4xl mb-2">${os.icon}</div>
+                    <div class="font-display font-extrabold text-base sm:text-lg">${os.name}</div>
+                    <span class="mt-1.5 px-3 py-0.5 rounded-full bg-white/20 text-xs font-bold">${os.tag}</span>
+                    <span class="mt-2 text-[11px] text-white/85 font-semibold">Натисни ✨</span>
                   </div>
-                  <div class="flip-card-back bg-white border-2 border-indigo-200 p-4 flex flex-col justify-between shadow-lg">
+                  <div class="flip-card-back bg-white border-2 border-indigo-200 p-3.5 flex flex-col justify-between shadow-lg">
                     <div>
-                      <div class="flex items-center gap-2 mb-2">
-                        <span class="text-2xl">${os.icon}</span>
+                      <div class="flex items-center gap-2 mb-1.5">
+                        <span class="text-xl">${os.icon}</span>
                         <span class="font-display font-extrabold text-sm text-slate-800">${os.name}</span>
                       </div>
-                      <p class="text-xs sm:text-sm font-semibold text-slate-600 leading-relaxed">${os.desc}</p>
+                      <p class="text-xs font-semibold text-slate-600 leading-relaxed">${os.desc}</p>
                     </div>
                     <div class="text-[11px] font-extrabold text-indigo-600 text-right">Натисни ще раз ↺</div>
                   </div>
@@ -1746,100 +2577,22 @@
       `;
     }
 
-    /* ---------------- СЛАЙД 5: ІСТОРІЯ ПІНГВІНА ТАКСА ---------------- */
-    function renderSlide5(el) {
-      const tuxFacts = [
-        '🐧 Ім’я Такс (Tux) походить від англійського слова «Tuxedo» — смокінг, бо чорно-білий пінгвін нагадує джентльмена у фраку!',
-        '❄️ Лінус Торвальдс створив ядро Linux у 1991 році, коли був студентом у Фінляндії, і подарував систему всьому світові.',
-        '🚀 Сьогодні системи на основі Linux керують суперкомп’ютерами, космічними ракетами та навіть марсоходами NASA!'
-      ];
-
-      el.innerHTML = `
-        <div class="space-y-5">
-          <div>
-            <span class="text-xs font-extrabold uppercase tracking-wider text-sky-700 bg-sky-100 px-3 py-1 rounded-full">
-              🔎 Довідничок юних дослідників
-            </span>
-            <h2 class="font-display font-black text-2xl sm:text-3xl text-slate-800 mt-1.5">
-              Чому у комп’ютерах живе пінгвін Такс? 🐧
-            </h2>
-          </div>
-
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-            <!-- Інтерактивний пінгвін Такс -->
-            <div class="lg:col-span-5 flex flex-col items-center">
-              <button id="tux-avatar-btn" onclick="petTuxPenguin()" class="group relative bg-gradient-to-b from-sky-100 to-blue-200 border-4 border-white rounded-3xl p-6 shadow-xl hover:shadow-2xl transition cursor-pointer w-full max-w-xs flex flex-col items-center">
-                <!-- Малюнок пінгвіна Такса -->
-                <svg viewBox="0 0 180 180" class="w-40 h-40 drop-shadow-md">
-                  <ellipse cx="90" cy="162" rx="48" ry="10" fill="rgba(15,23,42,0.12)" />
-                  <!-- Лапки -->
-                  <ellipse cx="64" cy="152" rx="22" ry="11" fill="#f59e0b" />
-                  <ellipse cx="116" cy="152" rx="22" ry="11" fill="#f59e0b" />
-                  <!-- Тіло -->
-                  <ellipse cx="90" cy="100" rx="46" ry="56" fill="#1e293b" />
-                  <!-- Крила -->
-                  <ellipse cx="42" cy="102" rx="13" ry="34" transform="rotate(18 42 102)" fill="#0f172a" />
-                  <ellipse cx="138" cy="102" rx="13" ry="34" transform="rotate(-18 138 102)" fill="#0f172a" />
-                  <!-- Білий животик -->
-                  <ellipse cx="90" cy="106" rx="33" ry="43" fill="#ffffff" />
-                  <!-- Голова -->
-                  <circle cx="90" cy="52" r="32" fill="#1e293b" />
-                  <!-- Очі -->
-                  <ellipse cx="79" cy="46" rx="8" ry="10" fill="#ffffff" />
-                  <ellipse cx="101" cy="46" rx="8" ry="10" fill="#ffffff" />
-                  <circle cx="81" cy="47" r="4" fill="#0f172a" />
-                  <circle cx="99" cy="47" r="4" fill="#0f172a" />
-                  <circle cx="82" cy="45" r="1.5" fill="#ffffff" />
-                  <circle cx="100" cy="45" r="1.5" fill="#ffffff" />
-                  <!-- Дзьоб -->
-                  <path d="M74 58 Q90 52 106 58 Q90 73 74 58 Z" fill="#fbbf24" stroke="#d97706" stroke-width="2" />
-                </svg>
-
-                <span class="mt-2 px-4 py-1.5 rounded-full bg-indigo-600 group-hover:bg-indigo-700 text-white font-extrabold text-xs sm:text-sm shadow">
-                  👆 Натисни на Такса!
-                </span>
-              </button>
-            </div>
-
-            <!-- Історія та перемикач міні-фактів -->
-            <div class="lg:col-span-7 space-y-4">
-              <div class="bg-white border-2 border-sky-100 rounded-3xl p-5 shadow-xs space-y-2">
-                <p class="text-slate-700 font-bold text-base leading-relaxed">
-                  Кажуть, що одного разу <strong>Лінуса Торвальдса</strong> — творця операційної системи <strong>Linux</strong> — у зоопарку Австралії дружелюбно клюнув за палець маленький пінгвін!
-                </p>
-                <p class="text-slate-600 font-semibold text-sm sm:text-base">
-                  Ця кумедна пригода так сподобалася програмісту, що він обрав кумедного ситого пінгвіна на ім’я <strong>Такс (Tux)</strong> офіційним значком-талісманом своєї операційної системи.
-                </p>
-              </div>
-
-              <!-- Картка міні-фактів -->
-              <div class="bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-200 rounded-3xl p-4 sm:p-5">
-                <div class="flex items-center justify-between mb-2">
-                  <span class="text-xs font-extrabold uppercase text-amber-800">
-                    ✨ Цікавий факт ${state.tuxFactIndex + 1} з ${tuxFacts.length}:
-                  </span>
-                  <button onclick="petTuxPenguin()" class="text-xs font-extrabold text-indigo-600 hover:underline cursor-pointer">
-                    Наступний факт ➡️
-                  </button>
-                </div>
-                <p class="text-slate-800 font-extrabold text-sm sm:text-base">
-                  ${tuxFacts[state.tuxFactIndex]}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    window.petTuxPenguin = function () {
-      playPopSound();
-      state.tuxFactIndex = (state.tuxFactIndex + 1) % 3;
+    window.setBootStage = function (step) {
+      playClickSound();
+      state.bootStep = step;
       renderCurrentSlide();
-      const btn = document.getElementById('tux-avatar-btn');
-      if (btn) {
-        btn.classList.add('tux-happy');
-      }
+    };
+
+    window.runBootAnimation = function () {
+      playClickSound();
+      state.bootStep = 1;
+      renderCurrentSlide();
+      setTimeout(() => {
+        if (state.currentSlide === 4) { state.bootStep = 2; playClickSound(); renderCurrentSlide(); }
+      }, 900);
+      setTimeout(() => {
+        if (state.currentSlide === 4) { state.bootStep = 3; playSuccessSound(); renderCurrentSlide(); }
+      }, 1800);
     };
 
     /* ---------------- СЛАЙД 6: ЩО ТАКЕ РОБОЧИЙ СТІЛ (ІНТЕРАКТИВНА СХЕМА) ---------------- */
@@ -2017,11 +2770,26 @@
               </div>
 
               <!-- Центр: Кнопка Пуск + Швидкий доступ -->
-              <div class="flex items-center gap-1.5 sm:gap-2">
-                <button onclick="selectTaskbarZone('start')" class="px-3 py-2 rounded-xl font-extrabold text-sm flex items-center gap-1.5 transition cursor-pointer ${state.selectedTaskbarZone === 'start' ? 'bg-blue-600 text-white ring-4 ring-blue-200 scale-105' : 'bg-blue-50 hover:bg-blue-100 text-blue-700'}">
+              <div class="flex items-center gap-1.5 sm:gap-2 relative">
+                <button onclick="toggleSlide7StartPopup()" class="px-3 py-2 rounded-xl font-extrabold text-sm flex items-center gap-1.5 transition cursor-pointer ${state.selectedTaskbarZone === 'start' ? 'bg-blue-600 text-white ring-4 ring-blue-200 scale-105' : 'bg-blue-50 hover:bg-blue-100 text-blue-700'}">
                   <span>🪟</span>
                   <span class="text-xs">Пуск</span>
                 </button>
+
+                ${state.taskbarStartOpen ? `
+                  <div class="absolute bottom-12 left-0 w-56 bg-white rounded-2xl shadow-2xl border-2 border-blue-200 p-3 z-20 space-y-1.5 text-left">
+                    <div class="text-[10px] font-extrabold uppercase text-blue-600">Меню «Пуск» Windows 11</div>
+                    <div class="grid grid-cols-3 gap-1.5 text-center text-[11px] font-bold text-slate-700 pt-1">
+                      <div class="p-1.5 rounded-xl bg-slate-50">🌐<br/>Edge</div>
+                      <div class="p-1.5 rounded-xl bg-slate-50">🎨<br/>Paint</div>
+                      <div class="p-1.5 rounded-xl bg-slate-50">🧮<br/>Кальк.</div>
+                    </div>
+                    <div class="pt-1 border-t border-slate-100 flex justify-between items-center text-[10px] font-extrabold text-slate-500">
+                      <span>👤 Учень 3 класу</span>
+                      <span>⏻ Живлення</span>
+                    </div>
+                  </div>
+                ` : ''}
 
                 <button onclick="selectTaskbarZone('quick')" class="px-3 py-2 rounded-xl flex items-center gap-2 transition cursor-pointer ${state.selectedTaskbarZone === 'quick' ? 'bg-indigo-600 text-white ring-4 ring-indigo-200 scale-105' : 'bg-slate-100 hover:bg-indigo-50 text-slate-700'}">
                   <span title="Пошук">🔍</span>
@@ -2074,6 +2842,14 @@
     window.selectTaskbarZone = function (zone) {
       playClickSound();
       state.selectedTaskbarZone = zone;
+      if (zone !== 'start') state.taskbarStartOpen = false;
+      renderCurrentSlide();
+    };
+
+    window.toggleSlide7StartPopup = function () {
+      playPopSound();
+      state.selectedTaskbarZone = 'start';
+      state.taskbarStartOpen = !state.taskbarStartOpen;
       renderCurrentSlide();
     };
 
@@ -2090,8 +2866,8 @@
       const actions = [
         { action: 'Вибрати (виділити) об’єкт', mouse: 'Навести вказівник миші на об’єкт і 1 раз клацнути лівою кнопкою миші.', badge: '1 клік 👆' },
         { action: 'Перетягнути об’єкт', mouse: 'Вибрати об’єкт і з натиснутою лівою кнопкою перемістити його в потрібне місце.', badge: 'Затиснути й тягнути ✊' },
-        { action: 'Відкрити папку або документ', mouse: 'Навести вказівник миші на об’єкт і двічі швидко клацнути лівою кнопкою.', badge: '2 кліки ⚡' },
-        { action: 'Запустити програму', mouse: 'Двічі клацнути по значку на Робочому столі або 1 раз у меню «Пуск».', badge: '2 кліки ⚡' }
+        { action: 'Відкрити папку або програму', mouse: 'Навести вказівник миші на об’єкт і двічі швидко клацнути лівою кнопкою.', badge: '2 кліки ⚡' },
+        { action: 'Відкрити контекстне меню', mouse: 'Натиснути праву кнопку миші на об’єкті, щоб побачити список команд.', badge: 'Правий клік 📋' }
       ];
 
       el.innerHTML = `
@@ -2133,24 +2909,24 @@
                   <rect x="10" y="6" width="40" height="68" rx="20" fill="#e2e8f0" stroke="#475569" stroke-width="3" />
                   <path d="M10 26 Q10 6 30 6 L30 34 L10 34 Z" fill="#3b82f6" />
                   <line x1="30" y1="6" x2="30" y2="34" stroke="#475569" stroke-width="2.5" />
-                  <line x1="10" y1="34" x2="50" y2="34" stroke="#475569" stroke-width="2.5" />
-                </svg>
-                <div class="text-left text-xs font-bold text-slate-700">
-                  Синім кольором позначено<br/><strong>ліву кнопку миші</strong>!
-                </div>
-              </div>
-
-              <!-- Інтерактивна папка -->
-              <div class="my-2">
+              <!-- Інтерактивна папка (підтримує 1 клік, 2 кліки та правий клік) -->
+              <div class="my-2 relative">
                 ${state.mouseTrainerStep < 2 ? `
                   <button
                     onclick="handleTrainerSingleClick()"
                     ondblclick="handleTrainerDoubleClick()"
+                    oncontextmenu="handleTrainerRightClick(event)"
                     class="p-4 rounded-2xl transition cursor-pointer flex flex-col items-center ${state.mouseTrainerStep === 1 ? 'bg-blue-500/25 border-2 border-blue-500 shadow-md scale-105' : 'bg-white/70 hover:bg-white border-2 border-transparent'}"
                   >
                     <span class="text-5xl">📁</span>
                     <span class="font-extrabold text-sm text-slate-800 mt-1">Мої малюнки</span>
                   </button>
+                  ${state.mouseRightMenuOpen ? `
+                    <div class="mt-2 bg-white rounded-xl shadow-lg border border-slate-200 p-1.5 text-left text-xs font-bold text-slate-700 space-y-1">
+                      <button onclick="handleTrainerDoubleClick()" class="w-full text-left px-2.5 py-1 rounded-lg hover:bg-indigo-50 cursor-pointer">📂 Відкрити</button>
+                      <button onclick="state.mouseRightMenuOpen=false; renderCurrentSlide(); showToast('✏️ Команда перейменування в контекстному меню!')" class="w-full text-left px-2.5 py-1 rounded-lg hover:bg-indigo-50 cursor-pointer">✏️ Перейменувати</button>
+                    </div>
+                  ` : ''}
                 ` : `
                   <div class="bg-white rounded-2xl p-4 border-2 border-emerald-400 shadow-md space-y-2">
                     <div class="text-xs font-extrabold text-emerald-700">📂 Папку відкрито! Усередині:</div>
@@ -2199,7 +2975,22 @@
 
     window.handleTrainerDoubleClick = function () {
       playSuccessSound();
+      state.mouseRightMenuOpen = false;
       state.mouseTrainerStep = 2;
+      renderCurrentSlide();
+    };
+
+    window.handleTrainerRightClick = function (e) {
+      e.preventDefault();
+      playClickSound();
+      state.mouseRightMenuOpen = !state.mouseRightMenuOpen;
+      renderCurrentSlide();
+    };
+
+    window.resetMouseTrainer = function () {
+      playClickSound();
+      state.mouseTrainerStep = 0;
+      state.mouseRightMenuOpen = false;
       renderCurrentSlide();
     };
 
@@ -2769,25 +3560,25 @@
                 </div>
                 <div onclick="playPopSound()" class="bg-white/90 p-3 rounded-2xl border border-emerald-100 cursor-pointer hover:scale-[1.02] transition">
                   🌧️ Хмарка сонечко закрила, слізки срібні зронила.<br/>Ми ті слізки пошукаємо, у травичці позбираємо <em>(присідання)</em>!
+            <!-- Гімнастика для очей та правила сидіння за ПК -->
+            <div class="lg:col-span-5 bg-gradient-to-br from-sky-50 to-indigo-50 border-2 border-sky-200 rounded-3xl p-4 sm:p-5 flex flex-col justify-between text-center space-y-2.5">
+              <div class="space-y-2">
+                <span class="inline-block px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-extrabold">
+                  👀 Вправа для очей та постава
+                </span>
+                <div class="text-4xl">👁️✨👁️</div>
+                <h3 class="font-display font-extrabold text-base sm:text-lg text-slate-800">
+                  Бережемо зір і спинку за комп’ютером
+                </h3>
+                <p class="text-xs sm:text-sm font-bold text-slate-600 leading-relaxed">
+                  Міцно заплющте очі на 3 секунди, а потім широко розплющте їх (повторити <strong>3–4 рази</strong>).
+                </p>
+                <div class="bg-white/90 rounded-2xl p-2.5 border border-sky-100 text-left text-xs font-bold text-slate-700 space-y-1">
+                  <div>🪑 Спина рівна, ноги стоять на підлозі або підставці.</div>
+                  <div>📏 Відстань від очей до монітора — <strong>50–60 см</strong> (витягнута рука).</div>
                 </div>
               </div>
-            </div>
-
-            <!-- Гімнастика для очей -->
-            <div class="lg:col-span-5 bg-gradient-to-br from-sky-50 to-indigo-50 border-2 border-sky-200 rounded-3xl p-5 flex flex-col justify-between text-center">
-              <div class="space-y-3">
-                <span class="inline-block px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-extrabold">
-                  👀 Бережемо зір
-                </span>
-                <div class="text-5xl my-2">👁️✨👁️</div>
-                <h3 class="font-display font-extrabold text-lg text-slate-800">
-                  Вправа для профілактики втоми очей
-                </h3>
-                <p class="text-sm font-bold text-slate-600 leading-relaxed">
-                  Сядьте зручно на стілець. Міцно заплющте очі на 3 секунди, а потім широко розплющте їх. Повторіть <strong>3–4 рази</strong> у середньому темпі!
-                </p>
-              </div>
-              <button onclick="playSuccessSound(); showToast('👀 Молодці! Очі відпочили й готові до завдань!', 'success')" class="mt-4 w-full py-2.5 rounded-2xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-sm transition cursor-pointer">
+              <button onclick="playSuccessSound(); showToast('👀 Молодці! Очі відпочили, сидимо рівненько!', 'success')" class="w-full py-2.5 rounded-2xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-xs sm:text-sm transition cursor-pointer">
                 ✅ Вправу для очей виконано!
               </button>
             </div>
@@ -3137,7 +3928,7 @@
     };
 
     /* =========================================================================
-       9. ІНІЦІАЛІЗАЦІЯ ПРИ ЗАВАНТАЖЕННІ СТОРІНКИ
+       10. ІНІЦІАЛІЗАЦІЯ ПРИ ЗАВАНТАЖЕННІ СТОРІНКИ
        ========================================================================= */
     function initApp() {
       const params = new URLSearchParams(window.location.search);
@@ -3146,17 +3937,27 @@
       const hash = (window.location.hash || '').toLowerCase();
 
       if (roomParam) {
-        state.roomCode = roomParam.toUpperCase();
-        const roomInput = document.getElementById('room-code-input');
-        if (roomInput) roomInput.value = state.roomCode;
+        const cleaned = roomParam.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 4);
+        if (cleaned.length >= 3) {
+          state.roomCode = cleaned;
+        }
       }
 
       if (roleParam === 'teacher' || hash.includes('teacher')) {
         state.role = 'teacher';
+        try {
+          window.history.replaceState(null, '', buildRoleUrl('teacher'));
+        } catch (e) {}
         applyRoleUI();
+        connectMqttBroker(0);
       } else if (roleParam === 'student' || hash.includes('student')) {
         state.role = 'student';
+        try {
+          window.history.replaceState(null, '', buildRoleUrl('student'));
+        } catch (e) {}
         applyRoleUI();
+        connectMqttBroker(0);
+        startStudentHeartbeatLoop();
       } else {
         // Показуємо вікно вибору ролі, якщо посилання відкрито без параметрів
         const modal = document.getElementById('role-select-modal');
@@ -3166,7 +3967,6 @@
 
       updateLinkFields();
       renderCurrentSlide();
-      initFirebaseSync();
     }
 
     window.addEventListener('DOMContentLoaded', initApp);
