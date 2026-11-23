@@ -1,0 +1,3664 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Урок 8. Робочий стіл комп’ютера — Інформатика 3 клас (НУШ)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-grad: linear-gradient(135deg, #e0f2fe 0%, #ede9fe 52%, #fef3c7 100%);
+      --card-bg: rgba(255, 255, 255, 0.94);
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-soft: #dbeafe;
+      --accent: #f59e0b;
+      --accent-soft: #fef3c7;
+      --success: #10b981;
+      --success-soft: #d1fae5;
+      --danger: #ef4444;
+      --danger-soft: #fee2e2;
+      --purple: #7c3aed;
+      --purple-soft: #ede9fe;
+      --text-main: #1e293b;
+      --text-muted: #475569;
+      --border: #cbd5e1;
+      --shadow-lg: 0 18px 40px -12px rgba(30, 41, 59, 0.16);
+      --shadow-sm: 0 4px 12px rgba(30, 41, 59, 0.08);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Nunito', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg-grad);
+      color: var(--text-main);
+      overflow-x: hidden;
+      user-select: none;
+    }
+
+    input, textarea {
+      user-select: text;
+      font-family: inherit;
+    }
+
+    /* Animated Emoji Background Layer */
+    #emoji-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .falling-emoji {
+      position: absolute;
+      top: -60px;
+      font-size: 30px;
+      cursor: pointer;
+      pointer-events: auto;
+      user-select: none;
+      opacity: 0.72;
+      transition: transform 0.15s ease;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.12));
+      animation-name: fallDown;
+      animation-timing-function: linear;
+      animation-fill-mode: forwards;
+    }
+
+    .falling-emoji:hover {
+      transform: scale(1.25);
+      opacity: 1;
+    }
+
+    @keyframes fallDown {
+      0% {
+        transform: translateY(0) rotate(0deg);
+      }
+      100% {
+        transform: translateY(calc(100vh + 120px)) rotate(360deg);
+      }
+    }
+
+    .emoji-flash {
+      position: fixed;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff 0%, #fde047 50%, rgba(249, 115, 22, 0) 75%);
+      pointer-events: none;
+      z-index: 2;
+      transform: translate(-50%, -50%) scale(0.2);
+      animation: flashBoom 0.45s ease-out forwards;
+    }
+
+    @keyframes flashBoom {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(0.2); }
+      60% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.5); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(2.1); }
+    }
+
+    .emoji-spark {
+      position: fixed;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 2;
+      animation: sparkFly 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes sparkFly {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.2);
+      }
+    }
+
+    /* Fireworks Canvas */
+    #fireworks-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* App Layout */
+    .app-shell {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 12px 18px;
+      max-width: 1320px;
+      margin: 0 auto;
+      gap: 10px;
+    }
+
+    /* Top Header Bar */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      padding: 10px 18px;
+      border-radius: 20px;
+      box-shadow: var(--shadow-sm);
+      border: 2px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nush-badge {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.85rem;
+      padding: 5px 12px;
+      border-radius: 999px;
+      letter-spacing: 0.3px;
+    }
+
+    .lesson-title-top {
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--text-main);
+    }
+
+    .controls-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: #f1f5f9;
+      color: var(--text-main);
+      border: 1.5px solid #e2e8f0;
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #94a3b8;
+    }
+
+    .status-dot.online {
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+    }
+
+    .btn-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: none;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 0.86rem;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .btn-top:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+    }
+
+    .btn-top:active {
+      transform: translateY(1px);
+    }
+
+    .btn-qr {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    .btn-lock {
+      background: #f59e0b;
+      color: #fff;
+    }
+
+    .btn-lock.free {
+      background: #10b981;
+      color: #fff;
+    }
+
+    .btn-salute {
+      background: linear-gradient(135deg, #ec4899, #f43f5e);
+      color: #fff;
+    }
+
+    .btn-sound {
+      background: #f8fafc;
+      color: var(--text-main);
+      border: 1.5px solid #cbd5e1;
+    }
+
+    /* Main Slide Stage */
+    .stage {
+      flex: 1;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      min-height: 0;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      border: 3px solid rgba(255, 255, 255, 0.9);
+      padding: 24px 30px;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      animation: slideEnter 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .slide.active {
+      display: flex;
+    }
+
+    @keyframes slideEnter {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.99);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .slide-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      border-bottom: 2px dashed #e2e8f0;
+      padding-bottom: 12px;
+    }
+
+    .slide-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 5px 13px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+    }
+
+    .slide-title {
+      font-size: clamp(1.45rem, 2.5vw, 2.05rem);
+      font-weight: 900;
+      color: #0f172a;
+      line-height: 1.2;
+    }
+
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    /* Common Interactive Elements */
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 22px;
+      border-radius: 16px;
+      border: none;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
+      transition: all 0.18s ease;
+    }
+
+    .btn-action:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn-action:active {
+      transform: translateY(0);
+    }
+
+    .btn-action.secondary {
+      background: #f1f5f9;
+      color: var(--text-main);
+      box-shadow: none;
+      border: 2px solid #cbd5e1;
+    }
+
+    .btn-action.secondary:hover {
+      background: #e2e8f0;
+    }
+
+    .btn-action.success {
+      background: var(--success);
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.25);
+    }
+
+    .btn-action.amber {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(245, 158, 11, 0.25);
+    }
+
+    .feedback-box {
+      padding: 12px 18px;
+      border-radius: 16px;
+      font-weight: 800;
+      font-size: 1rem;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      animation: popIn 0.25s ease;
+    }
+
+    .feedback-box.show {
+      display: flex;
+    }
+
+    .feedback-box.ok {
+      background: var(--success-soft);
+      color: #065f46;
+      border: 2px solid #34d399;
+    }
+
+    .feedback-box.err {
+      background: var(--danger-soft);
+      color: #991b1b;
+      border: 2px solid #f87171;
+    }
+
+    .feedback-box.info {
+      background: var(--primary-soft);
+      color: #1e40af;
+      border: 2px solid #60a5fa;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Slide 1 Hero */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      font-weight: 600;
+    }
+
+    .boot-card {
+      background: #f8fafc;
+      border: 2.5px solid #cbd5e1;
+      border-radius: 24px;
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .monitor-screen {
+      width: 240px;
+      height: 150px;
+      background: #1e293b;
+      border-radius: 16px;
+      border: 6px solid #334155;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.5s ease;
+    }
+
+    .monitor-screen.booted {
+      background: linear-gradient(135deg, #38bdf8, #3b82f6);
+      color: #fff;
+      border-color: #2563eb;
+      box-shadow: 0 0 24px rgba(59, 130, 246, 0.45);
+    }
+
+    /* Slide 2 Flip Cards */
+    .flip-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .flip-card {
+      height: 185px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.55s cubic-bezier(0.4, 0.2, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+
+    .flip-card.flipped .flip-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-front, .flip-back {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 8px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .flip-front {
+      background: linear-gradient(145deg, #eff6ff, #dbeafe);
+      border: 2.5px solid #93c5fd;
+      color: #1e3a8a;
+    }
+
+    .flip-back {
+      background: linear-gradient(145deg, #ecfdf5, #d1fae5);
+      border: 2.5px solid #34d399;
+      color: #064e3b;
+      transform: rotateY(180deg);
+      font-size: 0.96rem;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    /* Slide 3 & 4 Charades */
+    .charade-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      align-items: center;
+    }
+
+    .poem-card {
+      background: #fffbeb;
+      border: 2.5px solid #fcd34d;
+      border-radius: 22px;
+      padding: 20px 24px;
+      font-size: 1.12rem;
+      line-height: 1.7;
+      font-weight: 700;
+      color: #78350f;
+    }
+
+    .charade-inputs {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 22px;
+      border: 2px solid #e2e8f0;
+    }
+
+    .syllable-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .syllable-box label {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--text-muted);
+    }
+
+    .syllable-input {
+      width: 110px;
+      height: 54px;
+      border-radius: 14px;
+      border: 3px solid #93c5fd;
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--primary-dark);
+      background: #fff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .syllable-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+    }
+
+    .plus-sign {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--accent);
+      margin-top: 18px;
+    }
+
+    /* Slide 5 OS & Tux */
+    .os-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .os-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .os-tab {
+      padding: 8px 16px;
+      border-radius: 12px;
+      border: 2px solid #cbd5e1;
+      background: #f8fafc;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.92rem;
+      transition: all 0.15s;
+    }
+
+    .os-tab.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .os-preview-box {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: #fff;
+      border-radius: 20px;
+      padding: 20px;
+      min-height: 210px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.15);
+    }
+
+    .tux-card {
+      background: linear-gradient(145deg, #f3e8ff, #ede9fe);
+      border: 2.5px solid #c4b5fd;
+      border-radius: 22px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .tux-card:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Slide 6 Desktop Objects */
+    .objects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .obj-card {
+      background: #f8fafc;
+      border: 2.5px solid #cbd5e1;
+      border-radius: 20px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .obj-card:hover, .obj-card.selected {
+      border-color: var(--primary);
+      background: #eff6ff;
+      transform: translateY(-3px);
+    }
+
+    .obj-icon-big {
+      font-size: 2.6rem;
+    }
+
+    /* Slide 7 Taskbar Simulator */
+    .taskbar-demo {
+      background: rgba(241, 245, 249, 0.96);
+      border: 3px solid #94a3b8;
+      border-radius: 18px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+    }
+
+    .tb-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tb-item {
+      padding: 8px 12px;
+      border-radius: 12px;
+      background: #fff;
+      border: 2px solid #cbd5e1;
+      font-weight: 800;
+      font-size: 0.92rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .tb-item:hover {
+      background: #dbeafe;
+      border-color: #3b82f6;
+    }
+
+    .tb-item.active-tb {
+      background: #2563eb;
+      color: #fff;
+      border-color: #1d4ed8;
+      transform: scale(1.05);
+    }
+
+    .tb-item.visited-tb {
+      border-color: #10b981;
+    }
+
+    /* Slide 8 Mouse Actions + Live Desktop Simulator */
+    .sim8-layout {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .mouse-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid #cbd5e1;
+    }
+
+    .mouse-table th {
+      background: #2563eb;
+      color: #fff;
+      padding: 10px;
+      text-align: left;
+    }
+
+    .mouse-table td {
+      padding: 9px 10px;
+      border-top: 1.5px solid #e2e8f0;
+      font-weight: 700;
+    }
+
+    .mini-desktop {
+      position: relative;
+      height: 270px;
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      border-radius: 20px;
+      border: 4px solid #1e293b;
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    .desk-icon {
+      position: absolute;
+      width: 78px;
+      padding: 6px 4px;
+      border-radius: 10px;
+      text-align: center;
+      color: #fff;
+      font-size: 0.76rem;
+      font-weight: 800;
+      cursor: grab;
+      border: 2px solid transparent;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+      transition: background 0.12s, border-color 0.12s;
+    }
+
+    .desk-icon:active {
+      cursor: grabbing;
+    }
+
+    .desk-icon.selected {
+      background: rgba(255, 255, 255, 0.28);
+      border-color: #93c5fd;
+    }
+
+    .desk-icon .ico {
+      font-size: 1.9rem;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .desk-popup {
+      position: absolute;
+      top: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 240px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+      border: 2px solid #334155;
+      z-index: 20;
+      display: none;
+      overflow: hidden;
+    }
+
+    .desk-popup.open {
+      display: block;
+    }
+
+    .desk-popup-bar {
+      background: #1e293b;
+      color: #fff;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Slide 9 Physical Warmup Timer */
+    .warmup-grid {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .timer-box {
+      background: linear-gradient(145deg, #fef3c7, #fde68a);
+      border: 3px solid #f59e0b;
+      border-radius: 24px;
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .timer-digits {
+      font-size: 3.1rem;
+      font-weight: 900;
+      color: #92400e;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    .poem-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .poem-step {
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      font-weight: 700;
+      font-size: 0.94rem;
+      transition: all 0.25s;
+    }
+
+    .poem-step.current-step {
+      background: #dbeafe;
+      border-color: #2563eb;
+      color: #1e3a8a;
+      transform: scale(1.02);
+    }
+
+    /* Slide 10 Logic Puzzles */
+    .puzzles-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .puzzle-card {
+      background: #f8fafc;
+      border: 2.5px solid #cbd5e1;
+      border-radius: 22px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .num-input {
+      width: 78px;
+      height: 44px;
+      border-radius: 12px;
+      border: 2.5px solid #93c5fd;
+      text-align: center;
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: #1e3a8a;
+    }
+
+    /* Interactive Matchsticks SVG */
+    .stick-line {
+      stroke: #d97706;
+      stroke-width: 9;
+      stroke-linecap: round;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .stick-line:hover {
+      stroke: #2563eb;
+    }
+
+    .stick-line.removed {
+      stroke: #ef4444;
+      stroke-dasharray: 5 7;
+      opacity: 0.35;
+    }
+
+    /* Slide 11 Window Simulator */
+    .win-sim-grid {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .win-workspace {
+      position: relative;
+      height: 290px;
+      background: linear-gradient(135deg, #0f172a, #1e3a8a);
+      border-radius: 20px;
+      border: 4px solid #334155;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .app-window {
+      position: absolute;
+      top: 38px;
+      left: 24px;
+      width: 215px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+      border: 2px solid #cbd5e1;
+      overflow: hidden;
+      display: none;
+      z-index: 15;
+    }
+
+    .app-window.visible {
+      display: block;
+    }
+
+    .win-titlebar {
+      background: #2563eb;
+      color: #fff;
+      padding: 6px 8px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .win-btns {
+      display: flex;
+      gap: 4px;
+    }
+
+    .win-btn {
+      width: 22px;
+      height: 22px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 900;
+      cursor: pointer;
+      font-size: 0.78rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .win-btn.min { background: #fbbf24; color: #78350f; }
+    .win-btn.close { background: #ef4444; color: #fff; }
+
+    .calc-pad {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      padding: 8px;
+      background: #f1f5f9;
+    }
+
+    .calc-key {
+      padding: 6px;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    .calc-key:hover { background: #dbeafe; }
+
+    .sim-taskbar {
+      height: 36px;
+      background: rgba(15, 23, 42, 0.92);
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 20;
+    }
+
+    .mission-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .mission-item {
+      padding: 7px 10px;
+      border-radius: 10px;
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mission-item.done {
+      background: #d1fae5;
+      border-color: #10b981;
+      color: #065f46;
+    }
+
+    /* Slide 12 Quiz + Creative Canvas */
+    .final-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .quiz-option {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 8px 12px;
+      margin-top: 5px;
+      border-radius: 10px;
+      border: 2px solid #cbd5e1;
+      background: #fff;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .quiz-option:hover { border-color: var(--primary); background: #eff6ff; }
+    .quiz-option.correct { background: #d1fae5; border-color: #10b981; color: #065f46; }
+    .quiz-option.wrong { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+
+    .draw-box {
+      background: #f8fafc;
+      border: 2.5px solid #cbd5e1;
+      border-radius: 22px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #icon-canvas {
+      background: #ffffff;
+      border: 3px solid #2563eb;
+      border-radius: 20px;
+      cursor: crosshair;
+      touch-action: none;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .color-swatches {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .swatch {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 2.5px solid #fff;
+      box-shadow: 0 0 0 2px #94a3b8;
+      cursor: pointer;
+      transition: transform 0.12s;
+    }
+
+    .swatch.active {
+      transform: scale(1.2);
+      box-shadow: 0 0 0 3px #0f172a;
+    }
+
+    /* Bottom Navigation */
+    .bottombar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      padding: 10px 18px;
+      border-radius: 20px;
+      box-shadow: var(--shadow-sm);
+      border: 2px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .nav-btn {
+      padding: 9px 18px;
+      border-radius: 14px;
+      border: none;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      background: var(--primary);
+      color: #fff;
+      transition: all 0.15s;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .dots-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .slide-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: none;
+      background: #cbd5e1;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .slide-dot.active {
+      width: 28px;
+      border-radius: 999px;
+      background: var(--primary);
+    }
+
+    .slide-dot:disabled {
+      cursor: not-allowed;
+    }
+
+    /* Teacher Share QR Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(5px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #fff;
+      border-radius: 26px;
+      padding: 24px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      animation: popIn 0.25s ease;
+    }
+
+    .url-copy-row {
+      display: flex;
+      width: 100%;
+      gap: 8px;
+    }
+
+    .url-copy-row input {
+      flex: 1;
+      padding: 9px 12px;
+      border-radius: 12px;
+      border: 2px solid #cbd5e1;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--text-main);
+      background: #f8fafc;
+    }
+
+    @media (max-width: 860px) {
+      .hero-grid, .charade-layout, .os-grid, .sim8-layout, .warmup-grid, .puzzles-grid, .win-sim-grid, .final-grid {
+        grid-template-columns: 1fr;
+      }
+      .slide {
+        padding: 16px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Animated Falling Emojis Layer -->
+  <div id="emoji-bg" aria-hidden="true"></div>
+
+  <!-- Celebratory Fireworks Canvas -->
+  <canvas id="fireworks-canvas"></canvas>
+
+  <!-- Teacher QR & Link Share Modal -->
+  <div id="qr-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="qr-modal-title">
+    <div class="modal-card">
+      <h2 id="qr-modal-title" style="font-size: 1.35rem; font-weight: 900;">📲 Підключення учнів до уроку</h2>
+      <p style="font-size: 0.92rem; color: var(--text-muted); font-weight: 600;">
+        Учні можуть відсканувати QR-код камерою телефону або перейти за чистим учнівським посиланням (без кодів кімнати!):
+      </p>
+      <div style="background: #fff; padding: 12px; border-radius: 18px; border: 3px solid #2563eb;">
+        <canvas id="qr-canvas" width="210" height="210"></canvas>
+      </div>
+      <div class="url-copy-row">
+        <input id="student-url-input" type="text" readonly />
+        <button id="copy-url-btn" class="btn-action" style="padding: 9px 14px; font-size: 0.88rem;">📋 Копіювати</button>
+      </div>
+      <div id="copy-status" style="font-size: 0.85rem; font-weight: 800; color: var(--success); min-height: 20px;"></div>
+      <button id="close-qr-btn" class="btn-action secondary" style="width: 100%;">Закрити вікно</button>
+    </div>
+  </div>
+
+  <div class="app-shell">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="brand-group">
+        <span class="nush-badge">НУШ • 3 клас • Урок 8</span>
+        <span class="lesson-title-top">🖥️ Робочий стіл комп’ютера</span>
+      </div>
+
+      <div class="controls-group" id="controls-bar">
+        <span class="pill-status" id="sync-pill" title="Статус підключення">
+          <span class="status-dot" id="sync-dot"></span>
+          <span id="sync-text">Підключення...</span>
+        </span>
+
+        <!-- Teacher-only controls (hidden in student mode via JS) -->
+        <span class="pill-status" id="teacher-students-pill" style="display: none; background: #ede9fe; border-color: #c4b5fd; color: #5b21b6;">
+          👥 Учнів онлайн: <strong id="students-count">0</strong>
+        </span>
+        <button class="btn-top btn-qr" id="open-qr-btn" style="display: none;">📲 Посилання / QR</button>
+        <button class="btn-top btn-lock" id="toggle-lock-btn" style="display: none;">🔒 Вести клас за собою</button>
+        <button class="btn-top btn-salute" id="trigger-salute-btn" style="display: none;">🎉 Салют!</button>
+
+        <!-- Student lock indicator -->
+        <span class="pill-status" id="student-lock-pill" style="display: none; background: #fef3c7; border-color: #fcd34d; color: #92400e;">
+          🔒 Урок веде вчитель
+        </span>
+
+        <button class="btn-top btn-sound" id="sound-toggle-btn" title="Увімкнути або вимкнути звук">🔊 Звук</button>
+      </div>
+    </header>
+
+    <!-- Slides Container -->
+    <main class="stage">
+
+      <!-- SLIDE 1: Title & Interactive Computer Boot -->
+      <section class="slide active" data-slide="0">
+        <div class="slide-header">
+          <span class="slide-tag">🌟 За програмою Нової української школи</span>
+          <span style="font-weight: 800; color: var(--text-muted);">Інформатика • 3 клас • Урок 8</span>
+        </div>
+        <div class="slide-body">
+          <div class="hero-grid">
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+              <h1 style="font-size: clamp(2rem, 3.6vw, 2.8rem); font-weight: 900; color: #0f172a; line-height: 1.15;">
+                Робочий стіл комп’ютера 💻
+              </h1>
+              <p class="hero-subtitle">
+                Сьогодні ми дізнаємося, що з’являється на екрані після увімкнення комп’ютера, як керувати значками та вікнами за допомогою миші й створимо власний значок програми!
+              </p>
+              <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <span class="pill-status" style="background: #dbeafe; border-color: #93c5fd;">🖱️ Вправи з мишею</span>
+                <span class="pill-status" style="background: #fef3c7; border-color: #fcd34d;">🧩 Шаради та головоломки</span>
+                <span class="pill-status" style="background: #d1fae5; border-color: #6ee7b7;">🎨 Майстерня іконок</span>
+              </div>
+            </div>
+
+            <div class="boot-card">
+              <div class="monitor-screen" id="hero-monitor">
+                <div id="monitor-icon" style="font-size: 2.5rem;">💤</div>
+                <div id="monitor-msg" style="font-weight: 800; font-size: 0.92rem; margin-top: 6px; padding: 0 10px;">
+                  Екран вимкнено. Натисни кнопку живлення!
+                </div>
+              </div>
+              <button class="btn-action" id="boot-pc-btn">⏻ Увімкнути комп’ютер</button>
+            </div>
+          </div>
+        </div>
+        <div style="text-align: center; font-size: 0.9rem; font-weight: 700; color: var(--text-muted);">
+          💡 Підказка: спробуй натиснути на падаючий смайлик на фоні — він весело вибухне іскрами!
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Blitz Quiz (Flip Cards) -->
+      <section class="slide" data-slide="1">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🧠 Актуалізація опорних знань</span>
+            <h2 class="slide-title" style="margin-top: 6px;">Бліц-опитування: пригадай і перевір!</h2>
+          </div>
+          <span class="pill-status" id="flip-counter">Відкрито карток: 0 / 5</span>
+        </div>
+        <div class="slide-body">
+          <p style="font-weight: 700; color: var(--text-muted);">
+            Натисни на кожну картку, щоб перевернути її та перевірити свою відповідь:
+          </p>
+          <div class="flip-grid">
+            <div class="flip-card" onclick="toggleFlip(this)">
+              <div class="flip-inner">
+                <div class="flip-front">
+                  <span style="font-size: 2rem;">🖥️</span>
+                  <strong>1. Що таке системний блок?</strong>
+                  <span style="font-size: 0.8rem; opacity: 0.75;">(Натисни, щоб дізнатися)</span>
+                </div>
+                <div class="flip-back">
+                  Це головна частина комп’ютера, всередині якої працюють процесор, пам’ять та інші важливі пристрої.
+                </div>
+              </div>
+            </div>
+
+            <div class="flip-card" onclick="toggleFlip(this)">
+              <div class="flip-inner">
+                <div class="flip-front">
+                  <span style="font-size: 2rem;">🔘</span>
+                  <strong>2. Які кнопки розташовані на системному блоці?</strong>
+                  <span style="font-size: 0.8rem; opacity: 0.75;">(Натисни, щоб дізнатися)</span>
+                </div>
+                <div class="flip-back">
+                  Кнопка живлення (увімкнення) та кнопка перезавантаження (Reset).
+                </div>
+              </div>
+            </div>
+
+            <div class="flip-card" onclick="toggleFlip(this)">
+              <div class="flip-inner">
+                <div class="flip-front">
+                  <span style="font-size: 2rem;">⏻</span>
+                  <strong>3. Яка кнопка призначена для вмикання комп’ютера?</strong>
+                  <span style="font-size: 0.8rem; opacity: 0.75;">(Натисни, щоб дізнатися)</span>
+                </div>
+                <div class="flip-back">
+                  Кнопка живлення (Power) із позначкою кола та вертикальної риски ⏻.
+                </div>
+              </div>
+            </div>
+
+            <div class="flip-card" onclick="toggleFlip(this)">
+              <div class="flip-inner">
+                <div class="flip-front">
+                  <span style="font-size: 2rem;">✨</span>
+                  <strong>4. Як комп’ютер повідомляє, що готовий до роботи?</strong>
+                  <span style="font-size: 0.8rem; opacity: 0.75;">(Натисни, щоб дізнатися)</span>
+                </div>
+                <div class="flip-back">
+                  На екрані монітора з’являється зображення Робочого стола зі значками!
+                </div>
+              </div>
+            </div>
+
+            <div class="flip-card" onclick="toggleFlip(this)">
+              <div class="flip-inner">
+                <div class="flip-front">
+                  <span style="font-size: 2rem;">📁</span>
+                  <strong>5. Які значки є на Робочому столі? Як ще їх називають?</strong>
+                  <span style="font-size: 0.8rem; opacity: 0.75;">(Натисни, щоб дізнатися)</span>
+                </div>
+                <div class="flip-back">
+                  «Цей ПК», «Кошик», папки та програми. Їх ще називають піктограмами або ярликами.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Logic Warmup - Charade #1 -->
+      <section class="slide" data-slide="2">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🧩 Логічна розминка • Шарада №1</span>
+            <h2 class="slide-title" style="margin-top: 6px;">Розгадай закодоване слово!</h2>
+          </div>
+          <span class="pill-status" style="background: #fef3c7; border-color: #fcd34d;">Склади слово з 2 частин</span>
+        </div>
+        <div class="slide-body">
+          <div class="charade-layout">
+            <div class="poem-card">
+              <div style="font-size: 0.9rem; color: #b45309; margin-bottom: 8px;">
+                📖 <strong>Шарада</strong> — це загадка, в якій закодовано слово, що складається з кількох частин:
+              </div>
+              <p>
+                Спочатку прийменник з двох букв відгадай.<br />
+                Будинок за містом до нього додай.<br />
+                Це слово всім добре відоме.<br />
+                Ти з ним зустрічаєшся в класі й удома.
+              </p>
+              <div style="margin-top: 12px; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 2.3rem;">🏡</span>
+                <span style="font-size: 0.9rem; color: #92400e;">Підказка на малюнку: заміський будинок!</span>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+              <div class="charade-inputs">
+                <div class="syllable-box">
+                  <label>Прийменник (2 букви)</label>
+                  <input type="text" id="ch1-p1" class="syllable-input" maxlength="2" placeholder="_ _" />
+                </div>
+                <span class="plus-sign">+</span>
+                <div class="syllable-box">
+                  <label>Будинок за містом</label>
+                  <input type="text" id="ch1-p2" class="syllable-input" maxlength="4" placeholder="_ _ _ _" />
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                <button class="btn-action" onclick="checkCharade1()">✅ Перевірити слово</button>
+                <button class="btn-action secondary" onclick="hintCharade1()">💡 Підказка</button>
+              </div>
+
+              <div id="ch1-feedback" class="feedback-box"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Logic Warmup - Charade #2 -->
+      <section class="slide" data-slide="3">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🧩 Логічна розминка • Шарада №2</span>
+            <h2 class="slide-title" style="margin-top: 6px;">Склади слово на щастя!</h2>
+          </div>
+          <span class="pill-status" style="background: #ede9fe; border-color: #c4b5fd;">3 частини слова</span>
+        </div>
+        <div class="slide-body">
+          <div class="charade-layout">
+            <div class="poem-card">
+              <p>
+                Спочатку прийменник з трьох букв відгадай,<br />
+                Від «<strong>ко</strong>ней» дві літери перші додай,<br />
+                Візьми дві останні від слова «коро<strong>ва</strong>» —<br />
+                І ось ми отримали слово...
+              </p>
+              <div id="horseshoe-reveal" style="margin-top: 14px; display: none; align-items: center; gap: 12px; background: #fff; padding: 10px 14px; border-radius: 14px;">
+                <span style="font-size: 2.5rem;">🧲</span>
+                <span style="font-weight: 900; color: #065f46; font-size: 1.15rem;">ПІДКОВА!</span>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+              <div class="charade-inputs">
+                <div class="syllable-box">
+                  <label>Прийменник (3 букви)</label>
+                  <input type="text" id="ch2-p1" class="syllable-input" style="width: 92px;" maxlength="3" placeholder="_ _ _" />
+                </div>
+                <span class="plus-sign">+</span>
+                <div class="syllable-box">
+                  <label>«КОней» (перші 2)</label>
+                  <input type="text" id="ch2-p2" class="syllable-input" style="width: 84px;" maxlength="2" placeholder="_ _" />
+                </div>
+                <span class="plus-sign">+</span>
+                <div class="syllable-box">
+                  <label>«короВА» (останні 2)</label>
+                  <input type="text" id="ch2-p3" class="syllable-input" style="width: 84px;" maxlength="2" placeholder="_ _" />
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                <button class="btn-action" onclick="checkCharade2()">✅ Перевірити відповідь</button>
+                <button class="btn-action secondary" onclick="hintCharade2()">💡 Підказка</button>
+              </div>
+
+              <div id="ch2-feedback" class="feedback-box"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: What is Desktop + OS 2026 + Tux Story -->
+      <section class="slide" data-slide="4">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">💡 Новий матеріал • Світ операційних систем (2026)</span>
+            <h2 class="slide-title" style="margin-top: 6px;">Що таке Робочий стіл комп’ютера?</h2>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="os-grid">
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <p style="font-weight: 700; font-size: 1rem; line-height: 1.5; color: var(--text-main);">
+                Під час завантаження комп’ютера спеціальна головна програма — <strong>операційна система (ОС)</strong> — перевіряє роботу всіх пристроїв, а потім відкриває на екрані <strong>Робочий стіл</strong>. Обери сучасну ОС 2026 року, щоб побачити її особливості:
+              </p>
+
+              <div class="os-tabs">
+                <button class="os-tab active" onclick="selectOS('win', this)">🪟 Windows 11 / 12</button>
+                <button class="os-tab" onclick="selectOS('linux', this)">🐧 Linux (Ubuntu)</button>
+                <button class="os-tab" onclick="selectOS('mac', this)">🍏 macOS / Планшети</button>
+              </div>
+
+              <div class="os-preview-box" id="os-preview">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <strong style="font-size: 1.2rem;">🪟 Сучасна Windows (2026)</strong>
+                  <span style="background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 999px; font-size: 0.82rem;">Найпопулярніша на ПК</span>
+                </div>
+                <p style="font-size: 0.96rem; line-height: 1.45; opacity: 0.95;">
+                  Має зручний Робочий стіл зі значками зліва та оновлену центральну Панель завдань унизу з кнопкою «Пуск», пошуком та швидким запуском програм.
+                </p>
+                <div style="background: rgba(15, 23, 42, 0.45); padding: 8px 12px; border-radius: 12px; display: flex; justify-content: center; gap: 12px; font-size: 1.2rem;">
+                  <span>⊞</span><span>🔍</span><span>📁</span><span>🌐</span><span>📝</span><span>🎨</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tux-card" id="tux-secret-card" onclick="revealTuxStory()">
+              <div style="font-size: 0.82rem; font-weight: 800; text-transform: uppercase; color: #6d28d9; background: #fff; padding: 4px 12px; border-radius: 999px;">
+                🔍 Довідничок юних дослідників
+              </div>
+              <!-- Cute Tux SVG -->
+              <svg width="96" height="96" viewBox="0 0 120 120" aria-label="Пінгвін Такс">
+                <ellipse cx="60" cy="66" rx="34" ry="42" fill="#1e293b" />
+                <ellipse cx="60" cy="72" rx="22" ry="30" fill="#ffffff" />
+                <circle cx="49" cy="40" r="7" fill="#ffffff" />
+                <circle cx="71" cy="40" r="7" fill="#ffffff" />
+                <circle cx="50" cy="40" r="3.5" fill="#0f172a" />
+                <circle cx="70" cy="40" r="3.5" fill="#0f172a" />
+                <polygon points="48,50 72,50 60,62" fill="#f59e0b" />
+                <ellipse cx="42" cy="106" rx="14" ry="7" fill="#f59e0b" />
+                <ellipse cx="78" cy="106" rx="14" ry="7" fill="#f59e0b" />
+              </svg>
+              <strong style="font-size: 1.05rem; color: #4c1d95;">Чому в комп’ютерах можна побачити пінгвіна?</strong>
+              <p id="tux-story-text" style="font-size: 0.9rem; font-weight: 700; color: #5b21b6; line-height: 1.4;">
+                👆 Натисни на картку, щоб відкрити цікаву історію!
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: Desktop Objects -->
+      <section class="slide" data-slide="5">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🗂️ Об’єкти Робочого стола</span>
+            <h2 class="slide-title" style="margin-top: 6px;">Що розташовано на Робочому столі?</h2>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="objects-grid">
+            <div class="obj-card" onclick="highlightDesktopObj(this, 'Цей ПК відкриває доступ до всіх дисків, папок і файлів, що зберігаються в комп’ютері.')">
+              <span class="obj-icon-big">🖥️</span>
+              <strong style="font-size: 1.08rem; color: #1e3a8a;">Цей ПК (Цей комп’ютер)</strong>
+              <p style="font-size: 0.9rem; color: var(--text-muted); font-weight: 700;">
+                Відкриває доступ до всіх об’єктів, що зберігаються в пам’яті комп’ютера.
+              </p>
+            </div>
+
+            <div class="obj-card" onclick="highlightDesktopObj(this, 'Кошик зберігає видалені об’єкти. Якщо ти видалив файл випадково — з Кошика його можна повернути!')">
+              <span class="obj-icon-big">🗑️</span>
+              <strong style="font-size: 1.08rem; color: #1e3a8a;">Кошик</strong>
+              <p style="font-size: 0.9rem; color: var(--text-muted); font-weight: 700;">
+                Показує, куди перемістити об’єкти, які вже не потрібні для роботи.
+              </p>
+            </div>
+
+            <div class="obj-card" onclick="highlightDesktopObj(this, 'Папки допомагають навести лад: у них зручно зберігати малюнки, тексти, фото та проєкти.')">
+              <span class="obj-icon-big">📁</span>
+              <strong style="font-size: 1.08rem; color: #1e3a8a;">Папки та документи</strong>
+              <p style="font-size: 0.9rem; color: var(--text-muted); font-weight: 700;">
+                Зберігають твої файли: малюнки, презентації, тексти та відео.
+              </p>
+            </div>
+
+            <div class="obj-card" onclick="highlightDesktopObj(this, 'Ярлик має маленьку стрілочку в кутку та дозволяє миттєво запустити потрібну програму!')">
+              <span class="obj-icon-big">🚀</span>
+              <strong style="font-size: 1.08rem; color: #1e3a8a;">Ярлики програм</strong>
+              <p style="font-size: 0.9rem; color: var(--text-muted); font-weight: 700;">
+                Значки зі стрілочкою для швидкого запуску програм (браузер, GCompris, редактор).
+              </p>
+            </div>
+          </div>
+
+          <div style="background: #eff6ff; border: 2px solid #93c5fd; border-radius: 18px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+            <strong style="color: #1e3a8a;">🎯 Міні-перевірка: куди потрапляє файл, який вже не потрібен?</strong>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="btn-action secondary" style="padding: 7px 14px; font-size: 0.9rem;" onclick="checkObjMini(false)">🖥️ У Цей ПК</button>
+              <button class="btn-action secondary" style="padding: 7px 14px; font-size: 0.9rem;" onclick="checkObjMini(true)">🗑️ У Кошик</button>
+              <button class="btn-action secondary" style="padding: 7px 14px; font-size: 0.9rem;" onclick="checkObjMini(false)">🌐 У Браузер</button>
+            </div>
+          </div>
+          <div id="obj-mini-feedback" class="feedback-box"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: Taskbar Interactive Explorer -->
+      <section class="slide" data-slide="6">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">📊 Керування комп’ютером</span>
+            <h2 class="slide-title" style="margin-top: 6px;">Досліджуємо Панель завдань (2026)</h2>
+          </div>
+          <span class="pill-status" id="tb-visited-count">Досліджено кнопок: 0 / 7</span>
+        </div>
+        <div class="slide-body">
+          <p style="font-weight: 700; color: var(--text-muted);">
+            У нижній частині Робочого стола розташована <strong>Панель завдань</strong>. Натисни на кожен її елемент нижче, щоб дізнатися, за що він відповідає:
+          </p>
+
+          <div class="taskbar-demo" role="group" aria-label="Інтерактивна панель завдань">
+            <div class="tb-group">
+              <button class="tb-item" onclick="inspectTaskbar(this, 'Кнопка «Пуск»', 'Відкриває головне меню з усіма встановленими програмами, налаштуваннями та кнопкою вимкнення комп’ютера.')">
+                ⊞ Пуск
+              </button>
+              <button class="tb-item" onclick="inspectTaskbar(this, 'Пошук', 'Допомагає за секунду знайти будь-який файл, програму або відповідь на запитання.')">
+                🔍 Пошук
+              </button>
+              <button class="tb-item" onclick="inspectTaskbar(this, 'Панель швидкого доступу', 'Тут закріплені найпотрібніші програми (Провідник, Браузер, Документи, Презентації), щоб запускати їх одним кліком!')">
+                📁 🌐 📝 🎨 Швидкий доступ
+              </button>
+            </div>
+
+            <div class="tb-group">
+              <button class="tb-item" id="tb-lang-btn" onclick="inspectTaskbar(this, 'Індикатор мови (УКР / ENG)', 'Показує, якою мовою зараз друкує клавіатура. Клік перемикає мову введення!')">
+                🌐 УКР
+              </button>
+              <button class="tb-item" onclick="inspectTaskbar(this, 'Мережа Wi-Fi та Звук', 'Дозволяє підключитися до інтернету Wi-Fi, змінити гучність звуку та перевірити заряд батареї.')">
+                📶 🔊 🔋
+              </button>
+              <button class="tb-item" onclick="inspectTaskbar(this, 'Дата, час та сповіщення', 'Показує поточний час, календар і важливі повідомлення від програм.')">
+                🕒 12:45
+              </button>
+              <button class="tb-item" onclick="inspectTaskbar(this, 'Кнопка «Згорнути все»', 'Розташована на самому правому краю. Одне натискання — і всі відкриті вікна миттєво згортаються!')">
+                🗕 Згорнути все
+              </button>
+            </div>
+          </div>
+
+          <div id="tb-info-card" style="background: #eff6ff; border: 2.5px solid #60a5fa; border-radius: 20px; padding: 18px 22px; min-height: 92px; display: flex; flex-direction: column; justify-content: center; gap: 6px;">
+            <strong id="tb-info-title" style="font-size: 1.15rem; color: #1e3a8a;">👆 Обери будь-яку кнопку на панелі завдань вище!</strong>
+            <p id="tb-info-desc" style="font-weight: 700; color: var(--text-muted); font-size: 0.98rem;">
+              Ми перевіримо всі 7 важливих елементів нижньої панелі комп’ютера.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: Mouse Actions + Live Desktop Simulator -->
+      <section class="slide" data-slide="7">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🖱️ Практика з мишею • Симулятор</span>
+            <h2 class="slide-title" style="margin-top: 6px;">Дії з об’єктами на Робочому столі</h2>
+          </div>
+          <span class="pill-status" id="sim8-progress">Виконано завдань: 0 / 3</span>
+        </div>
+        <div class="slide-body">
+          <div class="sim8-layout">
+            <div style="display: flex; flex-direction: column; gap: 10px; justify-content: space-between;">
+              <table class="mouse-table">
+                <thead>
+                  <tr>
+                    <th>Дія з об’єктом</th>
+                    <th>Що робимо мишею</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Вибрати об’єкт</td>
+                    <td><strong>1 клік</strong> лівою кнопкою</td>
+                  </tr>
+                  <tr>
+                    <td>Перетягнути об’єкт</td>
+                    <td><strong>Утримувати</strong> ліву кнопку і рухати</td>
+                  </tr>
+                  <tr>
+                    <td>Відкрити / запустити</td>
+                    <td><strong>2 швидкі кліки</strong> лівою кнопкою</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <ul class="mission-list">
+                <li class="mission-item" id="m8-1">⬜ <strong>1.</strong> Виділи папку «Малюнки» (1 клік)</li>
+                <li class="mission-item" id="m8-2">⬜ <strong>2.</strong> Відкрий «Цей ПК» (подвійний клік)</li>
+                <li class="mission-item" id="m8-3">⬜ <strong>3.</strong> Перетягни «Зайвий_файл» у «Кошик»</li>
+              </ul>
+            </div>
+
+            <div>
+              <div class="mini-desktop" id="sim8-desktop">
+                <div class="desk-icon" id="ico-pc" style="top: 14px; left: 16px;" data-name="Цей ПК">
+                  <span class="ico">🖥️</span>Цей ПК
+                </div>
+                <div class="desk-icon" id="ico-art" style="top: 14px; left: 112px;" data-name="Малюнки">
+                  <span class="ico">📁</span>Малюнки
+                </div>
+                <div class="desk-icon" id="ico-trash-file" style="top: 112px; left: 16px;" data-name="Зайвий_файл">
+                  <span class="ico">📄</span>Зайвий_файл
+                </div>
+                <div class="desk-icon" id="ico-bin" style="bottom: 14px; right: 16px;" data-name="Кошик">
+                  <span class="ico">🗑️</span>Кошик
+                </div>
+
+                <div class="desk-popup" id="sim8-popup">
+                  <div class="desk-popup-bar">
+                    <span id="sim8-popup-title">Вікно</span>
+                    <button onclick="closeSim8Popup()" style="background: #ef4444; color: #fff; border: none; border-radius: 5px; padding: 2px 7px; cursor: pointer; font-weight: 900;">✕</button>
+                  </div>
+                  <div id="sim8-popup-body" style="padding: 14px; font-size: 0.88rem; font-weight: 700; color: #1e293b;"></div>
+                </div>
+              </div>
+              <div style="text-align: center; font-size: 0.82rem; font-weight: 700; color: var(--text-muted); margin-top: 6px;">
+                💡 Працює і мишею, і пальцем на сенсорному екрані!
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: Visual Physical Warmup & Eye Gymnastics with Timer -->
+      <section class="slide" data-slide="8">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🤸‍♂️ Здоров’язбереження • Пауза відпочинку</span>
+            <h2 class="slide-title" style="margin-top: 6px;">Візуальна фізкультхвилинка та вправа для очей</h2>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-action" style="padding: 7px 14px; font-size: 0.88rem;" onclick="setWarmupMode('body')">🏃‍♂️ Руханка (45 с)</button>
+            <button class="btn-action amber" style="padding: 7px 14px; font-size: 0.88rem;" onclick="setWarmupMode('eyes')">👀 Для очей (20 с)</button>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="warmup-grid">
+            <div class="timer-box">
+              <div id="warmup-emoji" style="font-size: 3.4rem; transition: transform 0.3s;">☀️</div>
+              <div class="timer-digits" id="warmup-timer">00:45</div>
+              <div id="warmup-status" style="font-weight: 800; color: #78350f; font-size: 0.95rem;">
+                Натисни «Старт» і виконуй рухи разом!
+              </div>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+                <button class="btn-action success" id="warmup-start-btn" onclick="startWarmupTimer()">▶️ Старт</button>
+                <button class="btn-action secondary" onclick="pauseWarmupTimer()">⏸️ Пауза</button>
+                <button class="btn-action secondary" onclick="resetWarmupTimer()">🔄 Спочатку</button>
+              </div>
+            </div>
+
+            <div class="poem-steps" id="warmup-poem-box">
+              <div class="poem-step current-step" id="w-step-0">
+                🚶 <strong>1.</strong> Хто ж там, хто вже так втомився і ліворуч нахилився? Треба дружно всім нам встати, фізкультпаузу почати!
+              </div>
+              <div class="poem-step" id="w-step-1">
+                🌙 <strong>2.</strong> Сонце спить, небо спить <em>(очі закрити долонями)</em>, навіть вітер не шумить <em>(присісти)</em>.
+              </div>
+              <div class="poem-step" id="w-step-2">
+                ☀️ <strong>3.</strong> Рано-вранці сонце встало <em>(піднятися на носки, руки вгору, помахати руками!)</em>.
+              </div>
+              <div class="poem-step" id="w-step-3">
+                🌦️ <strong>4.</strong> Хмарка сонечко закрила, слізки срібні зронила. Ми ті слізки пошукаємо, у травичці позбираємо <em>(присідання)</em>!
+              </div>
+            </div>
+
+            <div class="poem-steps" id="eyes-poem-box" style="display: none;">
+              <div class="poem-step current-step">
+                🪑 <strong>Вихідне положення:</strong> сядь рівно на стільці, розслаб плечі.
+              </div>
+              <div class="poem-step current-step">
+                😌 <strong>Вправа 1:</strong> міцно заплющ очі на 2 секунди, а потім широко розплющ. Повтори 3–4 рази у середньому темпі!
+              </div>
+              <div class="poem-step current-step">
+                🌲 <strong>Вправа 2:</strong> подивися на кінчик носа, а потім переведи погляд далеко у вікно!
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: Logic Puzzles (Book Pages + Matchsticks) -->
+      <section class="slide" data-slide="9">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🧮 Запитання і завдання • Логіка</span>
+            <h2 class="slide-title" style="margin-top: 6px;">Математичні та логічні головоломки</h2>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="puzzles-grid">
+            <!-- Puzzle 1: Book Pages -->
+            <div class="puzzle-card">
+              <div>
+                <span class="slide-tag" style="background: #fef3c7; color: #92400e;">📖 Задача 1 • Книга Ганнусі</span>
+                <p style="font-weight: 700; font-size: 0.96rem; margin-top: 10px; line-height: 1.5;">
+                  Ганнуся відкрила книгу навмання і побачила, що <strong>сума номерів лівої й правої сторінок дорівнює 25</strong>. Чому дорівнює <strong>добуток</strong> номерів цих сторінок?
+                </p>
+              </div>
+
+              <div style="background: #fff; padding: 12px; border-radius: 16px; border: 2px solid #e2e8f0; display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; font-weight: 800;">
+                  <span>Сторінки:</span>
+                  <input type="number" id="book-p1" class="num-input" placeholder="?" />
+                  <span>+</span>
+                  <input type="number" id="book-p2" class="num-input" placeholder="?" />
+                  <span>= 25</span>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 800;">
+                  <span>Добуток:</span>
+                  <input type="number" id="book-prod" class="num-input" style="width: 100px;" placeholder="?" />
+                  <button class="btn-action" style="padding: 9px 14px; font-size: 0.9rem;" onclick="checkBookPuzzle()">✅ Перевірити</button>
+                </div>
+              </div>
+              <div id="book-feedback" class="feedback-box"></div>
+            </div>
+
+            <!-- Puzzle 2: Interactive Matchsticks -->
+            <div class="puzzle-card">
+              <div>
+                <span class="slide-tag" style="background: #ede9fe; color: #5b21b6;">🥢 Задача 2 • Палички</span>
+                <p style="font-weight: 700; font-size: 0.96rem; margin-top: 10px; line-height: 1.45;">
+                  Натисни на <strong>одну паличку</strong>, щоб закреслити її, і залишилося рівно <strong>5 квадратів</strong>!
+                </p>
+              </div>
+
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                <!-- 3x2 grid of unit squares (17 sticks): removing any outer corner stick leaves 5 squares! -->
+                <svg id="sticks-svg" width="270" height="175" viewBox="0 0 270 175" aria-label="Сітка з паличок">
+                  <!-- Horizontal sticks: 3 rows x 3 cols = 9 sticks -->
+                  <!-- Row 0 (y=25) -->
+                  <line class="stick-line" data-id="h00" x1="30" y1="25" x2="95" y2="25" />
+                  <line class="stick-line" data-id="h01" x1="103" y1="25" x2="168" y2="25" />
+                  <line class="stick-line" data-id="h02" x1="176" y1="25" x2="241" y2="25" />
+                  <!-- Row 1 (y=88) -->
+                  <line class="stick-line" data-id="h10" x1="30" y1="88" x2="95" y2="88" />
+                  <line class="stick-line" data-id="h11" x1="103" y1="88" x2="168" y2="88" />
+                  <line class="stick-line" data-id="h12" x1="176" y1="88" x2="241" y2="88" />
+                  <!-- Row 2 (y=151) -->
+                  <line class="stick-line" data-id="h20" x1="30" y1="151" x2="95" y2="151" />
+                  <line class="stick-line" data-id="h21" x1="103" y1="151" x2="168" y2="151" />
+                  <line class="stick-line" data-id="h22" x1="176" y1="151" x2="241" y2="151" />
+
+                  <!-- Vertical sticks: 2 rows x 4 cols = 8 sticks -->
+                  <!-- Top row (y=31..82) -->
+                  <line class="stick-line" data-id="v00" x1="26" y1="31" x2="26" y2="82" />
+                  <line class="stick-line" data-id="v01" x1="99" y1="31" x2="99" y2="82" />
+                  <line class="stick-line" data-id="v02" x1="172" y1="31" x2="172" y2="82" />
+                  <line class="stick-line" data-id="v03" x1="245" y1="31" x2="245" y2="82" />
+                  <!-- Bottom row (y=94..145) -->
+                  <line class="stick-line" data-id="v10" x1="26" y1="94" x2="26" y2="145" />
+                  <line class="stick-line" data-id="v11" x1="99" y1="94" x2="99" y2="145" />
+                  <line class="stick-line" data-id="v12" x1="172" y1="94" x2="172" y2="145" />
+                  <line class="stick-line" data-id="v13" x1="245" y1="94" x2="245" y2="145" />
+                </svg>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                  <span id="sticks-status" style="font-weight: 800; font-size: 0.9rem; color: var(--text-muted);">Зараз квадратів: 6 (закреслено: 0)</span>
+                  <button class="btn-action secondary" style="padding: 5px 12px; font-size: 0.82rem;" onclick="resetSticks()">🔄 Скинути</button>
+                </div>
+              </div>
+              <div id="sticks-feedback" class="feedback-box"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 11: Fun Facts 2026 + Practical Window Simulator -->
+      <section class="slide" data-slide="10">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">💻 Працюємо за комп’ютером • Практикум</span>
+            <h2 class="slide-title" style="margin-top: 6px;">Цікавинка та тренажер керування вікнами</h2>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="win-sim-grid">
+            <div style="display: flex; flex-direction: column; justify-content: space-between; gap: 10px;">
+              <div style="background: #fffbeb; border: 2px solid #fcd34d; border-radius: 18px; padding: 12px 14px; font-size: 0.88rem; font-weight: 700; color: #78350f; line-height: 1.4;">
+                ✨ <strong>Цікавинка (2026):</strong> Понад 500 років тому «народився» олівець, 200 років тому — авторучка, а в 2011 році створили першу цифрову диво-ручку. Сьогодні у 2026 році розумні стилуси на планшетах миттєво перетворюють рукописні літери на друкований текст!
+              </div>
+
+              <ul class="mission-list">
+                <li class="mission-item" id="w11-1">⬜ <strong>1.</strong> Запусти <strong>Калькулятор</strong> (2 кліки по значку)</li>
+                <li class="mission-item" id="w11-2">⬜ <strong>2.</strong> Перетягни вікно у <strong>правий верхній кут</strong></li>
+                <li class="mission-item" id="w11-3">⬜ <strong>3.</strong> Згорни вікно кнопкою <strong>«—»</strong></li>
+                <li class="mission-item" id="w11-4">⬜ <strong>4.</strong> Віднови з панелі завдань і закрий <strong>«✕»</strong></li>
+              </ul>
+            </div>
+
+            <div class="win-workspace" id="win11-space">
+              <div style="padding: 14px;">
+                <div class="desk-icon" id="calc-launcher" style="position: static; display: inline-block;" title="Двічі клацни, щоб запустити Калькулятор">
+                  <span class="ico">🧮</span>Калькулятор
+                </div>
+              </div>
+
+              <!-- Draggable Calculator Window -->
+              <div class="app-window" id="calc-window">
+                <div class="win-titlebar" id="calc-titlebar">
+                  <span>🧮 Калькулятор</span>
+                  <div class="win-btns">
+                    <button class="win-btn min" id="calc-min-btn" title="Згорнути">—</button>
+                    <button class="win-btn close" id="calc-close-btn" title="Закрити">✕</button>
+                  </div>
+                </div>
+                <div style="padding: 8px; background: #fff;">
+                  <input type="text" id="calc-display" readonly value="0" style="width: 100%; text-align: right; font-size: 1.15rem; font-weight: 900; padding: 4px 8px; border: 1.5px solid #cbd5e1; border-radius: 8px; background: #f8fafc;" />
+                </div>
+                <div class="calc-pad">
+                  <button class="calc-key" onclick="calcInput('7')">7</button>
+                  <button class="calc-key" onclick="calcInput('8')">8</button>
+                  <button class="calc-key" onclick="calcInput('9')">9</button>
+                  <button class="calc-key" onclick="calcInput('+')">+</button>
+                  <button class="calc-key" onclick="calcInput('4')">4</button>
+                  <button class="calc-key" onclick="calcInput('5')">5</button>
+                  <button class="calc-key" onclick="calcInput('6')">6</button>
+                  <button class="calc-key" onclick="calcInput('-')">−</button>
+                  <button class="calc-key" onclick="calcInput('1')">1</button>
+                  <button class="calc-key" onclick="calcInput('2')">2</button>
+                  <button class="calc-key" onclick="calcInput('3')">3</button>
+                  <button class="calc-key" style="background: #2563eb; color: #fff;" onclick="calcEval()">=</button>
+                </div>
+              </div>
+
+              <!-- Mini Taskbar -->
+              <div class="sim-taskbar">
+                <span style="color: #fff; font-weight: 900; font-size: 0.85rem;">⊞ Пуск</span>
+                <button id="calc-tb-tab" style="display: none; padding: 4px 10px; border-radius: 8px; border: 1px solid #60a5fa; background: #1e40af; color: #fff; font-weight: 800; font-size: 0.8rem; cursor: pointer;">
+                  🧮 Калькулятор
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 12: Self-check Quiz + Creative App Icon Studio -->
+      <section class="slide" data-slide="11">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🏆 Підсумок уроку та Творча майстерня</span>
+            <h2 class="slide-title" style="margin-top: 6px;">Самоперевірка та твій власний значок програми!</h2>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="final-grid">
+            <!-- Left: Quick Self-check -->
+            <div style="display: flex; flex-direction: column; gap: 10px; justify-content: space-between;">
+              <div style="background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 18px; padding: 12px 14px;">
+                <strong style="font-size: 0.94rem; color: #1e3a8a;">1. Що з’являється на екрані після завантаження комп’ютера?</strong>
+                <button class="quiz-option" onclick="answerFinalQuiz(this, true)">А) Робочий стіл зі значками та панеллю завдань</button>
+                <button class="quiz-option" onclick="answerFinalQuiz(this, false)">Б) Тільки порожній чорний екран</button>
+              </div>
+
+              <div style="background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 18px; padding: 12px 14px;">
+                <strong style="font-size: 0.94rem; color: #1e3a8a;">2. Як запустити програму або відкрити папку?</strong>
+                <button class="quiz-option" onclick="answerFinalQuiz(this, false)">А) Навести мишу й один раз клацнути правою кнопкою</button>
+                <button class="quiz-option" onclick="answerFinalQuiz(this, true)">Б) Навести мишу й двічі клацнути лівою кнопкою</button>
+              </div>
+
+              <div style="background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 18px; padding: 12px 14px;">
+                <strong style="font-size: 0.94rem; color: #1e3a8a;">3. Куди потрапляють непотрібні видалені об’єкти?</strong>
+                <button class="quiz-option" onclick="answerFinalQuiz(this, true)">А) У Кошик</button>
+                <button class="quiz-option" onclick="answerFinalQuiz(this, false)">Б) У Калькулятор</button>
+              </div>
+            </div>
+
+            <!-- Right: Creative Icon Canvas -->
+            <div class="draw-box">
+              <strong style="font-size: 1rem; color: #0f172a;">🎨 Намалюй свій значок програми майбутнього!</strong>
+              <div class="color-swatches" id="swatch-bar">
+                <button class="swatch active" style="background: #2563eb;" data-color="#2563eb" aria-label="Синій"></button>
+                <button class="swatch" style="background: #ef4444;" data-color="#ef4444" aria-label="Червоний"></button>
+                <button class="swatch" style="background: #10b981;" data-color="#10b981" aria-label="Зелений"></button>
+                <button class="swatch" style="background: #f59e0b;" data-color="#f59e0b" aria-label="Жовтий"></button>
+                <button class="swatch" style="background: #7c3aed;" data-color="#7c3aed" aria-label="Фіолетовий"></button>
+                <button class="swatch" style="background: #0f172a;" data-color="#0f172a" aria-label="Чорний"></button>
+                <button class="swatch" style="background: #ffffff;" data-color="#ffffff" aria-label="Гумка"></button>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: center;">
+                <canvas id="icon-canvas" width="150" height="150"></canvas>
+                <div style="display: flex; flex-direction: column; gap: 8px; max-width: 210px;">
+                  <input type="text" id="custom-app-name" placeholder="Назва програми (напр. РобоДруг)" style="padding: 8px 10px; border-radius: 10px; border: 2px solid #cbd5e1; font-weight: 700; font-size: 0.86rem;" />
+                  <input type="text" id="custom-app-desc" placeholder="Що вона вміє робити?" style="padding: 8px 10px; border-radius: 10px; border: 2px solid #cbd5e1; font-weight: 700; font-size: 0.86rem;" />
+                  <div style="display: flex; gap: 6px;">
+                    <button class="btn-action secondary" style="padding: 6px 10px; font-size: 0.82rem;" onclick="clearIconCanvas()">🧹 Очистити</button>
+                    <button class="btn-action success" style="padding: 6px 12px; font-size: 0.82rem;" onclick="publishCustomIcon()">✨ Готово!</button>
+                  </div>
+                </div>
+              </div>
+
+              <div id="custom-icon-showcase" style="display: none; background: #d1fae5; border: 2px solid #10b981; border-radius: 14px; padding: 8px 14px; font-weight: 800; font-size: 0.88rem; color: #065f46; text-align: center;"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Navigation -->
+    <footer class="bottombar">
+      <button class="nav-btn" id="prev-btn" onclick="changeSlide(-1)" disabled>⬅️ Назад</button>
+
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: center;">
+        <div class="dots-wrap" id="dots-container"></div>
+        <span style="font-weight: 800; font-size: 0.9rem; color: var(--text-muted);" id="slide-counter">Слайд 1 / 12</span>
+      </div>
+
+      <button class="nav-btn" id="next-btn" onclick="changeSlide(1)">Далі ➡️</button>
+    </footer>
+  </div>
+
+  <script>
+    /* =====================================================================
+       1. SOUND EFFECTS (Web Audio API - Safe & Self-Contained)
+       ===================================================================== */
+    let soundEnabled = true;
+    let audioCtx = null;
+
+    function getAudioCtx() {
+      if (!soundEnabled) return null;
+      try {
+        if (!audioCtx) {
+          const Ctx = window.AudioContext || window.webkitAudioContext;
+          if (Ctx) audioCtx = new Ctx();
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume().catch(() => {});
+        }
+        return audioCtx;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function playTone(freq, duration, type = 'sine', gainVal = 0.12, delay = 0) {
+      try {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
+        gain.gain.setValueAtTime(gainVal, ctx.currentTime + delay);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + delay);
+        osc.stop(ctx.currentTime + delay + duration);
+      } catch (e) {}
+    }
+
+    function playClickSound() {
+      playTone(540, 0.08, 'sine', 0.08);
+    }
+
+    function playPopSound() {
+      playTone(720, 0.09, 'triangle', 0.12);
+      playTone(980, 0.08, 'sine', 0.08, 0.04);
+    }
+
+    function playSuccessSound() {
+      playTone(523.25, 0.14, 'triangle', 0.13, 0);
+      playTone(659.25, 0.14, 'triangle', 0.13, 0.11);
+      playTone(783.99, 0.24, 'triangle', 0.15, 0.22);
+    }
+
+    function playErrorSound() {
+      playTone(260, 0.16, 'sawtooth', 0.08, 0);
+      playTone(210, 0.22, 'sawtooth', 0.08, 0.14);
+    }
+
+    function playFireworkSound() {
+      playTone(440, 0.12, 'triangle', 0.12, 0);
+      playTone(587.33, 0.12, 'triangle', 0.12, 0.09);
+      playTone(880, 0.28, 'sine', 0.15, 0.18);
+      playTone(1046.5, 0.35, 'triangle', 0.14, 0.28);
+    }
+
+    const soundToggleBtn = document.getElementById('sound-toggle-btn');
+    soundToggleBtn.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      soundToggleBtn.textContent = soundEnabled ? '🔊 Звук' : '🔇 Тихо';
+      if (soundEnabled) playClickSound();
+    });
+
+    /* =====================================================================
+       2. ANIMATED FALLING THEMATIC EMOJIS WITH EXPLOSION ON CLICK
+       ===================================================================== */
+    const emojiBg = document.getElementById('emoji-bg');
+    const lessonEmojis = ['💻', '🖥️', '🖱️', '📁', '🗑️', '🐧', '⌨️', '🚀', '🪟', '⭐'];
+    const sparkColors = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'];
+
+    function spawnFallingEmoji() {
+      try {
+        if (document.hidden) return;
+        const el = document.createElement('span');
+        el.className = 'falling-emoji';
+        el.textContent = lessonEmojis[Math.floor(Math.random() * lessonEmojis.length)];
+        const leftPct = 3 + Math.random() * 94;
+        const duration = 9 + Math.random() * 8;
+        const size = 24 + Math.floor(Math.random() * 14);
+        el.style.left = leftPct + 'vw';
+        el.style.fontSize = size + 'px';
+        el.style.animationDuration = duration + 's';
+
+        el.addEventListener('pointerdown', (e) => {
+          e.stopPropagation();
+          explodeEmoji(e.clientX, e.clientY);
+          el.remove();
+        });
+
+        el.addEventListener('animationend', () => el.remove());
+        emojiBg.appendChild(el);
+      } catch (e) {}
+    }
+
+    function explodeEmoji(x, y) {
+      playPopSound();
+      try {
+        const flash = document.createElement('div');
+        flash.className = 'emoji-flash';
+        flash.style.left = x + 'px';
+        flash.style.top = y + 'px';
+        document.body.appendChild(flash);
+        setTimeout(() => flash.remove(), 480);
+
+        for (let i = 0; i < 12; i++) {
+          const spark = document.createElement('div');
+          spark.className = 'emoji-spark';
+          const angle = (Math.PI * 2 * i) / 12 + Math.random() * 0.3;
+          const dist = 36 + Math.random() * 48;
+          spark.style.left = x + 'px';
+          spark.style.top = y + 'px';
+          spark.style.background = sparkColors[i % sparkColors.length];
+          spark.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+          spark.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+          document.body.appendChild(spark);
+          setTimeout(() => spark.remove(), 580);
+        }
+      } catch (e) {}
+    }
+
+    setInterval(spawnFallingEmoji, 1600);
+    setTimeout(spawnFallingEmoji, 300);
+    setTimeout(spawnFallingEmoji, 900);
+
+    /* =====================================================================
+       3. CELEBRATION FIREWORKS CANVAS
+       ===================================================================== */
+    const fwCanvas = document.getElementById('fireworks-canvas');
+    const fwCtx = fwCanvas.getContext('2d');
+    let fwParticles = [];
+    let fwAnimId = null;
+
+    function resizeFwCanvas() {
+      fwCanvas.width = window.innerWidth;
+      fwCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeFwCanvas);
+    resizeFwCanvas();
+
+    function launchFireworks() {
+      playFireworkSound();
+      const bursts = 5;
+      for (let b = 0; b < bursts; b++) {
+        setTimeout(() => {
+          const cx = fwCanvas.width * (0.18 + Math.random() * 0.64);
+          const cy = fwCanvas.height * (0.16 + Math.random() * 0.42);
+          const color = sparkColors[Math.floor(Math.random() * sparkColors.length)];
+          for (let i = 0; i < 42; i++) {
+            const angle = (Math.PI * 2 * i) / 42 + (Math.random() - 0.5) * 0.2;
+            const speed = 2.5 + Math.random() * 5.5;
+            fwParticles.push({
+              x: cx,
+              y: cy,
+              vx: Math.cos(angle) * speed,
+              vy: Math.sin(angle) * speed,
+              alpha: 1,
+              color: i % 3 === 0 ? '#fde047' : color,
+              radius: 3 + Math.random() * 2.5
+            });
+          }
+          if (!fwAnimId) animateFireworks();
+        }, b * 240);
+      }
+    }
+
+    function animateFireworks() {
+      fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+      fwParticles.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.08;
+        p.alpha -= 0.016;
+        if (p.alpha > 0) {
+          fwCtx.save();
+          fwCtx.globalAlpha = p.alpha;
+          fwCtx.fillStyle = p.color;
+          fwCtx.beginPath();
+          fwCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          fwCtx.fill();
+          fwCtx.restore();
+        }
+      });
+      fwParticles = fwParticles.filter((p) => p.alpha > 0);
+      if (fwParticles.length > 0) {
+        fwAnimId = requestAnimationFrame(animateFireworks);
+      } else {
+        fwAnimId = null;
+      }
+    }
+
+    /* =====================================================================
+       4. PURE JS QR CODE GENERATOR (ISO/IEC 18004 Byte Mode, V1-V9, EC-L)
+       ===================================================================== */
+    const QRGenerator = (() => {
+      const GF_EXP = new Uint8Array(512);
+      const GF_LOG = new Uint8Array(256);
+      let x = 1;
+      for (let i = 0; i < 255; i++) {
+        GF_EXP[i] = x;
+        GF_LOG[x] = i;
+        x <<= 1;
+        if (x & 0x100) x ^= 0x11d;
+      }
+      for (let i = 255; i < 512; i++) GF_EXP[i] = GF_EXP[i - 255];
+
+      function gfMul(a, b) {
+        if (a === 0 || b === 0) return 0;
+        return GF_EXP[GF_LOG[a] + GF_LOG[b]];
+      }
+
+      function rsGeneratorPoly(degree) {
+        let poly = [1];
+        for (let i = 0; i < degree; i++) {
+          const next = new Array(poly.length + 1).fill(0);
+          const factor = GF_EXP[i];
+          for (let j = 0; j < poly.length; j++) {
+            next[j] ^= poly[j];
+            next[j + 1] ^= gfMul(poly[j], factor);
+          }
+          poly = next;
+        }
+        return poly;
+      }
+
+      function rsRemainder(data, ecLen) {
+        const gen = rsGeneratorPoly(ecLen);
+        const res = new Uint8Array(data.length + ecLen);
+        res.set(data);
+        for (let i = 0; i < data.length; i++) {
+          const coef = res[i];
+          if (coef !== 0) {
+            for (let j = 1; j < gen.length; j++) {
+              res[i + j] ^= gfMul(gen[j], coef);
+            }
+          }
+        }
+        return res.slice(data.length);
+      }
+
+      // Versions 1..9 Error Correction Level L specs
+      const VERSIONS = [
+        null,
+        { size: 21, dataBytes: 19, ecPerBlock: 7, blocks: 1, align: [] },
+        { size: 25, dataBytes: 34, ecPerBlock: 10, blocks: 1, align: [6, 18] },
+        { size: 29, dataBytes: 55, ecPerBlock: 15, blocks: 1, align: [6, 22] },
+        { size: 33, dataBytes: 80, ecPerBlock: 20, blocks: 1, align: [6, 26] },
+        { size: 37, dataBytes: 108, ecPerBlock: 26, blocks: 1, align: [6, 30] },
+        { size: 41, dataBytes: 136, ecPerBlock: 18, blocks: 2, align: [6, 34] },
+        { size: 45, dataBytes: 156, ecPerBlock: 20, blocks: 2, align: [6, 22, 38] },
+        { size: 49, dataBytes: 194, ecPerBlock: 24, blocks: 2, align: [6, 24, 42] },
+        { size: 53, dataBytes: 232, ecPerBlock: 30, blocks: 2, align: [6, 26, 46] }
+      ];
+
+      function encodeBytes(text) {
+        if (typeof TextEncoder !== 'undefined') {
+          return Array.from(new TextEncoder().encode(text));
+        }
+        const out = [];
+        for (let i = 0; i < text.length; i++) {
+          const c = text.charCodeAt(i);
+          if (c < 128) out.push(c);
+          else out.push(63);
+        }
+        return out;
+      }
+
+      function makeMatrix(text) {
+        const raw = encodeBytes(text);
+        let ver = 1;
+        while (ver <= 9 && raw.length + 2 > VERSIONS[ver].dataBytes) ver++;
+        if (ver > 9) return null;
+
+        const spec = VERSIONS[ver];
+        const bits = [];
+        const pushBits = (val, len) => {
+          for (let i = len - 1; i >= 0; i--) bits.push((val >>> i) & 1);
+        };
+
+        // Mode indicator: Byte (0100), Length: 8 bits (for V1-V9)
+        pushBits(0b0100, 4);
+        pushBits(raw.length, 8);
+        raw.forEach((b) => pushBits(b, 8));
+
+        const maxBits = spec.dataBytes * 8;
+        const termLen = Math.min(4, maxBits - bits.length);
+        pushBits(0, termLen);
+        while (bits.length % 8 !== 0) bits.push(0);
+
+        const dataCodewords = [];
+        for (let i = 0; i < bits.length; i += 8) {
+          let byte = 0;
+          for (let j = 0; j < 8; j++) byte = (byte << 1) | bits[i + j];
+          dataCodewords.push(byte);
+        }
+
+        const pads = [0xec, 0x11];
+        let pIdx = 0;
+        while (dataCodewords.length < spec.dataBytes) {
+          dataCodewords.push(pads[pIdx % 2]);
+          pIdx++;
+        }
+
+        // Split into blocks (1 or 2 equal blocks for V1-V9 L)
+        const blockSize = spec.dataBytes / spec.blocks;
+        const dataBlocks = [];
+        const ecBlocks = [];
+        for (let b = 0; b < spec.blocks; b++) {
+          const slice = dataCodewords.slice(b * blockSize, (b + 1) * blockSize);
+          dataBlocks.push(slice);
+          ecBlocks.push(Array.from(rsRemainder(slice, spec.ecPerBlock)));
+        }
+
+        const finalBytes = [];
+        for (let i = 0; i < blockSize; i++) {
+          for (let b = 0; b < spec.blocks; b++) finalBytes.push(dataBlocks[b][i]);
+        }
+        for (let i = 0; i < spec.ecPerBlock; i++) {
+          for (let b = 0; b < spec.blocks; b++) finalBytes.push(ecBlocks[b][i]);
+        }
+
+        const N = spec.size;
+        const grid = Array.from({ length: N }, () => new Int8Array(N).fill(-1));
+        const isFunc = Array.from({ length: N }, () => new Uint8Array(N));
+
+        const setFunc = (r, c, v) => {
+          if (r >= 0 && r < N && c >= 0 && c < N) {
+            grid[r][c] = v ? 1 : 0;
+            isFunc[r][c] = 1;
+          }
+        };
+
+        // Finder patterns + separators
+        const drawFinder = (r0, c0) => {
+          for (let dr = -1; dr <= 7; dr++) {
+            for (let dc = -1; dc <= 7; dc++) {
+              const inBox = dr >= 0 && dr <= 6 && dc >= 0 && dc <= 6;
+              const onBorder = dr === 0 || dr === 6 || dc === 0 || dc === 6;
+              const inCore = dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4;
+              setFunc(r0 + dr, c0 + dc, inBox && (onBorder || inCore));
+            }
+          }
+        };
+        drawFinder(0, 0);
+        drawFinder(0, N - 7);
+        drawFinder(N - 7, 0);
+
+        // Alignment patterns
+        if (spec.align.length > 0) {
+          for (const r of spec.align) {
+            for (const c of spec.align) {
+              if ((r === 6 && c === 6) || (r === 6 && c === N - 7) || (r === N - 7 && c === 6)) continue;
+              for (let dr = -2; dr <= 2; dr++) {
+                for (let dc = -2; dc <= 2; dc++) {
+                  const dark = Math.max(Math.abs(dr), Math.abs(dc)) !== 1;
+                  setFunc(r + dr, c + dc, dark);
+                }
+              }
+            }
+          }
+        }
+
+        // Timing patterns
+        for (let i = 8; i < N - 8; i++) {
+          setFunc(6, i, i % 2 === 0);
+          setFunc(i, 6, i % 2 === 0);
+        }
+
+        // Dark module & reserve format info areas
+        setFunc(N - 8, 8, 1);
+        for (let i = 0; i < 9; i++) {
+          if (i !== 6) {
+            isFunc[8][i] = 1;
+            isFunc[i][8] = 1;
+          }
+        }
+        for (let i = 0; i < 8; i++) {
+          isFunc[8][N - 1 - i] = 1;
+          if (i < 7) isFunc[N - 1 - i][8] = 1;
+        }
+
+        // Reserve version info for V7..V9
+        if (ver >= 7) {
+          for (let i = 0; i < 6; i++) {
+            for (let j = 0; j < 3; j++) {
+              isFunc[i][N - 11 + j] = 1;
+              isFunc[N - 11 + j][i] = 1;
+            }
+          }
+        }
+
+        // Place data bits (mask 0: (r + c) % 2 === 0)
+        const allBits = [];
+        for (const b of finalBytes) {
+          for (let i = 7; i >= 0; i--) allBits.push((b >>> i) & 1);
+        }
+
+        let bitIdx = 0;
+        let up = true;
+        for (let right = N - 1; right >= 1; right -= 2) {
+          if (right === 6) right = 5;
+          for (let step = 0; step < N; step++) {
+            const r = up ? N - 1 - step : step;
+            for (let dx = 0; dx < 2; dx++) {
+              const c = right - dx;
+              if (!isFunc[r][c]) {
+                let bit = bitIdx < allBits.length ? allBits[bitIdx++] : 0;
+                if ((r + c) % 2 === 0) bit ^= 1; // Mask 0
+                grid[r][c] = bit;
+              }
+            }
+          }
+          up = !up;
+        }
+
+        // Format info for EC Level L (01) + Mask 0 (000) -> 15-bit BCH + XOR 0x5412 = 0x77c4
+        const fmt = 0x77c4;
+        for (let i = 0; i <= 5; i++) setFunc(8, i, (fmt >>> i) & 1);
+        setFunc(8, 7, (fmt >>> 6) & 1);
+        setFunc(8, 8, (fmt >>> 7) & 1);
+        setFunc(7, 8, (fmt >>> 8) & 1);
+        for (let i = 9; i <= 14; i++) setFunc(14 - i, 8, (fmt >>> i) & 1);
+
+        for (let i = 0; i <= 7; i++) setFunc(N - 1 - i, 8, (fmt >>> i) & 1);
+        for (let i = 8; i <= 14; i++) setFunc(8, N - 15 + i, (fmt >>> i) & 1);
+
+        // Version info for V7..V9
+        if (ver >= 7) {
+          const VER_BITS = { 7: 0x07c94, 8: 0x085bc, 9: 0x09a99 };
+          const vb = VER_BITS[ver];
+          for (let i = 0; i < 18; i++) {
+            const bit = (vb >>> i) & 1;
+            const r = Math.floor(i / 3);
+            const c = N - 11 + (i % 3);
+            setFunc(r, c, bit);
+            setFunc(c, r, bit);
+          }
+        }
+
+        return grid;
+      }
+
+      function renderToCanvas(canvas, text) {
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, w, h);
+
+        const matrix = makeMatrix(text);
+        if (!matrix) {
+          ctx.fillStyle = '#1e293b';
+          ctx.font = 'bold 13px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('Посилання готове до копіювання', w / 2, h / 2);
+          return;
+        }
+
+        const n = matrix.length;
+        const quiet = 4;
+        const total = n + quiet * 2;
+        const scale = Math.floor(Math.min(w, h) / total);
+        const offset = Math.floor((w - scale * total) / 2);
+
+        ctx.fillStyle = '#0f172a';
+        for (let r = 0; r < n; r++) {
+          for (let c = 0; c < n; c++) {
+            if (matrix[r][c] === 1) {
+              ctx.fillRect(
+                offset + (c + quiet) * scale,
+                offset + (r + quiet) * scale,
+                scale,
+                scale
+              );
+            }
+          }
+        }
+      }
+
+      return { renderToCanvas };
+    })();
+
+    /* =====================================================================
+       5. ROLE DETECTION (TEACHER vs STUDENT) & SLIDE NAVIGATION
+       ===================================================================== */
+    function detectTeacherRole() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('role') === 'teacher') return true;
+        const hash = (window.location.hash || '').toLowerCase();
+        if (hash === '#teacher' || hash.includes('role=teacher')) return true;
+      } catch (e) {}
+      return false;
+    }
+
+    const isTeacher = detectTeacherRole();
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const totalSlides = slides.length;
+    let currentSlide = 0;
+    let lockStudents = true; // Teacher leads class by default
+
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const slideCounter = document.getElementById('slide-counter');
+    const dotsContainer = document.getElementById('dots-container');
+
+    // Build slide progress dots
+    for (let i = 0; i < totalSlides; i++) {
+      const dot = document.createElement('button');
+      dot.className = 'slide-dot' + (i === 0 ? ' active' : '');
+      dot.title = `Слайд ${i + 1}`;
+      dot.setAttribute('aria-label', `Перейти до слайда ${i + 1}`);
+      dot.addEventListener('click', () => {
+        if (!isTeacher && lockStudents) return;
+        goToSlide(i, true);
+      });
+      dotsContainer.appendChild(dot);
+    }
+
+    function updateNavigationUI() {
+      slides.forEach((s, idx) => {
+        s.classList.toggle('active', idx === currentSlide);
+      });
+
+      const dots = Array.from(dotsContainer.children);
+      dots.forEach((d, idx) => {
+        d.classList.toggle('active', idx === currentSlide);
+        d.disabled = (!isTeacher && lockStudents);
+      });
+
+      slideCounter.textContent = `Слайд ${currentSlide + 1} / ${totalSlides}`;
+
+      const lockedForStudent = (!isTeacher && lockStudents);
+      prevBtn.disabled = lockedForStudent || currentSlide === 0;
+      nextBtn.disabled = lockedForStudent || currentSlide === totalSlides - 1;
+
+      const studentLockPill = document.getElementById('student-lock-pill');
+      if (!isTeacher) {
+        studentLockPill.style.display = lockStudents ? 'inline-flex' : 'none';
+      }
+    }
+
+    function goToSlide(index, broadcast = false) {
+      const clamped = Math.max(0, Math.min(totalSlides - 1, index));
+      if (clamped !== currentSlide) {
+        playClickSound();
+      }
+      currentSlide = clamped;
+      updateNavigationUI();
+      if (isTeacher && broadcast) {
+        publishTeacherState();
+      }
+    }
+
+    function changeSlide(delta) {
+      if (!isTeacher && lockStudents) return;
+      goToSlide(currentSlide + delta, true);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+      if (tag === 'input' || tag === 'textarea') return;
+      if (!isTeacher && lockStudents) return;
+      if (e.key === 'ArrowRight') changeSlide(1);
+      if (e.key === 'ArrowLeft') changeSlide(-1);
+    });
+
+    /* =====================================================================
+       6. REAL-TIME SYNC (MQTT over WSS with Fallback + BroadcastChannel)
+       ===================================================================== */
+    const LESSON_CHANNEL_ID = 'nush3-lesson8-desktop2026';
+    const TOPIC_STATE = `${LESSON_CHANNEL_ID}/state`;
+    const TOPIC_PRESENCE = `${LESSON_CHANNEL_ID}/presence`;
+    const TOPIC_FIREWORKS = `${LESSON_CHANNEL_ID}/fireworks`;
+
+    const peerId = 'u_' + Math.random().toString(36).slice(2, 10);
+    const activeStudents = new Map();
+    let mqttClient = null;
+    let bc = null;
+
+    const syncDot = document.getElementById('sync-dot');
+    const syncText = document.getElementById('sync-text');
+
+    function setSyncStatus(connected, label) {
+      syncDot.classList.toggle('online', connected);
+      syncText.textContent = label;
+    }
+
+    // Setup BroadcastChannel for instant local tab sync
+    try {
+      if (typeof BroadcastChannel !== 'undefined') {
+        bc = new BroadcastChannel(LESSON_CHANNEL_ID + '_bc');
+        bc.onmessage = (event) => {
+          const msg = event.data;
+          if (!msg || !msg.type) return;
+          if (msg.type === 'state' && !isTeacher) {
+            applyTeacherState(msg.payload);
+          } else if (msg.type === 'presence' && isTeacher) {
+            registerStudentPresence(msg.payload);
+          } else if (msg.type === 'fireworks') {
+            launchFireworks();
+          } else if (msg.type === 'request_state' && isTeacher) {
+            publishTeacherState();
+          }
+        };
+      }
+    } catch (e) {}
+
+    function publishTeacherState() {
+      const payload = {
+        slide: currentSlide,
+        lock: lockStudents,
+        ts: Date.now()
+      };
+      try {
+        if (bc) bc.postMessage({ type: 'state', payload });
+      } catch (e) {}
+      try {
+        if (mqttClient && mqttClient.connected) {
+          mqttClient.publish(TOPIC_STATE, JSON.stringify(payload), { retain: true, qos: 1 });
+        }
+      } catch (e) {}
+    }
+
+    function applyTeacherState(payload) {
+      if (!payload || typeof payload.slide !== 'number') return;
+      lockStudents = payload.lock !== false;
+      if (lockStudents && payload.slide !== currentSlide) {
+        currentSlide = Math.max(0, Math.min(totalSlides - 1, payload.slide));
+      }
+      updateNavigationUI();
+    }
+
+    function registerStudentPresence(payload) {
+      if (!isTeacher || !payload || !payload.id) return;
+      if (payload.offline) {
+        activeStudents.delete(payload.id);
+      } else {
+        activeStudents.set(payload.id, Date.now());
+      }
+      updateStudentsCounter();
+    }
+
+    function updateStudentsCounter() {
+      const now = Date.now();
+      for (const [id, lastSeen] of activeStudents.entries()) {
+        if (now - lastSeen > 30000) activeStudents.delete(id);
+      }
+      const el = document.getElementById('students-count');
+      if (el) el.textContent = String(activeStudents.size);
+    }
+
+    function sendStudentHeartbeat(offline = false) {
+      if (isTeacher) return;
+      const payload = { id: peerId, offline, ts: Date.now() };
+      try {
+        if (bc) bc.postMessage({ type: 'presence', payload });
+      } catch (e) {}
+      try {
+        if (mqttClient && mqttClient.connected) {
+          mqttClient.publish(TOPIC_PRESENCE, JSON.stringify(payload), { retain: false });
+        }
+      } catch (e) {}
+    }
+
+    // Teacher UI Setup
+    if (isTeacher) {
+      lockStudents = true;
+      document.getElementById('teacher-students-pill').style.display = 'inline-flex';
+      const openQrBtn = document.getElementById('open-qr-btn');
+      const toggleLockBtn = document.getElementById('toggle-lock-btn');
+      const saluteBtn = document.getElementById('trigger-salute-btn');
+
+      openQrBtn.style.display = 'inline-flex';
+      toggleLockBtn.style.display = 'inline-flex';
+      saluteBtn.style.display = 'inline-flex';
+
+      toggleLockBtn.addEventListener('click', () => {
+        lockStudents = !lockStudents;
+        playClickSound();
+        if (lockStudents) {
+          toggleLockBtn.textContent = '🔒 Вести клас за собою';
+          toggleLockBtn.classList.remove('free');
+        } else {
+          toggleLockBtn.textContent = '🔓 Вільний перегляд';
+          toggleLockBtn.classList.add('free');
+        }
+        publishTeacherState();
+      });
+
+      saluteBtn.addEventListener('click', () => {
+        launchFireworks();
+        try {
+          if (bc) bc.postMessage({ type: 'fireworks' });
+        } catch (e) {}
+        try {
+          if (mqttClient && mqttClient.connected) {
+            mqttClient.publish(TOPIC_FIREWORKS, JSON.stringify({ ts: Date.now() }), { retain: false });
+          }
+        } catch (e) {}
+      });
+
+      // QR Modal Logic
+      const qrModal = document.getElementById('qr-modal');
+      const studentUrlInput = document.getElementById('student-url-input');
+      const copyUrlBtn = document.getElementById('copy-url-btn');
+      const copyStatus = document.getElementById('copy-status');
+
+      function getCleanStudentUrl() {
+        try {
+          const url = new URL(window.location.href);
+          url.searchParams.delete('role');
+          if (url.hash.toLowerCase().includes('teacher')) url.hash = '';
+          return url.toString();
+        } catch (e) {
+          return window.location.href.split('?')[0].split('#')[0];
+        }
+      }
+
+      openQrBtn.addEventListener('click', () => {
+        playClickSound();
+        const cleanUrl = getCleanStudentUrl();
+        studentUrlInput.value = cleanUrl;
+        copyStatus.textContent = '';
+        QRGenerator.renderToCanvas(document.getElementById('qr-canvas'), cleanUrl);
+        qrModal.classList.add('open');
+      });
+
+      document.getElementById('close-qr-btn').addEventListener('click', () => {
+        playClickSound();
+        qrModal.classList.remove('open');
+      });
+
+      qrModal.addEventListener('click', (e) => {
+        if (e.target === qrModal) qrModal.classList.remove('open');
+      });
+
+      copyUrlBtn.addEventListener('click', async () => {
+        playSuccessSound();
+        const text = studentUrlInput.value;
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            studentUrlInput.select();
+            document.execCommand('copy');
+          }
+          copyStatus.textContent = '✅ Посилання скопійовано! Надішли його учням.';
+        } catch (e) {
+          try {
+            studentUrlInput.select();
+            document.execCommand('copy');
+            copyStatus.textContent = '✅ Посилання виділено та скопійовано!';
+          } catch (err) {
+            copyStatus.textContent = 'Скопіюй посилання з поля вище вручну.';
+          }
+        }
+      });
+
+      setInterval(updateStudentsCounter, 5000);
+    } else {
+      // Student mode starts unlocked until teacher broadcasts locked state, or defaults cleanly
+      lockStudents = false;
+      updateNavigationUI();
+      try {
+        if (bc) bc.postMessage({ type: 'request_state' });
+      } catch (e) {}
+      setInterval(() => sendStudentHeartbeat(false), 10000);
+      window.addEventListener('beforeunload', () => sendStudentHeartbeat(true));
+    }
+
+    // Asynchronous MQTT loader with primary & fallback CDN + brokers
+    function initMqttConnection() {
+      if (typeof window.mqtt === 'undefined') {
+        setSyncStatus(false, 'Локальний режим');
+        return;
+      }
+      const brokers = [
+        'wss://broker.emqx.io:8084/mqtt',
+        'wss://broker.hivemq.com:8884/mqtt'
+      ];
+      let brokerIdx = 0;
+
+      function connectBroker() {
+        if (brokerIdx >= brokers.length) {
+          setSyncStatus(false, 'Локальний режим');
+          return;
+        }
+        try {
+          const client = window.mqtt.connect(brokers[brokerIdx], {
+            clientId: `${LESSON_CHANNEL_ID}_${peerId}`,
+            clean: true,
+            connectTimeout: 6000,
+            reconnectPeriod: 4000
+          });
+
+          client.on('connect', () => {
+            mqttClient = client;
+            setSyncStatus(true, isTeacher ? 'Онлайн (Вчитель)' : 'Синхронізовано');
+            client.subscribe([TOPIC_STATE, TOPIC_FIREWORKS, TOPIC_PRESENCE], { qos: 1 });
+            if (isTeacher) {
+              publishTeacherState();
+            } else {
+              sendStudentHeartbeat(false);
+            }
+          });
+
+          client.on('message', (topic, messageBuf) => {
+            try {
+              const data = JSON.parse(messageBuf.toString());
+              if (topic === TOPIC_STATE && !isTeacher) {
+                applyTeacherState(data);
+              } else if (topic === TOPIC_FIREWORKS) {
+                launchFireworks();
+              } else if (topic === TOPIC_PRESENCE && isTeacher) {
+                registerStudentPresence(data);
+              }
+            } catch (e) {}
+          });
+
+          client.on('error', () => {
+            try { client.end(true); } catch (e) {}
+            brokerIdx++;
+            connectBroker();
+          });
+        } catch (e) {
+          brokerIdx++;
+          connectBroker();
+        }
+      }
+
+      connectBroker();
+    }
+
+    (function loadMqttScript() {
+      try {
+        const s = document.createElement('script');
+        s.src = 'https://unpkg.com/mqtt/dist/mqtt.min.js';
+        s.async = true;
+        s.onload = initMqttConnection;
+        s.onerror = () => {
+          try {
+            const fb = document.createElement('script');
+            fb.src = 'https://cdn.jsdelivr.net/npm/mqtt/dist/mqtt.min.js';
+            fb.async = true;
+            fb.onload = initMqttConnection;
+            fb.onerror = () => setSyncStatus(false, 'Локальний режим');
+            document.head.appendChild(fb);
+          } catch (e) {
+            setSyncStatus(false, 'Локальний режим');
+          }
+        };
+        document.head.appendChild(s);
+      } catch (e) {
+        setSyncStatus(false, 'Локальний режим');
+      }
+    })();
+
+    /* =====================================================================
+       7. INTERACTIVE WIDGETS ON EVERY SLIDE
+       ===================================================================== */
+
+    // Slide 1: Boot PC Button
+    let pcBooted = false;
+    document.getElementById('boot-pc-btn').addEventListener('click', function () {
+      if (pcBooted) return;
+      pcBooted = true;
+      const mon = document.getElementById('hero-monitor');
+      const icon = document.getElementById('monitor-icon');
+      const msg = document.getElementById('monitor-msg');
+      this.disabled = true;
+      this.textContent = '⏳ Завантаження...';
+      icon.textContent = '⚙️';
+      msg.textContent = 'Перевірка пристроїв...';
+      playClickSound();
+
+      setTimeout(() => {
+        mon.classList.add('booted');
+        icon.textContent = '🖥️✨';
+        msg.textContent = 'Робочий стіл готовий! Тисни «Далі ➡️»';
+        this.textContent = '✅ Комп’ютер увімкнено!';
+        this.classList.add('success');
+        playSuccessSound();
+      }, 650);
+    });
+
+    // Slide 2: Flip Cards
+    function toggleFlip(card) {
+      playClickSound();
+      card.classList.toggle('flipped');
+      card.dataset.seen = '1';
+      const seenCount = document.querySelectorAll('.flip-card[data-seen="1"]').length;
+      document.getElementById('flip-counter').textContent = `Відкрито карток: ${seenCount} / 5`;
+      if (seenCount === 5) playSuccessSound();
+    }
+
+    // Slide 3: Charade 1 (ЗА + ДАЧА = ЗАДАЧА)
+    function checkCharade1() {
+      const p1 = (document.getElementById('ch1-p1').value || '').trim().toUpperCase();
+      const p2 = (document.getElementById('ch1-p2').value || '').trim().toUpperCase();
+      const fb = document.getElementById('ch1-feedback');
+      fb.className = 'feedback-box show';
+
+      if (p1 === 'ЗА' && p2 === 'ДАЧА') {
+        playSuccessSound();
+        fb.classList.add('ok');
+        fb.innerHTML = '🎉 Правильно! <strong>ЗА + ДАЧА = ЗАДАЧА</strong>! Чудовий старт!';
+      } else {
+        playErrorSound();
+        fb.classList.add('err');
+        fb.innerHTML = '🤔 Спробуй ще раз! Прийменник із 2 букв: <strong>ЗА</strong>, а заміський будинок — <strong>ДАЧА</strong>.';
+      }
+    }
+
+    function hintCharade1() {
+      playClickSound();
+      document.getElementById('ch1-p1').value = 'ЗА';
+      const fb = document.getElementById('ch1-feedback');
+      fb.className = 'feedback-box show info';
+      fb.innerHTML = '💡 Перша частина — <strong>ЗА</strong>. Допиши назву заміського будиночка!';
+    }
+
+    // Slide 4: Charade 2 (ПІД + КО + ВА = ПІДКОВА)
+    function checkCharade2() {
+      const p1 = (document.getElementById('ch2-p1').value || '').trim().toUpperCase();
+      const p2 = (document.getElementById('ch2-p2').value || '').trim().toUpperCase();
+      const p3 = (document.getElementById('ch2-p3').value || '').trim().toUpperCase();
+      const fb = document.getElementById('ch2-feedback');
+      fb.className = 'feedback-box show';
+
+      if (p1 === 'ПІД' && p2 === 'КО' && p3 === 'ВА') {
+        playSuccessSound();
+        fb.classList.add('ok');
+        fb.innerHTML = '🧲 Браво! <strong>ПІД + КО + ВА = ПІДКОВА</strong>! Вона приносить удачу!';
+        document.getElementById('horseshoe-reveal').style.display = 'flex';
+      } else {
+        playErrorSound();
+        fb.classList.add('err');
+        fb.innerHTML = '🧐 Перевір склади: 1) прийменник <strong>ПІД</strong>, 2) перші дві літери від «коней», 3) останні дві від «корова».';
+      }
+    }
+
+    function hintCharade2() {
+      playClickSound();
+      document.getElementById('ch2-p1').value = 'ПІД';
+      const fb = document.getElementById('ch2-feedback');
+      fb.className = 'feedback-box show info';
+      fb.innerHTML = '💡 Прийменник з 3 букв — <strong>ПІД</strong>. Тепер додай склади зі слів «коней» та «корова»!';
+    }
+
+    // Slide 5: OS Tabs & Tux Penguin Story
+    const osData = {
+      win: {
+        title: '🪟 Сучасна Windows (2026)',
+        badge: 'Найпопулярніша на ПК',
+        desc: 'Має зручний Робочий стіл зі значками зліва та оновлену центральну Панель завдань унизу з кнопкою «Пуск», пошуком та швидким запуском програм.',
+        icons: '<span>⊞</span><span>🔍</span><span>📁</span><span>🌐</span><span>📝</span><span>🎨</span>'
+      },
+      linux: {
+        title: '🐧 Linux (Ubuntu / KDE)',
+        badge: 'Вільна операційна система',
+        desc: 'Її талісманом є пінгвін Такс! Робочий стіл Linux можна налаштувати як завгодно — її дуже люблять програмісти та дослідники.',
+        icons: '<span>🐧</span><span>🖥️</span><span>⚙️</span><span>📁</span><span>🌐</span><span>🚀</span>'
+      },
+      mac: {
+        title: '🍏 macOS та сучасні планшети',
+        badge: 'Для ноутбуків і планшетів',
+        desc: 'У нижній частині екрана розташована панель Dock із великими яскравими значками програм, а вгорі — рядок стану з годинником та Wi-Fi.',
+        icons: '<span>😊</span><span>🧭</span><span>🎨</span><span>🎵</span><span>📷</span><span>🗑️</span>'
+      }
+    };
+
+    function selectOS(key, btn) {
+      playClickSound();
+      document.querySelectorAll('.os-tab').forEach((t) => t.classList.remove('active'));
+      btn.classList.add('active');
+      const d = osData[key];
+      document.getElementById('os-preview').innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <strong style="font-size: 1.2rem;">${d.title}</strong>
+          <span style="background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 999px; font-size: 0.82rem;">${d.badge}</span>
+        </div>
+        <p style="font-size: 0.96rem; line-height: 1.45; opacity: 0.95;">${d.desc}</p>
+        <div style="background: rgba(15, 23, 42, 0.45); padding: 8px 12px; border-radius: 12px; display: flex; justify-content: center; gap: 14px; font-size: 1.25rem;">
+          ${d.icons}
+        </div>
+      `;
+    }
+
+    let tuxRevealed = false;
+    function revealTuxStory() {
+      if (!tuxRevealed) {
+        playSuccessSound();
+        tuxRevealed = true;
+      } else {
+        playClickSound();
+      }
+      document.getElementById('tux-story-text').innerHTML =
+        'Кажуть, що одного разу <strong>Лінуса Торвальдса</strong>, творця системи Linux, у зоопарку кумедно клюнув пінгвін! Саме цей випадок і надихнув обрати веселого пінгвіна <strong>Такса</strong> символом цієї системи.';
+    }
+
+    // Slide 6: Desktop Objects
+    function highlightDesktopObj(card, text) {
+      playClickSound();
+      document.querySelectorAll('.obj-card').forEach((c) => c.classList.remove('selected'));
+      card.classList.add('selected');
+      const fb = document.getElementById('obj-mini-feedback');
+      fb.className = 'feedback-box show info';
+      fb.innerHTML = '💡 ' + text;
+    }
+
+    function checkObjMini(isCorrect) {
+      const fb = document.getElementById('obj-mini-feedback');
+      fb.className = 'feedback-box show';
+      if (isCorrect) {
+        playSuccessSound();
+        fb.classList.add('ok');
+        fb.innerHTML = '✅ Точно! Непотрібні файли та папки переміщують у <strong>Кошик</strong>.';
+      } else {
+        playErrorSound();
+        fb.classList.add('err');
+        fb.innerHTML = '❌ Ні, це не те місце. Подумай, куди викидають непотрібні об’єкти!';
+      }
+    }
+
+    // Slide 7: Taskbar Explorer
+    const visitedTb = new Set();
+    let langUk = true;
+
+    function inspectTaskbar(btn, title, desc) {
+      playClickSound();
+      document.querySelectorAll('.tb-item').forEach((b) => b.classList.remove('active-tb'));
+      btn.classList.add('active-tb', 'visited-tb');
+      visitedTb.add(title);
+
+      if (btn.id === 'tb-lang-btn') {
+        langUk = !langUk;
+        btn.textContent = langUk ? '🌐 УКР' : '🌐 ENG';
+      }
+
+      document.getElementById('tb-info-title').textContent = '✨ ' + title;
+      document.getElementById('tb-info-desc').textContent = desc;
+      document.getElementById('tb-visited-count').textContent = `Досліджено кнопок: ${visitedTb.size} / 7`;
+      if (visitedTb.size === 7) playSuccessSound();
+    }
+
+    // Slide 8: Live Desktop Simulator (Select, Double-Click, Drag to Trash)
+    const sim8State = { m1: false, m2: false, m3: false };
+
+    function updateSim8Progress() {
+      const count = (sim8State.m1 ? 1 : 0) + (sim8State.m2 ? 1 : 0) + (sim8State.m3 ? 1 : 0);
+      document.getElementById('sim8-progress').textContent = `Виконано завдань: ${count} / 3`;
+      if (sim8State.m1) {
+        const el = document.getElementById('m8-1');
+        el.classList.add('done');
+        el.innerHTML = '✅ <strong>1.</strong> Виділи папку «Малюнки» (1 клік)';
+      }
+      if (sim8State.m2) {
+        const el = document.getElementById('m8-2');
+        el.classList.add('done');
+        el.innerHTML = '✅ <strong>2.</strong> Відкрий «Цей ПК» (подвійний клік)';
+      }
+      if (sim8State.m3) {
+        const el = document.getElementById('m8-3');
+        el.classList.add('done');
+        el.innerHTML = '✅ <strong>3.</strong> Перетягни «Зайвий_файл» у «Кошик»';
+      }
+    }
+
+    function openSim8Popup(title, body) {
+      document.getElementById('sim8-popup-title').textContent = title;
+      document.getElementById('sim8-popup-body').textContent = body;
+      document.getElementById('sim8-popup').classList.add('open');
+    }
+
+    function closeSim8Popup() {
+      playClickSound();
+      document.getElementById('sim8-popup').classList.remove('open');
+    }
+
+    (function initSim8() {
+      const desktop = document.getElementById('sim8-desktop');
+      const icons = Array.from(desktop.querySelectorAll('.desk-icon'));
+      const binEl = document.getElementById('ico-bin');
+
+      icons.forEach((icon) => {
+        let dragging = false;
+        let moved = false;
+        let startX = 0, startY = 0, origLeft = 0, origTop = 0;
+
+        icon.addEventListener('pointerdown', (e) => {
+          e.stopPropagation();
+          playClickSound();
+          icons.forEach((i) => i.classList.remove('selected'));
+          icon.classList.add('selected');
+
+          if (icon.id === 'ico-art' && !sim8State.m1) {
+            sim8State.m1 = true;
+            playSuccessSound();
+            updateSim8Progress();
+          }
+
+          dragging = true;
+          moved = false;
+          startX = e.clientX;
+          startY = e.clientY;
+          origLeft = icon.offsetLeft;
+          origTop = icon.offsetTop;
+          try { icon.setPointerCapture(e.pointerId); } catch (err) {}
+        });
+
+        icon.addEventListener('pointermove', (e) => {
+          if (!dragging) return;
+          const dx = e.clientX - startX;
+          const dy = e.clientY - startY;
+          if (Math.abs(dx) > 4 || Math.abs(dy) > 4) moved = true;
+          if (!moved) return;
+
+          const maxX = desktop.clientWidth - icon.offsetWidth - 6;
+          const maxY = desktop.clientHeight - icon.offsetHeight - 6;
+          const newLeft = Math.max(6, Math.min(maxX, origLeft + dx));
+          const newTop = Math.max(6, Math.min(maxY, origTop + dy));
+          icon.style.right = 'auto';
+          icon.style.bottom = 'auto';
+          icon.style.left = newLeft + 'px';
+          icon.style.top = newTop + 'px';
+        });
+
+        icon.addEventListener('pointerup', (e) => {
+          if (!dragging) return;
+          dragging = false;
+          try { icon.releasePointerCapture(e.pointerId); } catch (err) {}
+
+          if (icon.id === 'ico-trash-file' && moved) {
+            const r1 = icon.getBoundingClientRect();
+            const r2 = binEl.getBoundingClientRect();
+            const overlap = !(r1.right < r2.left || r1.left > r2.right || r1.bottom < r2.top || r1.top > r2.bottom);
+            if (overlap) {
+              icon.style.display = 'none';
+              binEl.querySelector('.ico').textContent = '🗑️📄';
+              if (!sim8State.m3) {
+                sim8State.m3 = true;
+                playSuccessSound();
+                updateSim8Progress();
+              }
+            }
+          }
+        });
+
+        icon.addEventListener('dblclick', () => {
+          playPopSound();
+          const name = icon.dataset.name;
+          if (name === 'Цей ПК') {
+            openSim8Popup('🖥️ Цей ПК', 'Диск (C:), Диск (D:), Документи, Зображення — усі об’єкти на місці!');
+            if (!sim8State.m2) {
+              sim8State.m2 = true;
+              playSuccessSound();
+              updateSim8Progress();
+            }
+          } else if (name === 'Малюнки') {
+            openSim8Popup('📁 Папка «Малюнки»', 'Тут зберігаються твої яскраві малюнки з графічного редактора!');
+          } else if (name === 'Кошик') {
+            openSim8Popup('🗑️ Кошик', sim8State.m3 ? 'У Кошику є 1 файл: Зайвий_файл.' : 'Кошик зараз порожній.');
+          } else {
+            openSim8Popup('📄 Зайвий_файл', 'Цей файл більше не потрібен — перетягни його у Кошик!');
+          }
+        });
+      });
+
+      desktop.addEventListener('pointerdown', () => {
+        icons.forEach((i) => i.classList.remove('selected'));
+      });
+    })();
+
+    // Slide 9: Visual Physical Warmup Timer
+    let warmupMode = 'body';
+    let warmupTotal = 45;
+    let warmupRemaining = 45;
+    let warmupInterval = null;
+
+    function formatTime(sec) {
+      const m = String(Math.floor(sec / 60)).padStart(2, '0');
+      const s = String(sec % 60).padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function updateWarmupVisuals() {
+      document.getElementById('warmup-timer').textContent = formatTime(warmupRemaining);
+      const emojiEl = document.getElementById('warmup-emoji');
+
+      if (warmupMode === 'body') {
+        const elapsed = warmupTotal - warmupRemaining;
+        let step = 0;
+        if (elapsed >= 33) step = 3;
+        else if (elapsed >= 20) step = 2;
+        else if (elapsed >= 10) step = 1;
+
+        const icons = ['🚶', '🌙', '☀️', '🌦️'];
+        emojiEl.textContent = icons[step];
+        for (let i = 0; i < 4; i++) {
+          const st = document.getElementById('w-step-' + i);
+          if (st) st.classList.toggle('current-step', i === step);
+        }
+      } else {
+        emojiEl.textContent = warmupRemaining % 4 < 2 ? '😌' : '👀';
+      }
+    }
+
+    function setWarmupMode(mode) {
+      pauseWarmupTimer();
+      playClickSound();
+      warmupMode = mode;
+      warmupTotal = mode === 'body' ? 45 : 20;
+      warmupRemaining = warmupTotal;
+      document.getElementById('warmup-poem-box').style.display = mode === 'body' ? 'flex' : 'none';
+      document.getElementById('eyes-poem-box').style.display = mode === 'eyes' ? 'flex' : 'none';
+      document.getElementById('warmup-status').textContent =
+        mode === 'body' ? 'Руханка: натисни «Старт»!' : 'Гімнастика для очей: натисни «Старт»!';
+      updateWarmupVisuals();
+    }
+
+    function startWarmupTimer() {
+      if (warmupInterval) return;
+      playClickSound();
+      if (warmupRemaining <= 0) warmupRemaining = warmupTotal;
+      document.getElementById('warmup-status').textContent = 'Виконуємо вправу...';
+      warmupInterval = setInterval(() => {
+        warmupRemaining--;
+        updateWarmupVisuals();
+        if (warmupRemaining <= 0) {
+          pauseWarmupTimer();
+          document.getElementById('warmup-emoji').textContent = '🎉';
+          document.getElementById('warmup-status').textContent = 'Чудово! Відпочили й готові працювати далі!';
+          playSuccessSound();
+        }
+      }, 1000);
+    }
+
+    function pauseWarmupTimer() {
+      if (warmupInterval) {
+        clearInterval(warmupInterval);
+        warmupInterval = null;
+      }
+    }
+
+    function resetWarmupTimer() {
+      pauseWarmupTimer();
+      playClickSound();
+      warmupRemaining = warmupTotal;
+      document.getElementById('warmup-status').textContent = 'Натисни «Старт» і виконуй рухи разом!';
+      updateWarmupVisuals();
+    }
+
+    // Slide 10: Logic Puzzles
+    function checkBookPuzzle() {
+      const p1 = Number(document.getElementById('book-p1').value);
+      const p2 = Number(document.getElementById('book-p2').value);
+      const prod = Number(document.getElementById('book-prod').value);
+      const fb = document.getElementById('book-feedback');
+      fb.className = 'feedback-box show';
+
+      const validPages = (p1 === 12 && p2 === 13) || (p1 === 13 && p2 === 12);
+      if (validPages && prod === 156) {
+        playSuccessSound();
+        fb.classList.add('ok');
+        fb.innerHTML = '🏆 Супер! Сторінки <strong>12 і 13</strong> (12 + 13 = 25), а їхній добуток <strong>12 × 13 = 156</strong>!';
+      } else if (prod === 156) {
+        playSuccessSound();
+        fb.classList.add('ok');
+        fb.innerHTML = '✅ Добуток <strong>156</strong> правильний! (Це сторінки 12 і 13).';
+      } else {
+        playErrorSound();
+        fb.classList.add('err');
+        fb.innerHTML = '💡 Підказка: у книзі номери сторінок ідуть підряд: 12 і 13. Помнож 12 на 13!';
+      }
+    }
+
+    // Matchsticks Puzzle (3x2 grid = 6 unit squares; removing 1 outer corner stick leaves 5 squares)
+    const removedSticks = new Set();
+    const stickLines = Array.from(document.querySelectorAll('.stick-line'));
+
+    function countRemainingSquares() {
+      const has = (id) => !removedSticks.has(id);
+      let squares = 0;
+      // 6 unit 1x1 squares: r in [0,1], c in [0,1,2]
+      for (let r = 0; r < 2; r++) {
+        for (let c = 0; c < 3; c++) {
+          const top = `h${r}${c}`;
+          const bot = `h${r + 1}${c}`;
+          const left = `v${r}${c}`;
+          const right = `v${r}${c + 1}`;
+          if (has(top) && has(bot) && has(left) && has(right)) {
+            squares++;
+          }
+        }
+      }
+      // 2 larger 2x2 squares: c in [0,1]
+      for (let c = 0; c < 2; c++) {
+        const ok =
+          has(`h0${c}`) && has(`h0${c + 1}`) &&
+          has(`h2${c}`) && has(`h2${c + 1}`) &&
+          has(`v0${c}`) && has(`v1${c}`) &&
+          has(`v0${c + 2}`) && has(`v1${c + 2}`);
+        if (ok) squares++;
+      }
+      return squares;
+    }
+
+    stickLines.forEach((line) => {
+      line.addEventListener('click', () => {
+        const id = line.dataset.id;
+        if (removedSticks.has(id)) {
+          removedSticks.delete(id);
+          line.classList.remove('removed');
+          playClickSound();
+        } else {
+          removedSticks.add(id);
+          line.classList.add('removed');
+          playClickSound();
+        }
+
+        const sq = countRemainingSquares();
+        const cnt = removedSticks.size;
+        document.getElementById('sticks-status').textContent = `Зараз квадратів: ${sq} (закреслено: ${cnt})`;
+
+        const fb = document.getElementById('sticks-feedback');
+        if (cnt === 1 && sq === 5) {
+          playSuccessSound();
+          fb.className = 'feedback-box show ok';
+          fb.innerHTML = '🎉 Геніально! Закреслили 1 крайню паличку — і залишилося рівно <strong>5 квадратів</strong>!';
+        } else if (cnt > 1) {
+          playErrorSound();
+          fb.className = 'feedback-box show err';
+          fb.innerHTML = '⚠️ За умовою можна закреслити лише <strong>одну</strong> паличку! Натисни «Скинути».';
+        } else if (cnt === 1 && sq !== 5) {
+          playErrorSound();
+          fb.className = 'feedback-box show err';
+          fb.innerHTML = '🤔 Ця паличка спільна для двох квадратів! Спробуй закреслити крайню кутову паличку.';
+        } else {
+          fb.className = 'feedback-box';
+        }
+      });
+    });
+
+    function resetSticks() {
+      playClickSound();
+      removedSticks.clear();
+      stickLines.forEach((l) => l.classList.remove('removed'));
+      document.getElementById('sticks-status').textContent = 'Зараз квадратів: 6 (закреслено: 0)';
+      document.getElementById('sticks-feedback').className = 'feedback-box';
+    }
+
+    // Slide 11: Practical Window Simulator (Calculator)
+    const w11State = { m1: false, m2: false, m3: false, m4: false };
+    let calcExpr = '';
+
+    function updateW11Progress() {
+      [1, 2, 3, 4].forEach((n) => {
+        if (w11State['m' + n]) {
+          const el = document.getElementById('w11-' + n);
+          el.classList.add('done');
+          el.innerHTML = el.innerHTML.replace('⬜', '✅');
+        }
+      });
+    }
+
+    function calcInput(ch) {
+      playClickSound();
+      if (calcExpr.length > 12) return;
+      calcExpr += ch;
+      document.getElementById('calc-display').value = calcExpr;
+    }
+
+    function calcEval() {
+      playPopSound();
+      try {
+        const m = calcExpr.match(/^(\d+)([+-])(\d+)$/);
+        if (m) {
+          const a = Number(m[1]);
+          const b = Number(m[3]);
+          const res = m[2] === '+' ? a + b : a - b;
+          calcExpr = String(res);
+          document.getElementById('calc-display').value = calcExpr;
+        }
+      } catch (e) {}
+    }
+
+    (function initWin11Sim() {
+      const space = document.getElementById('win11-space');
+      const launcher = document.getElementById('calc-launcher');
+      const winEl = document.getElementById('calc-window');
+      const titlebar = document.getElementById('calc-titlebar');
+      const minBtn = document.getElementById('calc-min-btn');
+      const closeBtn = document.getElementById('calc-close-btn');
+      const tbTab = document.getElementById('calc-tb-tab');
+      let wasMinimized = false;
+
+      launcher.addEventListener('dblclick', () => {
+        playPopSound();
+        winEl.classList.add('visible');
+        tbTab.style.display = 'inline-block';
+        if (!w11State.m1) {
+          w11State.m1 = true;
+          playSuccessSound();
+          updateW11Progress();
+        }
+      });
+
+      // Drag window to top-right corner
+      let dragging = false, sx = 0, sy = 0, ol = 0, ot = 0;
+      titlebar.addEventListener('pointerdown', (e) => {
+        if (e.target.tagName.toLowerCase() === 'button') return;
+        dragging = true;
+        sx = e.clientX;
+        sy = e.clientY;
+        ol = winEl.offsetLeft;
+        ot = winEl.offsetTop;
+        try { titlebar.setPointerCapture(e.pointerId); } catch (err) {}
+      });
+
+      titlebar.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        const maxL = space.clientWidth - winEl.offsetWidth - 8;
+        const maxT = space.clientHeight - winEl.offsetHeight - 42;
+        const nl = Math.max(8, Math.min(maxL, ol + (e.clientX - sx)));
+        const nt = Math.max(8, Math.min(maxT, ot + (e.clientY - sy)));
+        winEl.style.left = nl + 'px';
+        winEl.style.top = nt + 'px';
+
+        // Check if moved into upper-right area
+        if (nl > space.clientWidth * 0.35 && nt < 48 && !w11State.m2) {
+          w11State.m2 = true;
+          playSuccessSound();
+          updateW11Progress();
+        }
+      });
+
+      titlebar.addEventListener('pointerup', (e) => {
+        dragging = false;
+        try { titlebar.releasePointerCapture(e.pointerId); } catch (err) {}
+      });
+
+      minBtn.addEventListener('click', () => {
+        playClickSound();
+        winEl.classList.remove('visible');
+        wasMinimized = true;
+        if (!w11State.m3) {
+          w11State.m3 = true;
+          playSuccessSound();
+          updateW11Progress();
+        }
+      });
+
+      tbTab.addEventListener('click', () => {
+        playClickSound();
+        winEl.classList.add('visible');
+      });
+
+      closeBtn.addEventListener('click', () => {
+        playClickSound();
+        winEl.classList.remove('visible');
+        tbTab.style.display = 'none';
+        if (wasMinimized && !w11State.m4) {
+          w11State.m4 = true;
+          playSuccessSound();
+          updateW11Progress();
+        }
+      });
+    })();
+
+    // Slide 12: Final Quiz + Creative Icon Canvas
+    function answerFinalQuiz(btn, isCorrect) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.quiz-option').forEach((o) => {
+        o.classList.remove('correct', 'wrong');
+      });
+      if (isCorrect) {
+        btn.classList.add('correct');
+        playSuccessSound();
+      } else {
+        btn.classList.add('wrong');
+        playErrorSound();
+      }
+    }
+
+    const iconCanvas = document.getElementById('icon-canvas');
+    const iconCtx = iconCanvas.getContext('2d');
+    let brushColor = '#2563eb';
+    let isDrawing = false;
+    let lastPt = null;
+
+    // Fill crisp white background
+    iconCtx.fillStyle = '#ffffff';
+    iconCtx.fillRect(0, 0, iconCanvas.width, iconCanvas.height);
+
+    document.querySelectorAll('.swatch').forEach((sw) => {
+      sw.addEventListener('click', () => {
+        playClickSound();
+        document.querySelectorAll('.swatch').forEach((s) => s.classList.remove('active'));
+        sw.classList.add('active');
+        brushColor = sw.dataset.color;
+      });
+    });
+
+    function getCanvasPos(e) {
+      const rect = iconCanvas.getBoundingClientRect();
+      return {
+        x: (e.clientX - rect.left) * (iconCanvas.width / rect.width),
+        y: (e.clientY - rect.top) * (iconCanvas.height / rect.height)
+      };
+    }
+
+    iconCanvas.addEventListener('pointerdown', (e) => {
+      isDrawing = true;
+      lastPt = getCanvasPos(e);
+      try { iconCanvas.setPointerCapture(e.pointerId); } catch (err) {}
+    });
+
+    iconCanvas.addEventListener('pointermove', (e) => {
+      if (!isDrawing || !lastPt) return;
+      const pt = getCanvasPos(e);
+      iconCtx.strokeStyle = brushColor;
+      iconCtx.lineWidth = brushColor === '#ffffff' ? 14 : 7;
+      iconCtx.lineCap = 'round';
+      iconCtx.beginPath();
+      iconCtx.moveTo(lastPt.x, lastPt.y);
+      iconCtx.lineTo(pt.x, pt.y);
+      iconCtx.stroke();
+      lastPt = pt;
+    });
+
+    iconCanvas.addEventListener('pointerup', (e) => {
+      isDrawing = false;
+      lastPt = null;
+      try { iconCanvas.releasePointerCapture(e.pointerId); } catch (err) {}
+    });
+
+    function clearIconCanvas() {
+      playClickSound();
+      iconCtx.fillStyle = '#ffffff';
+      iconCtx.fillRect(0, 0, iconCanvas.width, iconCanvas.height);
+    }
+
+    function publishCustomIcon() {
+      const name = (document.getElementById('custom-app-name').value || '').trim() || 'СуперПрограма';
+      const desc = (document.getElementById('custom-app-desc').value || '').trim() || 'Допомагає вчитися та творити!';
+      const box = document.getElementById('custom-icon-showcase');
+      box.style.display = 'block';
+      box.innerHTML = `🚀 Значок «<strong>${name.replace(/</g, '&lt;')}</strong>» створено! Призначення: <em>${desc.replace(/</g, '&lt;')}</em>`;
+      launchFireworks();
+    }
+  </script>
+</body>
+</html>

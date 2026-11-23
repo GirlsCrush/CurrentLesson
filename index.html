@@ -2,2173 +2,387 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Урок 9 • Сучасні носії інформації. Пам’ять комп’ютера (4 клас НУШ)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Інформатика • Урок</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --bg-grad: linear-gradient(135deg, #eef6ff 0%, #f5f3ff 48%, #fff7ed 100%);
-      --card-bg: rgba(255, 255, 255, 0.94);
-      --primary: #4f46e5;
-      --primary-light: #e0e7ff;
-      --primary-dark: #3730a3;
-      --secondary: #0ea5e9;
-      --accent: #f59e0b;
-      --accent-light: #fef3c7;
-      --success: #10b981;
-      --success-light: #d1fae5;
-      --danger: #f43f5e;
-      --danger-light: #ffe4e6;
-      --text-main: #1e293b;
-      --text-muted: #475569;
-      --border-soft: rgba(99, 102, 241, 0.18);
-      --shadow-card: 0 18px 40px -12px rgba(30, 41, 59, 0.14), 0 4px 14px -2px rgba(79, 70, 229, 0.08);
-      --radius-xl: 28px;
-      --radius-lg: 20px;
-      --radius-md: 14px;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Nunito', 'Segoe UI', sans-serif; color: #1e293b;
+      background: linear-gradient(135deg, #eef6ff 0%, #f5f3ff 48%, #fff7ed 100%); }
+    .hidden { display: none !important; }
+    .btn { border: none; border-radius: 14px; padding: 9px 16px; font-family: inherit; font-weight: 800; font-size: .95rem; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 7px; transition: transform .14s, box-shadow .14s; text-decoration: none; white-space: nowrap; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: linear-gradient(135deg, #4f46e5, #6366f1); color: #fff; box-shadow: 0 6px 16px rgba(79,70,229,.28); }
+    .btn-secondary { background: #fff; color: #3730a3; border: 2px solid #c7d2fe; }
+    .btn-accent { background: linear-gradient(135deg, #f59e0b, #f97316); color: #fff; }
+    .btn-danger { background: #fff; color: #be123c; border: 2px solid #fda4af; }
+    .btn-success { background: linear-gradient(135deg, #10b981, #059669); color: #fff; box-shadow: 0 6px 16px rgba(16,185,129,.28); }
+    .btn-sm { padding: 6px 11px; font-size: .84rem; border-radius: 11px; }
+    .chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; font-size: .82rem; font-weight: 800;
+      background: #f1f5f9; color: #475569; border: 1.5px solid #e2e8f0; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: #94a3b8; }
+    .dot.on { background: #10b981; box-shadow: 0 0 0 3px rgba(16,185,129,.25); }
+    .dot.live { background: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,.25); animation: pulse 1.4s infinite; }
+    @keyframes pulse { 50% { opacity: .4; } }
+    iframe.lesson-frame { border: 0; width: 100%; height: 100%; display: block; background: transparent; }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
+    /* ===== Учень ===== */
+    #studentView { position: fixed; inset: 0; }
+    #waitScreen { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; padding: 20px; }
+    #waitScreen .big { font-size: 5rem; animation: float 2.4s ease-in-out infinite; }
+    @keyframes float { 50% { transform: translateY(-14px); } }
+    #waitScreen h1 { font-size: clamp(1.6rem, 3.5vw, 2.6rem); font-weight: 900; color: #312e81; }
+    #waitScreen p { font-size: 1.2rem; font-weight: 700; color: #475569; }
 
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg-grad);
-      color: var(--text-main);
-      user-select: none;
-    }
+    /* ===== Вчитель: каталог ===== */
+    #catalogView { position: fixed; inset: 0; overflow-y: auto; padding: 16px 20px 30px; }
+    .wrap { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; background: rgba(255,255,255,.9);
+      border: 2px solid rgba(99,102,241,.18); border-radius: 20px; padding: 10px 16px; box-shadow: 0 6px 20px rgba(15,23,42,.06); }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 1.1rem; color: #3730a3; }
+    .pill { background: linear-gradient(135deg, #4f46e5, #0ea5e9); color: #fff; padding: 4px 11px; border-radius: 999px; font-size: .8rem; font-weight: 900; }
+    .now { background: linear-gradient(135deg, #312e81, #4338ca); color: #fff; border-radius: 22px; padding: 16px 20px; display: flex; align-items: center;
+      justify-content: space-between; gap: 14px; flex-wrap: wrap; box-shadow: 0 14px 30px rgba(49,46,129,.25); }
+    .now.idle { background: #fff; color: #475569; border: 2.5px dashed #c7d2fe; box-shadow: none; }
+    .now .lbl { font-size: .85rem; font-weight: 800; opacity: .85; }
+    .now .ttl { font-size: 1.35rem; font-weight: 900; }
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tab { background: #fff; border: 2.5px solid #c7d2fe; border-radius: 16px; padding: 10px 20px; font-family: inherit; font-weight: 900; font-size: 1.05rem;
+      color: #3730a3; cursor: pointer; }
+    .tab.active { background: linear-gradient(135deg, #4f46e5, #0ea5e9); color: #fff; border-color: #4f46e5; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+    .card { background: rgba(255,255,255,.95); border: 2.5px solid #e2e8f0; border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column;
+      gap: 10px; box-shadow: 0 6px 16px rgba(15,23,42,.05); }
+    .card.current { border-color: #ef4444; box-shadow: 0 0 0 4px rgba(239,68,68,.15); }
+    .card .num { font-size: .82rem; font-weight: 900; color: #6366f1; }
+    .card .title { font-size: 1.1rem; font-weight: 900; color: #1e1b4b; line-height: 1.25; flex: 1; }
+    .card .meta { font-size: .8rem; font-weight: 700; color: #64748b; }
+    .card .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .empty { text-align: center; padding: 30px; font-weight: 800; color: #64748b; }
+    .hint { font-size: .85rem; font-weight: 700; color: #64748b; }
 
-    /* Animated Emoji Background & Fireworks Layers (NEVER block clicks!) */
-    #emojiBgCanvas, #fxCanvas {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-    }
-    #emojiBgCanvas { z-index: 1; }
-    #fxCanvas { z-index: 9999; }
+    /* ===== Вчитель: керування ===== */
+    #controlView { position: fixed; inset: 0; display: flex; flex-direction: column; }
+    .ctrlbar { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 5px 10px; background: #1e1b4b; color: #fff; flex-wrap: wrap; }
+    .ctrlbar .ttl { font-weight: 900; font-size: .9rem; flex: 1; min-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ctrlbar .btn-sm { padding: 4px 10px; }
+    #teacherFrameWrap { flex: 1; min-height: 0; }
 
-    /* Decorative soft blobs */
-    .bg-blob {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(60px);
-      opacity: 0.45;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .blob-1 { width: 380px; height: 380px; background: #bae6fd; top: -100px; left: -80px; }
-    .blob-2 { width: 420px; height: 420px; background: #ddd6fe; bottom: -120px; right: -80px; }
-    .blob-3 { width: 300px; height: 300px; background: #fde68a; top: 40%; left: 55%; }
-
-    /* Main App Shell */
-    .app-shell {
-      position: relative;
-      z-index: 10;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 10px 18px 12px;
-      max-width: 1360px;
-      margin: 0 auto;
-    }
-
-    /* Top Header & Teacher Panel */
-    .top-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(12px);
-      border: 2px solid var(--border-soft);
-      border-radius: 20px;
-      padding: 8px 16px;
-      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
-      flex-wrap: wrap;
-      flex-shrink: 0;
-    }
-
-    .brand-badge {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 800;
-      font-size: 0.98rem;
-      color: var(--primary-dark);
-      cursor: pointer;
-    }
-
-    .brand-pill {
-      background: linear-gradient(135deg, #4f46e5, #0ea5e9);
-      color: #fff;
-      padding: 4px 11px;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 900;
-      letter-spacing: 0.03em;
-    }
-
-    .top-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .status-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 12px;
-      border-radius: 999px;
-      font-size: 0.82rem;
-      font-weight: 800;
-      background: #f1f5f9;
-      color: var(--text-muted);
-      border: 1.5px solid #e2e8f0;
-    }
-    .status-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: #94a3b8;
-    }
-    .status-dot.online {
-      background: var(--success);
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
-    }
-    .status-dot.locked {
-      background: var(--accent);
-      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
-    }
-
-    /* Teacher Controls Bar (visible only in teacher mode) */
-    .teacher-bar {
-      display: none;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      background: linear-gradient(135deg, #eef2ff, #e0f2fe);
-      border: 2px solid #818cf8;
-      border-radius: 16px;
-      padding: 5px 12px;
-    }
-    body.is-teacher .teacher-bar {
-      display: flex;
-    }
-
-    .t-counter {
-      font-weight: 900;
-      font-size: 0.86rem;
-      color: var(--primary-dark);
-      background: #fff;
-      padding: 5px 11px;
-      border-radius: 12px;
-      border: 1.5px solid #c7d2fe;
-    }
-
-    .btn {
-      border: none;
-      border-radius: 14px;
-      padding: 8px 15px;
-      font-family: inherit;
-      font-weight: 800;
-      font-size: 0.9rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      transition: transform 0.14s ease, box-shadow 0.14s ease, background 0.15s ease;
-    }
-    .btn:hover:not(:disabled) {
-      transform: translateY(-2px);
-    }
-    .btn:active:not(:disabled) {
-      transform: scale(0.97);
-    }
-    .btn:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #4f46e5, #6366f1);
-      color: #fff;
-      box-shadow: 0 6px 16px rgba(79, 70, 229, 0.28);
-    }
-    .btn-secondary {
-      background: #fff;
-      color: var(--primary-dark);
-      border: 2px solid #c7d2fe;
-    }
-    .btn-accent {
-      background: linear-gradient(135deg, #f59e0b, #f97316);
-      color: #fff;
-      box-shadow: 0 6px 16px rgba(245, 158, 11, 0.28);
-    }
-    .btn-success {
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: #fff;
-      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.28);
-    }
-    .btn-sm {
-      padding: 6px 11px;
-      font-size: 0.82rem;
-      border-radius: 11px;
-    }
-
-    /* Slides Viewport */
-    .slides-stage {
-      position: relative;
-      flex: 1;
-      min-height: 0;
-      margin: 10px 0;
-      display: flex;
-      align-items: stretch;
-      justify-content: center;
-    }
-
-    .slide {
-      display: none;
-      width: 100%;
-      height: 100%;
-      background: var(--card-bg);
-      backdrop-filter: blur(14px);
-      border: 3px solid rgba(255, 255, 255, 0.9);
-      box-shadow: var(--shadow-card);
-      border-radius: var(--radius-xl);
-      padding: 22px 28px;
-      flex-direction: column;
-      justify-content: space-between;
-      overflow-y: auto;
-      animation: slidePop 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    /* Slide 1 is immediately visible on load without JS delay */
-    .slide.active {
-      display: flex;
-    }
-
-    @keyframes slidePop {
-      from { opacity: 0; transform: translateY(10px) scale(0.99); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    .slide-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-    }
-
-    .slide-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--primary-light);
-      color: var(--primary-dark);
-      font-weight: 800;
-      font-size: 0.82rem;
-      padding: 5px 13px;
-      border-radius: 999px;
-    }
-
-    .slide-title {
-      font-size: clamp(1.35rem, 2.4vw, 2rem);
-      font-weight: 900;
-      color: #1e1b4b;
-      line-height: 1.2;
-    }
-
-    .slide-subtitle {
-      font-size: clamp(0.95rem, 1.3vw, 1.12rem);
-      color: var(--text-muted);
-      font-weight: 600;
-      margin-top: 4px;
-    }
-
-    .slide-body {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 14px;
-      min-height: 0;
-    }
-
-    /* Hero Slide 1 */
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 24px;
-      align-items: center;
-    }
-    @media (max-width: 860px) {
-      .hero-grid { grid-template-columns: 1fr; }
-    }
-
-    .hero-title {
-      font-size: clamp(1.75rem, 3.2vw, 2.65rem);
-      font-weight: 900;
-      line-height: 1.15;
-      background: linear-gradient(135deg, #312e81, #4f46e5, #0284c7);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin: 10px 0;
-    }
-
-    .mission-box {
-      background: linear-gradient(135deg, #f8fafc, #eef2ff);
-      border: 2.5px dashed #818cf8;
-      border-radius: 22px;
-      padding: 18px;
-    }
-
-    .mission-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: #fff;
-      border: 2px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 11px 15px;
-      margin-top: 10px;
-      cursor: pointer;
-      font-weight: 800;
-      font-size: 1rem;
-      transition: all 0.2s ease;
-    }
-    .mission-item:hover {
-      border-color: #818cf8;
-      transform: translateX(4px);
-    }
-    .mission-item.done {
-      background: var(--success-light);
-      border-color: var(--success);
-      color: #065f46;
-    }
-
-    /* Flashcards Slide 2 */
-    .flash-stage {
-      background: linear-gradient(135deg, #312e81, #4338ca);
-      color: #fff;
-      border-radius: 24px;
-      padding: 26px;
-      text-align: center;
-      box-shadow: 0 14px 30px rgba(49, 46, 129, 0.25);
-      position: relative;
-      overflow: hidden;
-    }
-    .flash-word {
-      font-size: clamp(2rem, 4.5vw, 3.4rem);
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      min-height: 68px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .flash-timer-bar {
-      width: 100%;
-      height: 10px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 999px;
-      margin-top: 14px;
-      overflow: hidden;
-    }
-    .flash-timer-fill {
-      height: 100%;
-      width: 0%;
-      background: #fbbf24;
-      transition: width 0.1s linear;
-    }
-    .word-choices {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-    }
-    .word-chip {
-      background: #fff;
-      border: 2.5px solid #cbd5e1;
-      border-radius: 16px;
-      padding: 11px 18px;
-      font-weight: 900;
-      font-size: 1.02rem;
-      cursor: pointer;
-      transition: all 0.18s;
-    }
-    .word-chip:hover { border-color: var(--primary); transform: translateY(-2px); }
-    .word-chip.correct { background: var(--success); color: #fff; border-color: #059669; }
-    .word-chip.wrong { background: var(--danger-light); color: #be123c; border-color: var(--danger); }
-
-    /* 3D Flip Cards Slide 3 */
-    .flip-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-    }
-    @media (max-width: 900px) {
-      .flip-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    .flip-card {
-      perspective: 1000px;
-      height: 230px;
-      cursor: pointer;
-    }
-    .flip-inner {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
-      transform-style: preserve-3d;
-    }
-    .flip-card.flipped .flip-inner {
-      transform: rotateY(180deg);
-    }
-    .flip-front, .flip-back {
-      position: absolute;
-      inset: 0;
-      backface-visibility: hidden;
-      border-radius: 22px;
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
-    }
-    .flip-front {
-      background: linear-gradient(145deg, #ffffff, #eef2ff);
-      border: 2.5px solid #c7d2fe;
-    }
-    .flip-back {
-      background: linear-gradient(145deg, #4f46e5, #0ea5e9);
-      color: #fff;
-      transform: rotateY(180deg);
-      font-weight: 700;
-      font-size: 0.96rem;
-      line-height: 1.4;
-    }
-
-    /* Ancient Artifacts Slide 4 */
-    .artifacts-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 12px;
-    }
-    @media (max-width: 920px) {
-      .artifacts-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    .artifact-card {
-      background: #fffbeb;
-      border: 2.5px solid #fcd34d;
-      border-radius: 20px;
-      padding: 14px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 8px;
-    }
-    .artifact-card.solved {
-      background: var(--success-light);
-      border-color: var(--success);
-    }
-
-    /* Timeline Slide 5 */
-    .timeline-tabs {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 8px;
-    }
-    @media (max-width: 820px) {
-      .timeline-tabs { grid-template-columns: repeat(3, 1fr); }
-    }
-    .era-btn {
-      background: #f8fafc;
-      border: 2px solid #cbd5e1;
-      border-radius: 16px;
-      padding: 10px 8px;
-      text-align: center;
-      cursor: pointer;
-      font-weight: 800;
-      font-size: 0.84rem;
-      transition: all 0.2s;
-    }
-    .era-btn.active {
-      background: linear-gradient(135deg, #4f46e5, #0ea5e9);
-      color: #fff;
-      border-color: #4f46e5;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 18px rgba(79, 70, 229, 0.25);
-    }
-    .era-showcase {
-      background: linear-gradient(135deg, #f8fafc, #eef2ff);
-      border: 2.5px solid #c7d2fe;
-      border-radius: 22px;
-      padding: 20px;
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 20px;
-      align-items: center;
-    }
-    .cap-meter {
-      height: 14px;
-      background: #e2e8f0;
-      border-radius: 999px;
-      overflow: hidden;
-      margin-top: 8px;
-    }
-    .cap-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #10b981, #0ea5e9);
-      border-radius: 999px;
-      transition: width 0.45s ease;
-    }
-
-    /* Power Simulator Slide 6 */
-    .pc-sim-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-    }
-    @media (max-width: 780px) {
-      .pc-sim-grid { grid-template-columns: 1fr; }
-    }
-    .mem-box {
-      border-radius: 22px;
-      padding: 18px;
-      border: 3px solid;
-      transition: all 0.35s ease;
-    }
-    .mem-ram {
-      background: #fff1f2;
-      border-color: #fda4af;
-    }
-    .mem-ram.power-off {
-      background: #1e293b;
-      border-color: #475569;
-      color: #94a3b8;
-    }
-    .mem-ssd {
-      background: #ecfdf5;
-      border-color: #6ee7b7;
-    }
-
-    /* Modern Devices Grid Slide 7 */
-    .devices-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-    }
-    @media (max-width: 860px) {
-      .devices-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    .device-card {
-      background: #fff;
-      border: 2px solid #e2e8f0;
-      border-radius: 20px;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 6px;
-      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
-    }
-
-    /* Break / Timer Slide 8 */
-    .break-grid {
-      display: grid;
-      grid-template-columns: 0.9fr 1.1fr;
-      gap: 20px;
-      align-items: center;
-    }
-    @media (max-width: 820px) {
-      .break-grid { grid-template-columns: 1fr; }
-    }
-    .timer-circle {
-      width: 170px;
-      height: 170px;
-      border-radius: 50%;
-      background: conic-gradient(#4f46e5 var(--deg, 360deg), #e2e8f0 0deg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto;
-      box-shadow: 0 12px 28px rgba(79, 70, 229, 0.22);
-    }
-    .timer-inner {
-      width: 138px;
-      height: 138px;
-      border-radius: 50%;
-      background: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 2.2rem;
-      color: var(--primary-dark);
-    }
-
-    /* This PC Explorer Slide 9 */
-    .win11-window {
-      background: #f8fafc;
-      border: 2.5px solid #94a3b8;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
-    }
-    .win11-titlebar {
-      background: linear-gradient(90deg, #e0e7ff, #f1f5f9);
-      padding: 9px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1.5px solid #cbd5e1;
-      font-weight: 800;
-      font-size: 0.9rem;
-    }
-    .drives-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 12px;
-      padding: 16px;
-    }
-    .drive-tile {
-      background: #fff;
-      border: 2px solid #cbd5e1;
-      border-radius: 16px;
-      padding: 12px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .drive-tile:hover { border-color: #0ea5e9; transform: translateY(-2px); }
-    .drive-tile.selected-c { border-color: var(--success); background: var(--success-light); }
-    .drive-bar {
-      height: 9px;
-      background: #e2e8f0;
-      border-radius: 999px;
-      overflow: hidden;
-      margin: 7px 0;
-    }
-    .drive-bar-fill {
-      height: 100%;
-      background: #0ea5e9;
-    }
-
-    /* Match Pairs Game Slide 10 */
-    .match-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-    .match-col {
-      display: flex;
-      flex-direction: column;
-      gap: 9px;
-    }
-    .pair-card {
-      background: #fff;
-      border: 2.5px solid #cbd5e1;
-      border-radius: 16px;
-      padding: 11px 15px;
-      font-weight: 800;
-      font-size: 0.95rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: all 0.18s;
-    }
-    .pair-card:hover:not(.matched) { border-color: var(--primary); }
-    .pair-card.selected { border-color: var(--accent); background: var(--accent-light); transform: scale(1.02); }
-    .pair-card.matched { border-color: var(--success); background: var(--success-light); color: #065f46; cursor: default; }
-
-    /* Sorter & Letter Riddles Slide 11 */
-    .sort-zone-wrap {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-    .sort-bucket {
-      border-radius: 20px;
-      padding: 14px;
-      border: 2.5px dashed;
-      min-height: 115px;
-    }
-    .letter-boxes {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .letter-input {
-      width: 40px;
-      height: 44px;
-      border: 2.5px solid #818cf8;
-      border-radius: 12px;
-      text-align: center;
-      font-family: inherit;
-      font-size: 1.25rem;
-      font-weight: 900;
-      text-transform: uppercase;
-      color: var(--primary-dark);
-      background: #fff;
-      user-select: text;
-    }
-    .letter-input.ok { background: var(--success-light); border-color: var(--success); color: #065f46; }
-    .letter-input.bad { background: var(--danger-light); border-color: var(--danger); }
-
-    /* Drawing Studio Slide 12 */
-    .studio-wrap {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 18px;
-      align-items: center;
-    }
-    @media (max-width: 840px) {
-      .studio-wrap { grid-template-columns: 1fr; }
-    }
-    .draw-canvas {
-      background: #ffffff;
-      border: 3px solid #818cf8;
-      border-radius: 20px;
-      box-shadow: 0 10px 24px rgba(79, 70, 229, 0.14);
-      cursor: crosshair;
-      touch-action: none;
-      max-width: 100%;
-    }
-    .color-dot {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      border: 3px solid #fff;
-      box-shadow: 0 0 0 2px #cbd5e1;
-      cursor: pointer;
-    }
-    .color-dot.active {
-      box-shadow: 0 0 0 3px #1e1b4b;
-      transform: scale(1.12);
-    }
-
-    /* Bottom Navigation Bar */
-    .bottom-nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(12px);
-      border: 2px solid var(--border-soft);
-      border-radius: 20px;
-      padding: 8px 16px;
-      flex-shrink: 0;
-    }
-
-    .progress-track {
-      flex: 1;
-      max-width: 440px;
-      height: 11px;
-      background: #e2e8f0;
-      border-radius: 999px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      width: 8.33%;
-      background: linear-gradient(90deg, #4f46e5, #0ea5e9, #10b981);
-      border-radius: 999px;
-      transition: width 0.3s ease;
-    }
-
-    /* Modal for Teacher Share & QR */
-    .modal-backdrop {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.55);
-      backdrop-filter: blur(6px);
-      z-index: 5000;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-    .modal-backdrop.open {
-      display: flex;
-    }
-    .modal-card {
-      background: #fff;
-      border-radius: 26px;
-      padding: 24px;
-      max-width: 440px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.3);
-      border: 3px solid #c7d2fe;
-    }
-    .url-box {
-      background: #f1f5f9;
-      border: 2px solid #cbd5e1;
-      border-radius: 14px;
-      padding: 10px 12px;
-      font-size: 0.84rem;
-      font-weight: 700;
-      color: #334155;
-      word-break: break-all;
-      margin: 12px 0;
-      user-select: all;
-    }
-
-    .feedback-pill {
-      display: inline-block;
-      padding: 6px 14px;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 0.9rem;
-    }
+    /* ===== QR ===== */
+    .modal { position: fixed; inset: 0; background: rgba(15,23,42,.55); backdrop-filter: blur(6px); z-index: 50; display: none; align-items: center;
+      justify-content: center; padding: 16px; }
+    .modal.open { display: flex; }
+    .modal-card { background: #fff; border-radius: 26px; padding: 24px; max-width: 440px; width: 100%; text-align: center; border: 3px solid #c7d2fe; }
+    .url-box { background: #f1f5f9; border: 2px solid #cbd5e1; border-radius: 14px; padding: 10px 12px; font-size: .9rem; font-weight: 800; word-break: break-all;
+      margin: 12px 0; user-select: all; }
   </style>
 </head>
 <body>
-  <!-- Decorative Soft Shapes -->
-  <div class="bg-blob blob-1"></div>
-  <div class="bg-blob blob-2"></div>
-  <div class="bg-blob blob-3"></div>
 
-  <!-- Interactive Falling Emojis & Fireworks Canvases -->
-  <canvas id="emojiBgCanvas"></canvas>
-  <canvas id="fxCanvas"></canvas>
-
-  <div class="app-shell">
-    <!-- Top Header -->
-    <header class="top-bar">
-      <div class="brand-badge" id="brandBadge" title="Інформатика • 4 клас НУШ">
-        <span class="brand-pill">НУШ • 4 КЛАС</span>
-        <span>Урок 9: Пам’ять комп’ютера та носії інформації</span>
-      </div>
-
-      <!-- Teacher Sync & Controls (Hidden for students) -->
-      <div class="teacher-bar" id="teacherBar">
-        <span class="t-counter" id="studentCounter">👨‍🎓 Учнів онлайн: 0</span>
-        <button class="btn btn-sm btn-primary" id="btnFollowToggle" title="Перемкнути керування слайдами для класу">
-          🔒 Вести клас за собою
-        </button>
-        <button class="btn btn-sm btn-accent" id="btnClassFireworks" title="Запустити салют на екранах усіх учнів">
-          🎆 Салют класу
-        </button>
-        <button class="btn btn-sm btn-secondary" id="btnOpenShare" title="Показати посилання та QR-код для учнів">
-          📲 QR-код учням
-        </button>
-      </div>
-
-      <div class="top-controls">
-        <div class="status-chip" id="syncStatusChip">
-          <span class="status-dot" id="syncDot"></span>
-          <span id="syncText">Готово до роботи</span>
-        </div>
-        <button class="btn btn-sm btn-secondary" id="btnSoundToggle" aria-label="Увімкнути або вимкнути звук">
-          🔊 Звук
-        </button>
-      </div>
-    </header>
-
-    <!-- Main Slides Viewport -->
-    <main class="slides-stage" id="slidesStage">
-
-      <!-- SLIDE 1: Immediately Active on Load -->
-      <section class="slide active" id="slide-1" data-slide="1">
-        <div class="slide-header">
-          <span class="slide-tag">🚀 Розділ 1 • § 9 • Оновлено для 2026 року</span>
-          <span class="slide-tag" style="background:#fef3c7;color:#92400e;">💡 Підказка: натискай на падаючі смайлики!</span>
-        </div>
-        <div class="slide-body">
-          <div class="hero-grid">
-            <div>
-              <div style="font-size:3rem;line-height:1;">💾 🧠 ⚡</div>
-              <h1 class="hero-title">Сучасні носії інформації. Пам’ять комп’ютера</h1>
-              <p class="slide-subtitle" style="font-size:1.12rem;margin-bottom:14px;">
-                Сьогодні ми дізнаємося, де комп’ютер ховає ігри та фотографії, чим внутрішня пам’ять відрізняється від зовнішньої та які носії використовують у 2026 році!
-              </p>
-              <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                <span class="feedback-pill" style="background:#e0e7ff;color:#3730a3;">🧩 Інтерактивні ігри</span>
-                <span class="feedback-pill" style="background:#d1fae5;color:#065f46;">⚡ Симулятори ПК</span>
-                <span class="feedback-pill" style="background:#ffe4e6;color:#9f1239;">🎨 Конструктор майбутнього</span>
-              </div>
-            </div>
-
-            <div class="mission-box">
-              <div style="font-weight:900;font-size:1.1rem;color:#312e81;">🎯 Передпольотна перевірка екіпажу:</div>
-              <p style="font-size:0.88rem;color:#475569;margin-top:2px;">Натисни на кожен пункт, щоб підтвердити готовність:</p>
-              <div class="mission-item" onclick="toggleMission(this)">
-                <span>👀</span> <span>Очі готові помічати деталі</span>
-              </div>
-              <div class="mission-item" onclick="toggleMission(this)">
-                <span>🧠</span> <span>Мозок готовий запам’ятовувати нове</span>
-              </div>
-              <div class="mission-item" onclick="toggleMission(this)">
-                <span>🖱️</span> <span>Руки готові досліджувати комп’ютер</span>
-              </div>
-              <div id="missionStatus" style="margin-top:10px;font-weight:800;font-size:0.92rem;color:#4f46e5;">
-                Виконано: 0 з 3
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style="text-align:center;font-size:0.85rem;color:#64748b;font-weight:700;">
-          Натисни «Далі ➡» або стрілку вправо, щоб розпочати подорож!
-        </div>
-      </section>
-
-      <!-- SLIDE 2: Flashcards Game from Lesson Plan -->
-      <section class="slide" id="slide-2" data-slide="2">
-        <div class="slide-header">
-          <div>
-            <span class="slide-tag">⚡ Розминка для мозку</span>
-            <h2 class="slide-title">Гра «Картки-блискавки»</h2>
-          </div>
-          <button class="btn btn-accent" id="btnStartFlash" onclick="startFlashcards()">▶ Показати 5 слів (по 3 сек)</button>
-        </div>
-
-        <div class="slide-body">
-          <div class="flash-stage">
-            <div style="font-size:0.88rem;opacity:0.88;font-weight:700;" id="flashCounter">Натисни «Показати 5 слів» та уважно запам’ятай кожне слово!</div>
-            <div class="flash-word" id="flashWordDisplay">👀 ГОТОВІ?</div>
-            <div class="flash-timer-bar"><div class="flash-timer-fill" id="flashTimerFill"></div></div>
-          </div>
-
-          <div style="background:#f8fafc;border:2px solid #e2e8f0;border-radius:20px;padding:14px;">
-            <div style="font-weight:900;margin-bottom:8px;">🕵️ Завдання 1: Яке слово серед цих 5 було «зайвим»? Натисни на нього!</div>
-            <div class="word-choices" id="flashChoices">
-              <button class="word-chip" onclick="checkFlashOdd(this, false)">ІНФОРМАЦІЯ</button>
-              <button class="word-chip" onclick="checkFlashOdd(this, false)">ПОВІДОМЛЕННЯ</button>
-              <button class="word-chip" onclick="checkFlashOdd(this, false)">ВІДОМОСТІ</button>
-              <button class="word-chip" onclick="checkFlashOdd(this, false)">НОВИНА</button>
-              <button class="word-chip" onclick="checkFlashOdd(this, true)">МОНІТОР</button>
-            </div>
-            <div id="flashFeedback" style="margin-top:8px;font-weight:800;font-size:0.92rem;"></div>
-          </div>
-
-          <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;background:#eef2ff;padding:11px 16px;border-radius:16px;">
-            <div style="font-weight:800;font-size:0.9rem;">
-              👁️ Чим ми сприймали слова?
-              <button class="btn btn-sm btn-secondary" onclick="this.textContent='✅ Зором!';SoundFX.success();">Перевірити</button>
-            </div>
-            <div style="font-weight:800;font-size:0.9rem;">
-              📝 У вигляді чого подане повідомлення?
-              <button class="btn btn-sm btn-secondary" onclick="this.textContent='✅ У вигляді тексту!';SoundFX.success();">Перевірити</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- SLIDE 3: Why do we need memory? (3D Flip Cards) -->
-      <section class="slide" id="slide-3" data-slide="3">
-        <div class="slide-header">
-          <div>
-            <span class="slide-tag">🧠 Відкриваємо нове</span>
-            <h2 class="slide-title">Для чого потрібна пам’ять людині та комп’ютеру?</h2>
-            <p class="slide-subtitle">Натисни на кожну картку, щоб перевернути її та відкрити головний секрет!</p>
-          </div>
-        </div>
-
-        <div class="slide-body">
-          <div class="flip-grid">
-            <div class="flip-card" onclick="flipCard(this)">
-              <div class="flip-inner">
-                <div class="flip-front">
-                  <div style="font-size:3.2rem;">🧠</div>
-                  <div style="font-weight:900;font-size:1.12rem;margin-top:8px;">Мозок людини</div>
-                  <div style="font-size:0.82rem;color:#6366f1;font-weight:800;margin-top:6px;">Натисни, щоб відкрити ↻</div>
-                </div>
-                <div class="flip-back">
-                  Наш мозок не лише зберігає отриману інформацію, а й уміє її опрацьовувати, створювати нові ідеї та відтворювати знання!
-                </div>
-              </div>
-            </div>
-
-            <div class="flip-card" onclick="flipCard(this)">
-              <div class="flip-inner">
-                <div class="flip-front">
-                  <div style="font-size:3.2rem;">🎓</div>
-                  <div style="font-weight:900;font-size:1.12rem;margin-top:8px;">Успішне навчання</div>
-                  <div style="font-size:0.82rem;color:#6366f1;font-weight:800;margin-top:6px;">Натисни, щоб відкрити ↻</div>
-                </div>
-                <div class="flip-back">
-                  Без пам’яті ми б щодня заново вчилися читати, рахувати й користуватися ґаджетами. Знання — наш головний скарб!
-                </div>
-              </div>
-            </div>
-
-            <div class="flip-card" onclick="flipCard(this)">
-              <div class="flip-inner">
-                <div class="flip-front">
-                  <div style="font-size:3.2rem;">🛠️</div>
-                  <div style="font-weight:900;font-size:1.12rem;margin-top:8px;">Плідна праця</div>
-                  <div style="font-size:0.82rem;color:#6366f1;font-weight:800;margin-top:6px;">Натисни, щоб відкрити ↻</div>
-                </div>
-                <div class="flip-back">
-                  Інженери, лікарі, програмісти та вчителі спираються на збережений досвід, щоб створювати корисні речі для людей.
-                </div>
-              </div>
-            </div>
-
-            <div class="flip-card" onclick="flipCard(this)">
-              <div class="flip-inner">
-                <div class="flip-front">
-                  <div style="font-size:3.2rem;">💻</div>
-                  <div style="font-weight:900;font-size:1.12rem;margin-top:8px;">Пам’ять комп’ютера</div>
-                  <div style="font-size:0.82rem;color:#6366f1;font-weight:800;margin-top:6px;">Натисни, щоб відкрити ↻</div>
-                </div>
-                <div class="flip-back">
-                  Це спеціальні запам’ятовуючі пристрої, які допомагають комп’ютеру точно зберігати мільйони фото, відео, ігор і програм!
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:18px;padding:12px 18px;text-align:center;font-weight:800;color:#78350f;">
-            📌 Запам’ятай: <strong>Носій інформації</strong> — це будь-який об’єкт, на якому збережено інформацію у вигляді певного повідомлення.
-          </div>
-        </div>
-      </section>
-
-      <!-- SLIDE 4: Ancient Carriers Gallery -->
-      <section class="slide" id="slide-4" data-slide="4">
-        <div class="slide-header">
-          <div>
-            <span class="slide-tag">🏛️ Історичний детектив</span>
-            <h2 class="slide-title">Як люди зберігали інформацію в давнину?</h2>
-            <p class="slide-subtitle">Розглянь стародавні носії та вибери для кожного правильний вигляд повідомлення!</p>
-          </div>
-          <div class="feedback-pill" id="ancientScore" style="background:#d1fae5;color:#065f46;">Досліджено: 0 / 5</div>
-        </div>
-
-        <div class="slide-body">
-          <div class="artifacts-grid">
-            <div class="artifact-card" data-ans="graphic">
-              <div style="font-size:2.8rem;">🪨</div>
-              <div style="font-weight:900;">Скеля та камінь</div>
-              <div style="font-size:0.82rem;color:#64748b;">Наскельні зображення мисливців</div>
-              <select class="btn btn-sm btn-secondary" onchange="checkArtifact(this)" style="width:100%;">
-                <option value="">Обери вигляд...</option>
-                <option value="graphic">🎨 Графічне (малюнок)</option>
-                <option value="text">📜 Текстове</option>
-              </select>
-              <div class="art-msg" style="font-size:0.8rem;font-weight:800;"></div>
-            </div>
-
-            <div class="artifact-card" data-ans="graphic">
-              <div style="font-size:2.8rem;">🏺</div>
-              <div style="font-weight:900;">Глиняна амфора</div>
-              <div style="font-size:0.82rem;color:#64748b;">Розпис на стародавньому посуді</div>
-              <select class="btn btn-sm btn-secondary" onchange="checkArtifact(this)" style="width:100%;">
-                <option value="">Обери вигляд...</option>
-                <option value="graphic">🎨 Графічне (орнамент)</option>
-                <option value="sound">🎵 Звукове</option>
-              </select>
-              <div class="art-msg" style="font-size:0.8rem;font-weight:800;"></div>
-            </div>
-
-            <div class="artifact-card" data-ans="text">
-              <div style="font-size:2.8rem;">📜</div>
-              <div style="font-weight:900;">Сувій папірусу</div>
-              <div style="font-size:0.82rem;color:#64748b;">Єгипетські ієрогліфи та знаки</div>
-              <select class="btn btn-sm btn-secondary" onchange="checkArtifact(this)" style="width:100%;">
-                <option value="">Обери вигляд...</option>
-                <option value="text">✍️ Текстове / символьне</option>
-                <option value="video">🎬 Відео</option>
-              </select>
-              <div class="art-msg" style="font-size:0.8rem;font-weight:800;"></div>
-            </div>
-
-            <div class="artifact-card" data-ans="graphic">
-              <div style="font-size:2.8rem;">🖼️</div>
-              <div style="font-weight:900;">Полотно картини</div>
-              <div style="font-size:0.82rem;color:#64748b;">Портрети та пейзажі художників</div>
-              <select class="btn btn-sm btn-secondary" onchange="checkArtifact(this)" style="width:100%;">
-                <option value="">Обери вигляд...</option>
-                <option value="graphic">🎨 Графічне</option>
-                <option value="text">🔢 Числове</option>
-              </select>
-              <div class="art-msg" style="font-size:0.8rem;font-weight:800;"></div>
-            </div>
-
-            <div class="artifact-card" data-ans="combo">
-              <div style="font-size:2.8rem;">📖</div>
-              <div style="font-weight:900;">Паперова книга</div>
-              <div style="font-size:0.82rem;color:#64748b;">Літери + яскраві ілюстрації</div>
-              <select class="btn btn-sm btn-secondary" onchange="checkArtifact(this)" style="width:100%;">
-                <option value="">Обери вигляд...</option>
-                <option value="combo">📚 Комбіноване (текст + графіка)</option>
-                <option value="sound">🔊 Тільки звукове</option>
-              </select>
-              <div class="art-msg" style="font-size:0.8rem;font-weight:800;"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- SLIDE 5: Evolution Timeline to 2026 -->
-      <section class="slide" id="slide-5" data-slide="5">
-        <div class="slide-header">
-          <div>
-            <span class="slide-tag">⏳ Машина часу: від карток до 2026 року</span>
-            <h2 class="slide-title">Еволюція носіїв інформації</h2>
-            <p class="slide-subtitle">Натискай на різні епохи та порівнюй, скільки даних вміщував кожен носій!</p>
-          </div>
-        </div>
-
-        <div class="slide-body">
-          <div class="timeline-tabs" id="timelineTabs">
-            <button class="era-btn active" onclick="selectEra(0, this)">1970-ті<br>🕳️ Перфокарта</button>
-            <button class="era-btn" onclick="selectEra(1, this)">1990-ті<br>💾 Дискета</button>
-            <button class="era-btn" onclick="selectEra(2, this)">2000-ні<br>💿 CD / DVD</button>
-            <button class="era-btn" onclick="selectEra(3, this)">2015-ті<br>🔌 USB-флешка</button>
-            <button class="era-btn" onclick="selectEra(4, this)">2026 рік<br>⚡ NVMe SSD</button>
-            <button class="era-btn" onclick="selectEra(5, this)">2026 рік<br>☁️ Хмара</button>
-          </div>
-
-          <div class="era-showcase" id="eraShowcase">
-            <div style="font-size:4.4rem;text-align:center;" id="eraIcon">🕳️</div>
-            <div>
-              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                <h3 style="font-size:1.35rem;font-weight:900;color:#1e1b4b;" id="eraTitle">Перфокарта (1960–1970-ті роки)</h3>
-                <span class="feedback-pill" style="background:#e0e7ff;color:#3730a3;" id="eraCapLabel">Обсяг: ~80 байт (1 речення)</span>
-              </div>
-              <p style="margin-top:8px;font-weight:600;color:#334155;line-height:1.45;" id="eraDesc">
-                Картонна картка, у якій спеціальна машина пробивала отвори в певних місцях. Щоб записати одну невелику програму, доводилося носити цілі ящики перфокарт!
-              </p>
-              <div class="cap-meter">
-                <div class="cap-fill" id="eraCapFill" style="width:4%;"></div>
-              </div>
-              <div style="margin-top:6px;font-size:0.84rem;font-weight:800;color:#0f766e;" id="eraFact">
-                📸 Скільки сучасних фото зі смартфона вміститься: 0 фото (замало місця!).
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- SLIDE 6: Internal vs External Memory & Power Simulator -->
-      <section class="slide" id="slide-6" data-slide="6">
-        <div class="slide-header">
-          <div>
-            <span class="slide-tag">⚙️ Секрет будови комп’ютера</span>
-            <h2 class="slide-title">Внутрішня (оперативна) та зовнішня пам’ять</h2>
-          </div>
-          <button class="btn btn-accent" id="btnPowerToggle" onclick="togglePcPower()">🔌 Вимкнути комп’ютер (Експеримент!)</button>
-        </div>
-
-        <div class="slide-body">
-          <div style="display:flex;gap:12px;flex-wrap:wrap;background:#eef2ff;padding:10px 16px;border-radius:16px;align-items:center;">
-            <span style="font-size:1.8rem;">🧠</span>
-            <div style="font-weight:700;font-size:0.95rem;">
-              <strong>Процесор (CPU)</strong> опрацьовує дані й керує комп’ютером. А щоб зберігати дані, комп’ютер має <strong>два види пам’яті</strong> — спробуй вимкнути живлення і подивись, що станеться!
-            </div>
-          </div>
-
-          <div class="pc-sim-grid">
-            <div class="mem-box mem-ram" id="ramBox">
-              <div style="display:flex;align-items:center;justify-content:space-between;">
-                <span style="font-weight:900;font-size:1.1rem;">⚡ Оперативна пам’ять (RAM)</span>
-                <span class="feedback-pill" id="ramBadge" style="background:#ffe4e6;color:#9f1239;">Внутрішня • Тимчасова</span>
-              </div>
-              <p style="font-size:0.88rem;margin-top:6px;font-weight:600;">
-                Працює, лише поки комп’ютер увімкнений. Тут відкриті поточні програми та незбережені малюнки.
-              </p>
-              <div id="ramContent" style="margin-top:12px;background:#fff;border-radius:14px;padding:12px;font-weight:800;color:#be123c;">
-                🎨 Відкритий незбережений малюнок «Космос.png»<br>
-                🎮 Запущена гра «Робо-перегони»
-              </div>
-            </div>
-
-            <div class="mem-box mem-ssd" id="ssdBox">
-              <div style="display:flex;align-items:center;justify-content:space-between;">
-                <span style="font-weight:900;font-size:1.1rem;">💾 Зовнішня пам’ять (SSD / Флешка)</span>
-                <span class="feedback-pill" style="background:#d1fae5;color:#065f46;">Постійна • Довготривала</span>
-              </div>
-              <p style="font-size:0.88rem;margin-top:6px;font-weight:600;color:#1e293b;">
-                Зберігає файли роками навіть без електрики! Дозволяє переносити дані на інші пристрої.
-              </p>
-              <div style="margin-top:12px;background:#fff;border-radius:14px;padding:12px;font-weight:800;color:#047857;">
-                ✅ Збережений файл «Домашнє_завдання.docx»<br>
-                ✅ Сімейні фото та улюблена музика
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- SLIDE 7: Modern Storage Devices 2026 -->
-      <section class="slide" id="slide-7" data-slide="7">
-        <div class="slide-header">
-          <div>
-            <span class="slide-tag">🛍️ Вітрина технологій 2026</span>
-            <h2 class="slide-title">Сучасні пристрої зберігання інформації</h2>
-            <p class="slide-subtitle">Ознайомся з кожним носієм і пройди міні-перевірку на картках!</p>
-          </div>
-        </div>
-
-        <div class="slide-body">
-          <div class="devices-grid">
-            <div class="device-card">
-              <div>
-                <div style="font-size:2rem;">⚡ <strong>NVMe SSD (Твердотілий диск)</strong></div>
-                <p style="font-size:0.86rem;color:#475569;margin-top:4px;font-weight:600;">
-                  Головний накопичувач ноутбуків, ПК і консолей 2026 року. Працює на мікросхемах флеш-пам’яті: безшумний, надшвидкий і не боїться струсів.
-                </p>
-              </div>
-              <button class="btn btn-sm btn-secondary" onclick="this.textContent='✅ Швидший за HDD у 10–30 разів!';this.classList.add('btn-success');SoundFX.success();">Чим кращий за HDD?</button>
-            </div>
-
-            <div class="device-card">
-              <div>
-                <div style="font-size:2rem;">💿 <strong>Жорсткий диск (HDD / Вінчестер)</strong></div>
-                <p style="font-size:0.86rem;color:#475569;margin-top:4px;font-weight:600;">
-                  Накопичувач на магнітних дисках великої ємності (до 20+ ТБ). У 2026 році використовується переважно у серверах та для великих домашніх архівів.
-                </p>
-              </div>
-              <button class="btn btn-sm btn-secondary" onclick="this.textContent='✅ Магнітні пластини всередині!';this.classList.add('btn-success');SoundFX.success();">Як записує дані?</button>
-            </div>
-
-            <div class="device-card">
-              <div>
-                <div style="font-size:2rem;">🔌 <strong>USB-флешнакопичувач</strong></div>
-                <p style="font-size:0.86rem;color:#475569;margin-top:4px;font-weight:600;">
-                  Компактна «флешка» з роз’ємом USB-C або USB-A. Зручно покласти у пенал, щоб принести презентацію до школи!
-                </p>
-              </div>
-              <button class="btn btn-sm btn-secondary" onclick="this.textContent='✅ Безпечно витягати через меню!';this.classList.add('btn-success');SoundFX.success();">Правило безпеки</button>
-            </div>
-
-            <div class="device-card">
-              <div>
-                <div style="font-size:2rem;">📲 <strong>Карта пам’яті (microSD)</strong></div>
-                <p style="font-size:0.86rem;color:#475569;margin-top:4px;font-weight:600;">
-                  Крихітна картка розміром із ніготь для смартфонів, екшн-камер, дронів та портативних ігрових приставок.
-                </p>
-              </div>
-              <button class="btn btn-sm btn-secondary" onclick="this.textContent='✅ До 2 ТБ на одній крихітній картці!';this.classList.add('btn-success');SoundFX.success();">Скільки вміщує у 2026?</button>
-            </div>
-
-            <div class="device-card">
-              <div>
-                <div style="font-size:2rem;">☁️ <strong>Хмарне сховище</strong></div>
-                <p style="font-size:0.86rem;color:#475569;margin-top:4px;font-weight:600;">
-                  Google Диск, OneDrive чи iCloud — зберігання файлів на захищених серверах в інтернеті. Доступні з будь-якого комп’ютера чи телефона!
-                </p>
-              </div>
-              <button class="btn btn-sm btn-secondary" onclick="this.textContent='✅ Потрібен доступ до Інтернету!';this.classList.add('btn-success');SoundFX.success();">Що потрібно для доступу?</button>
-            </div>
-
-            <div class="device-card" style="background:#fffbeb;border-color:#fcd34d;">
-              <div>
-                <div style="font-size:2rem;">🏛️ <strong>Ретро: Дискета та CD/DVD</strong></div>
-                <p style="font-size:0.86rem;color:#78350f;margin-top:4px;font-weight:600;">
-                  У сучасних ноутбуках 2026 року дисководів уже немає. Але маленька <strong>дискета 💾</strong> назавжди стала значком кнопки «Зберегти»!
-                </p>
-              </div>
-              <button class="btn btn-sm btn-accent" onclick="this.textContent='💾 Кнопка «Зберегти» у програмах!';SoundFX.success();">Де бачимо дискету?</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- SLIDE 8: Interactive Physical & Eye Break with Countdown Timer -->
-      <section class="slide" id="slide-8" data-slide="8">
-        <div class="slide-header">
-          <div>
-            <span class="slide-tag">🤸 Фізкультхвилинка та гімнастика для очей</span>
-            <h2 class="slide-title">Гра «Не помились!» + Зарядка для очей</h2>
-          </div>
-          <div style="display:flex;gap:8px;">
-            <button class="btn btn-sm btn-primary" id="btnBreakMove" onclick="setBreakMode('move')">🏃 Гра «Не помились!»</button>
-            <button class="btn btn-sm btn-secondary" id="btnBreakEyes" onclick="setBreakMode('eyes')">👀 Вправа для очей</button>
-          </div>
-        </div>
-
-        <div class="slide-body">
-          <div class="break-grid">
-            <div style="text-align:center;background:#f8fafc;border:2.5px solid #c7d2fe;border-radius:24px;padding:18px;">
-              <div class="timer-circle" id="timerCircle" style="--deg: 360deg;">
-                <div class="timer-inner">
-                  <span id="timerText">60</span>
-                  <span style="font-size:0.75rem;color:#64748b;font-weight:800;">СЕКУНД</span>
-                </div>
-              </div>
-              <div style="display:flex;gap:8px;justify-content:center;margin-top:14px;">
-                <button class="btn btn-success btn-sm" id="btnTimerStart" onclick="startBreakTimer()">▶ Старт</button>
-                <button class="btn btn-accent btn-sm" onclick="pauseBreakTimer()">⏸ Пауза</button>
-                <button class="btn btn-secondary btn-sm" onclick="resetBreakTimer()">🔄 Скинути</button>
-              </div>
-            </div>
-
-            <div id="breakContentBox" style="background:linear-gradient(135deg,#eef2ff,#fff7ed);border:2.5px solid #818cf8;border-radius:24px;padding:22px;text-align:center;">
-              <div style="font-size:0.9rem;font-weight:800;color:#4f46e5;">УВАГА! Виконуй те, що НАПИСАНО, а не те, що показує робот-жартівник!</div>
-              <div style="margin:14px 0;padding:14px;background:#fff;border-radius:18px;border:2px solid #cbd5e1;">
-                <div style="font-size:0.85rem;color:#64748b;font-weight:800;">КОМАНДА СЛОВАМИ (ВИКОНУЙ!):</div>
-                <div id="cmdWord" style="font-size:1.75rem;font-weight:900;color:#059669;margin-top:4px;">🙌 ПІДНІМИ РУКИ ВГОРУ!</div>
-              </div>
-              <div style="padding:10px;background:#ffe4e6;border-radius:16px;">
-                <div style="font-size:0.8rem;color:#be123c;font-weight:800;">А РОБОТ ХИТРУЄ І ПОКАЗУЄ:</div>
-                <div id="cmdTrick" style="font-size:2.4rem;margin-top:2px;">🧎 ПРИСІДАЄ!</div>
-              </div>
-              <button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="nextMoveCommand()">🎲 Інша команда</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- SLIDE 9: Exploring "This PC" (Windows 11 / 2026 Simulator) -->
-      <section class="slide" id="slide-9" data-slide="9">
-        <div class="slide-header">
-          <div>
-            <span class="slide-tag">🖥️ Практикум • Провідник 2026</span>
-            <h2 class="slide-title">Як комп’ютер позначає пристрої зберігання?</h2>
-          </div>
-          <button class="btn btn-accent btn-sm" id="btnToggleUsbDrive" onclick="toggleUsbDrive()">🔌 Від’єднати флешку (E:)</button>
-        </div>
-
-        <div class="slide-body">
-          <div class="win11-window">
-            <div class="win11-titlebar">
-              <span>💻 Цей ПК • Пристрої та диски (Windows 11 / 2026)</span>
-              <span style="color:#4f46e5;">Позначаються латинськими літерами з двокрапкою</span>
-            </div>
-            <div class="drives-grid" id="drivesGrid">
-              <div class="drive-tile" id="driveC" onclick="selectSystemDrive(this)">
-                <div style="display:flex;align-items:center;gap:8px;font-weight:900;">
-                  <span style="font-size:1.6rem;">🪟💾</span>
-                  <span>Windows 11 (C:)</span>
-                </div>
-                <div class="drive-bar"><div class="drive-bar-fill" style="width:42%;"></div></div>
-                <div style="font-size:0.8rem;color:#475569;font-weight:700;">NVMe SSD • 296 ГБ вільно з 512 ГБ</div>
-              </div>
-
-              <div class="drive-tile" onclick="SoundFX.click();document.getElementById('driveQuizMsg').textContent='ℹ️ Диск (D:) — це другий розділ диска для твоїх ігор, фото та проєктів. Спробуй знайти диск з операційною системою!';">
-                <div style="display:flex;align-items:center;gap:8px;font-weight:900;">
-                  <span style="font-size:1.6rem;">⚡</span>
-                  <span>Ігри та Проєкти (D:)</span>
-                </div>
-                <div class="drive-bar"><div class="drive-bar-fill" style="width:28%;background:#10b981;"></div></div>
-                <div style="font-size:0.8rem;color:#475569;font-weight:700;">NVMe SSD • 368 ГБ вільно з 512 ГБ</div>
-              </div>
-
-              <div class="drive-tile" id="driveE" onclick="SoundFX.click();document.getElementById('driveQuizMsg').textContent='🔌 Диск (E:) — це під’єднана USB-флешка! Коли її вийняти, вона зникне зі списку.';">
-                <div style="display:flex;align-items:center;gap:8px;font-weight:900;">
-                  <span style="font-size:1.6rem;">🔌</span>
-                  <span>Шкільна флешка (E:)</span>
-                </div>
-                <div class="drive-bar"><div class="drive-bar-fill" style="width:15%;background:#f59e0b;"></div></div>
-                <div style="font-size:0.8rem;color:#475569;font-weight:700;">USB-C • 54,4 ГБ вільно з 64 ГБ</div>
-              </div>
-            </div>
-          </div>
-
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-            <div style="background:#eef2ff;padding:12px 16px;border-radius:16px;font-weight:800;font-size:0.9rem;">
-              1️⃣ Клацни у вікні вище на диск, де встановлена операційна система:
-              <div id="driveQuizMsg" style="margin-top:6px;color:#4f46e5;">Очікую вибір диска...</div>
-            </div>
-
-            <div style="background:#fef3c7;padding:12px 16px;border-radius:16px;font-weight:800;font-size:0.9rem;">
-              2️⃣ Які дві перші літери алфавіту колись належали дисководам для дискет?
-              <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
-                <input class="letter-input" id="ab1" maxlength="1" placeholder="?" oninput="checkAB()" style="width:36px;height:36px;font-size:1.05rem;">
-                <span>: і</span>
-                <input class="letter-input" id="ab2" maxlength="1" placeholder="?" oninput="checkAB()" style="width:36px;height:36px;font-size:1.05rem;">
-                <span>:</span>
-                <span id="abMsg" style="font-size:0.85rem;"></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- SLIDE 10: Match Pairs Game (Modernized LearningApps Exercise) -->
-      <section class="slide" id="slide-10" data-slide="10">
-        <div class="slide-header">
-          <div>
-            <span class="slide-tag">🧩 Інтерактивна гра-тренажер</span>
-            <h2 class="slide-title">Пристрої пам’яті: Знайди пару!</h2>
-            <p class="slide-subtitle">Натисни спочатку на пристрій зліва, а потім на його правильну назву справа!</p>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <span class="feedback-pill" id="matchScore" style="background:#d1fae5;color:#065f46;">Знайдено пар: 0 / 5</span>
-            <button class="btn btn-sm btn-secondary" onclick="initMatchGame()">🔄 Перемішати</button>
-          </div>
-        </div>
-
-        <div class="slide-body">
-          <div class="match-grid">
-            <div class="match-col" id="matchLeftCol"></div>
-            <div class="match-col" id="matchRightCol"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- SLIDE 11: Sorter & Letter Riddles -->
-      <section class="slide" id="slide-11" data-slide="11">
-        <div class="slide-header">
-          <div>
-            <span class="slide-tag">🧠 Перевір себе</span>
-            <h2 class="slide-title">Сортувальник пам’яті та комп’ютерні загадки</h2>
-          </div>
-        </div>
-
-        <div class="slide-body">
-          <!-- Quick Sorter -->
-          <div style="background:#f8fafc;border:2px solid #cbd5e1;border-radius:18px;padding:12px;">
-            <div style="font-weight:900;font-size:0.95rem;margin-bottom:8px;">
-              1️⃣ Розподіли пристрої: натисни на пристрій, а потім обери, яка це пам’ять!
-            </div>
-            <div id="sortPool" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;"></div>
-            <div class="sort-zone-wrap">
-              <div class="sort-bucket" style="background:#fff1f2;border-color:#fb7185;" onclick="assignToBucket('internal')">
-                <div style="font-weight:900;color:#9f1239;font-size:0.9rem;">⚡ Внутрішня (оперативна) — натисни сюди</div>
-                <div id="bucketInternal" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;"></div>
-              </div>
-              <div class="sort-bucket" style="background:#ecfdf5;border-color:#34d399;" onclick="assignToBucket('external')">
-                <div style="font-weight:900;color:#065f46;font-size:0.9rem;">💾 Зовнішня (довготривала) — натисни сюди</div>
-                <div id="bucketExternal" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Letter Riddles -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-            <div style="background:#eef2ff;border-radius:18px;padding:12px 15px;">
-              <div style="font-weight:800;font-size:0.88rem;margin-bottom:6px;">
-                2️⃣ Загадка: Маленька, кишенькова, через USB підключається, уся презентація на ній зберігається:
-              </div>
-              <div class="letter-boxes" id="riddle1Boxes"></div>
-            </div>
-
-            <div style="background:#fef3c7;border-radius:18px;padding:12px 15px;">
-              <div style="font-weight:800;font-size:0.88rem;margin-bottom:6px;">
-                3️⃣ Загадка: Перша зовнішня пам’ять комп’ютера, що стала іконкою кнопки «Зберегти» 💾:
-              </div>
-              <div class="letter-boxes" id="riddle2Boxes"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- SLIDE 12: Creative Canvas Workshop & Final Reflection -->
-      <section class="slide" id="slide-12" data-slide="12">
-        <div class="slide-header">
-          <div>
-            <span class="slide-tag">🎨 Творча лабораторія 2026+</span>
-            <h2 class="slide-title">Створи носій інформації майбутнього та підбий підсумки!</h2>
-          </div>
-          <button class="btn btn-accent" onclick="launchFireworksBurst(true)">🎆 Салют перемоги!</button>
-        </div>
-
-        <div class="slide-body">
-          <div class="studio-wrap">
-            <div>
-              <canvas id="drawCanvas" class="draw-canvas" width="440" height="230"></canvas>
-            </div>
-
-            <div style="display:flex;flex-direction:column;gap:10px;">
-              <div style="font-weight:900;font-size:0.98rem;">🖌️ Інструменти дизайнера:</div>
-              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                <button class="color-dot active" style="background:#4f46e5;" onclick="setBrushColor('#4f46e5', this)"></button>
-                <button class="color-dot" style="background:#0ea5e9;" onclick="setBrushColor('#0ea5e9', this)"></button>
-                <button class="color-dot" style="background:#10b981;" onclick="setBrushColor('#10b981', this)"></button>
-                <button class="color-dot" style="background:#f59e0b;" onclick="setBrushColor('#f59e0b', this)"></button>
-                <button class="color-dot" style="background:#f43f5e;" onclick="setBrushColor('#f43f5e', this)"></button>
-                <button class="color-dot" style="background:#1e293b;" onclick="setBrushColor('#1e293b', this)"></button>
-                <button class="btn btn-sm btn-secondary" onclick="stampSticker('🚀 100 ТБ')">+ 🚀 100 ТБ</button>
-                <button class="btn btn-sm btn-secondary" onclick="stampSticker('⚡ НУШ 2026')">+ ⚡ 2026</button>
-                <button class="btn btn-sm btn-secondary" onclick="stampSticker('🇺🇦')">+ 🇺🇦</button>
-              </div>
-
-              <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                <button class="btn btn-sm btn-secondary" onclick="drawDeviceTemplate()">📐 Шаблон супер-чіпа</button>
-                <button class="btn btn-sm btn-secondary" onclick="clearDrawCanvas()">🗑️ Очистити</button>
-                <button class="btn btn-sm btn-primary" onclick="downloadDrawing()">📥 Зберегти PNG</button>
-              </div>
-
-              <div style="background:#f1f5f9;border-radius:16px;padding:11px 14px;margin-top:4px;">
-                <div style="font-weight:900;font-size:0.9rem;margin-bottom:6px;">🌟 Рефлексія уроку: Як тобі сьогоднішній урок?</div>
-                <div style="display:flex;gap:8px;flex-wrap:wrap;" id="reflectionBtns">
-                  <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🚀 Супер! Усе зрозуміло!')">🚀 Супер! Усе зрозуміло!</button>
-                  <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '😊 Цікаво, хочу ще!')">😊 Цікаво, хочу ще!</button>
-                  <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🤔 Потрібно трохи повторити')">🤔 Трохи повторю</button>
-                </div>
-                <div id="reflectionReply" style="margin-top:6px;font-weight:800;font-size:0.86rem;color:#059669;"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-    </main>
-
-    <!-- Bottom Navigation -->
-    <footer class="bottom-nav">
-      <button class="btn btn-secondary" id="btnPrev" onclick="changeSlide(-1)">⬅ Назад</button>
-
-      <div style="display:flex;align-items:center;gap:12px;flex:1;justify-content:center;">
-        <span style="font-weight:900;font-size:0.95rem;color:var(--primary-dark);" id="slideIndicator">Слайд 1 / 12</span>
-        <div class="progress-track">
-          <div class="progress-fill" id="progressFill"></div>
-        </div>
-      </div>
-
-      <button class="btn btn-primary" id="btnNext" onclick="changeSlide(1)">Далі ➡</button>
-    </footer>
+  <!-- ======================= УЧЕНЬ ======================= -->
+  <div id="studentView" class="hidden">
+    <div id="waitScreen">
+      <div class="big">🧑‍🏫</div>
+      <h1>Урок ще не почався</h1>
+      <p>Зачекай трошки — учитель зараз відкриє урок, і він з’явиться тут сам!</p>
+      <span class="chip"><span class="dot" id="sNetDot"></span><span id="sNetText">Підключаємося…</span></span>
+    </div>
+    <iframe id="studentFrame" class="lesson-frame hidden" title="Урок" allow="fullscreen; autoplay"></iframe>
   </div>
 
-  <!-- Teacher QR & Link Share Modal -->
-  <div class="modal-backdrop" id="shareModal">
+  <!-- ======================= ВЧИТЕЛЬ: каталог ======================= -->
+  <div id="catalogView" class="hidden">
+    <div class="wrap">
+      <div class="topbar">
+        <div class="brand"><span class="pill">ВЧИТЕЛЬ</span> Інформатика • Панель уроків</div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <span class="chip"><span class="dot" id="tNetDot"></span><span id="tNetText">Підключаємося…</span></span>
+          <button class="btn btn-sm btn-secondary" onclick="openQR()">📲 Посилання для учнів</button>
+        </div>
+      </div>
+
+      <div class="now idle" id="nowBox"></div>
+
+      <div class="tabs" id="classTabs"></div>
+      <div class="grid" id="lessonGrid"><div class="empty">Завантажуємо список уроків…</div></div>
+      <div class="hint">💡 «Зробити поточним» — учні на своєму посиланні одразу побачать цей урок. «Переглянути» відкриває урок у новій вкладці лише для вас (на учнів не впливає).</div>
+    </div>
+  </div>
+
+  <!-- ======================= ВЧИТЕЛЬ: керування уроком ======================= -->
+  <div id="controlView" class="hidden">
+    <div class="ctrlbar">
+      <button class="btn btn-sm btn-secondary" onclick="showCatalog()">← Усі уроки</button>
+      <span class="dot live"></span>
+      <span class="ttl" id="ctrlTitle"></span>
+      <span class="chip" style="background:transparent;color:#c7d2fe;border-color:#4338ca;"><span class="dot" id="cNetDot"></span><span id="cNetText"></span></span>
+      <button class="btn btn-sm btn-secondary" onclick="openQR()">📲 QR учням</button>
+      <button class="btn btn-sm btn-danger" onclick="endLesson()">⏹ Завершити урок</button>
+    </div>
+    <div id="teacherFrameWrap"><iframe id="teacherFrame" class="lesson-frame" title="Керування уроком" allow="fullscreen; autoplay"></iframe></div>
+  </div>
+
+  <div class="modal" id="qrModal" onclick="if(event.target===this)closeQR()">
     <div class="modal-card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <h3 style="font-weight:900;font-size:1.2rem;color:#1e1b4b;">📲 Посилання для учнів</h3>
-        <button class="btn btn-sm btn-secondary" onclick="closeShareModal()">✕</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <h3 style="font-weight:900;color:#1e1b4b;">📲 Посилання для учнів</h3>
+        <button class="btn btn-sm btn-secondary" onclick="closeQR()">✕</button>
       </div>
-      <p style="font-size:0.88rem;color:#475569;font-weight:600;">
-        Учні одразу відкривають учнівську версію без кодів кімнати та підключаються до вашого екрана автоматично!
-      </p>
-      <div style="margin:14px auto;padding:12px;background:#fff;border:2px solid #e2e8f0;border-radius:18px;display:inline-block;">
-        <canvas id="qrCanvas" width="210" height="210"></canvas>
-      </div>
-      <div class="url-box" id="studentUrlText"></div>
-      <div style="display:flex;gap:10px;justify-content:center;">
-        <button class="btn btn-primary" id="btnCopyUrl" onclick="copyStudentUrl()">📋 Копіювати посилання</button>
-        <button class="btn btn-secondary" onclick="closeShareModal()">Закрити</button>
-      </div>
-      <div id="copyFeedback" style="margin-top:8px;font-weight:800;font-size:0.85rem;color:#059669;"></div>
+      <p style="font-size:.9rem;color:#475569;font-weight:600;margin-top:6px;">Це посилання завжди однакове: учні відкривають його один раз, а урок змінюється сам, коли ви робите інший урок поточним.</p>
+      <div style="margin:14px auto;padding:12px;border:2px solid #e2e8f0;border-radius:18px;display:inline-block;"><canvas id="qrCanvas" width="210" height="210"></canvas></div>
+      <div class="url-box" id="qrUrl"></div>
+      <button class="btn btn-primary" onclick="copyUrl()">📋 Копіювати</button>
+      <div id="copyFb" style="margin-top:8px;font-weight:800;font-size:.85rem;color:#059669;"></div>
     </div>
   </div>
 
   <script>
-    /* =====================================================================
-       1. SAFE STORAGE & ROLE DETECTION (Default = Student; ?role=teacher / #teacher = Teacher)
-       ===================================================================== */
-    function safeStorageGet(key, fallback) {
-      try { return window.localStorage.getItem(key) ?? fallback; } catch (e) { return fallback; }
+    /* ---------- Роль та адреса ---------- */
+    const params = new URLSearchParams(location.search);
+    const isTeacher = params.get('role') === 'teacher';
+    function rootUrl() {
+      const u = new URL(location.href);
+      u.search = ''; u.hash = '';
+      u.pathname = u.pathname.replace(/index\.html$/i, '');
+      return u.toString();
     }
-    function safeStorageSet(key, val) {
-      try { window.localStorage.setItem(key, val); } catch (e) {}
+    const ROOT = rootUrl();
+    function fnv(str) {
+      let h = 2166136261;
+      for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+      return (h >>> 0).toString(36);
+    }
+    const TOPIC = 'informatyka_shell_' + fnv(ROOT) + '/current';
+
+    /* ---------- Поточний урок ---------- */
+    // { lesson: '2-klas/urok-01/' | null, title, cls, ts }
+    let current = { lesson: null, title: '', cls: '', ts: 0 };
+    let ownState = false;       // вчитель підтримує стан живим (повторно публікує)
+    let manifest = null;
+    let activeClass = null;
+    let loadedTeacherLesson = null;
+    let loadedStudentLesson = null;
+    let wantControl = isTeacher && location.hash === '#control';
+
+    function applyCurrent(data) {
+      if (!data || typeof data.ts !== 'number' || data.ts < current.ts) return;
+      const changed = data.ts !== current.ts;
+      current = { lesson: data.lesson || null, title: data.title || '', cls: data.cls || '', ts: data.ts };
+      if (isTeacher) ownState = true;
+      if (changed) render();
     }
 
-    let isTeacher = false;
+    /* ---------- Зв’язок: MQTT (усі брокери одразу) + BroadcastChannel ---------- */
+    const BROKERS = ['wss://broker.emqx.io:8084/mqtt', 'wss://broker.hivemq.com:8884/mqtt', 'wss://test.mosquitto.org:8081/mqtt'];
+    const clients = [];
+    let bc = null;
     try {
-      const params = new URLSearchParams(window.location.search || '');
-      const hash = (window.location.hash || '').toLowerCase();
-      if (params.get('role') === 'teacher' || hash.includes('teacher')) {
-        isTeacher = true;
-      }
-    } catch (e) {}
-
-    if (isTeacher) {
-      document.body.classList.add('is-teacher');
-    }
-
-    // Secret double-click on badge to switch to teacher mode if opened locally without params
-    document.getElementById('brandBadge').addEventListener('dblclick', () => {
-      if (!isTeacher) {
-        try {
-          window.location.hash = 'teacher';
-          window.location.reload();
-        } catch (e) {}
-      }
-    });
-
-    function getCleanStudentUrl() {
-      try {
-        const u = new URL(window.location.href);
-        u.search = '';
-        u.hash = '';
-        return u.toString();
-      } catch (e) {
-        return (window.location.href || '').split('?')[0].split('#')[0];
-      }
-    }
-
-    /* =====================================================================
-       2. WEB AUDIO API SOUND EFFECTS (Zero external audio files)
-       ===================================================================== */
-    const SoundFX = (() => {
-      let ctx = null;
-      let enabled = safeStorageGet('nush4_sound', '1') !== '0';
-
-      function getCtx() {
-        try {
-          if (!ctx) {
-            const AC = window.AudioContext || window.webkitAudioContext;
-            if (AC) ctx = new AC();
-          }
-          if (ctx && ctx.state === 'suspended') {
-            ctx.resume().catch(() => {});
-          }
-        } catch (e) {}
-        return ctx;
-      }
-
-      function tone(freq, endFreq, duration, type = 'sine', gainVal = 0.14, delay = 0) {
-        if (!enabled) return;
-        try {
-          const c = getCtx();
-          if (!c) return;
-          const now = c.currentTime + delay;
-          const osc = c.createOscillator();
-          const gain = c.createGain();
-          osc.type = type;
-          osc.frequency.setValueAtTime(freq, now);
-          if (endFreq && endFreq !== freq) {
-            osc.frequency.exponentialRampToValueAtTime(endFreq, now + duration);
-          }
-          gain.gain.setValueAtTime(0.001, now);
-          gain.gain.linearRampToValueAtTime(gainVal, now + 0.015);
-          gain.gain.exponentialRampToValueAtTime(0.0008, now + duration);
-          osc.connect(gain);
-          gain.connect(c.destination);
-          osc.start(now);
-          osc.stop(now + duration + 0.02);
-        } catch (e) {}
-      }
-
-      return {
-        isEnabled: () => enabled,
-        toggle: () => {
-          enabled = !enabled;
-          safeStorageSet('nush4_sound', enabled ? '1' : '0');
-          if (enabled) SoundFX.click();
-          return enabled;
-        },
-        click: () => tone(540, 720, 0.07, 'sine', 0.11),
-        pop: () => {
-          tone(420, 960, 0.09, 'triangle', 0.15, 0);
-          tone(1180, 1560, 0.11, 'sine', 0.09, 0.04);
-        },
-        success: () => {
-          tone(523.25, 523.25, 0.12, 'triangle', 0.14, 0);
-          tone(659.25, 659.25, 0.12, 'triangle', 0.14, 0.09);
-          tone(783.99, 783.99, 0.14, 'triangle', 0.14, 0.18);
-          tone(1046.5, 1046.5, 0.28, 'sine', 0.16, 0.27);
-        },
-        error: () => {
-          tone(280, 210, 0.18, 'sawtooth', 0.08, 0);
-          tone(220, 175, 0.22, 'sawtooth', 0.08, 0.14);
-        },
-        tick: () => tone(880, 880, 0.05, 'sine', 0.08),
-        firework: () => {
-          if (!enabled) return;
-          try {
-            const c = getCtx();
-            if (!c) return;
-            // Whistle + Boom + Sparkles
-            tone(450, 1250, 0.22, 'sine', 0.07, 0);
-            tone(140, 42, 0.45, 'triangle', 0.22, 0.20);
-            [1320, 1580, 1860, 2100].forEach((f, idx) => {
-              tone(f, f * 0.75, 0.16, 'sine', 0.07, 0.24 + idx * 0.05);
-            });
-          } catch (e) {}
-        }
+      bc = new BroadcastChannel(TOPIC);
+      bc.onmessage = (e) => {
+        const m = e.data || {};
+        if (m.type === 'current') applyCurrent(m.payload);
+        if (m.type === 'hello' && isTeacher && ownState) publish();
       };
-    })();
-
-    const btnSoundToggle = document.getElementById('btnSoundToggle');
-    function updateSoundBtn() {
-      btnSoundToggle.textContent = SoundFX.isEnabled() ? '🔊 Звук' : '🔇 Без звуку';
-    }
-    updateSoundBtn();
-    btnSoundToggle.addEventListener('click', () => {
-      SoundFX.toggle();
-      updateSoundBtn();
-    });
-
-    /* =====================================================================
-       3. FALLING THEMATIC EMOJIS & CLICK-TO-EXPLODE + FIREWORKS CANVAS
-       ===================================================================== */
-    const bgCanvas = document.getElementById('emojiBgCanvas');
-    const bgCtx = bgCanvas.getContext('2d');
-    const fxCanvas = document.getElementById('fxCanvas');
-    const fxCtx = fxCanvas.getContext('2d');
-
-    let W = window.innerWidth;
-    let H = window.innerHeight;
-    function resizeCanvases() {
-      W = bgCanvas.width = fxCanvas.width = window.innerWidth;
-      H = bgCanvas.height = fxCanvas.height = window.innerHeight;
-    }
-    resizeCanvases();
-    window.addEventListener('resize', resizeCanvases);
-
-    const LESSON_EMOJIS = ['💾', '💿', '🔌', '🧠', '⚡', '💻', '📱', '☁️', '🔋', '📁', '🚀'];
-    const SPARK_COLORS = ['#4f46e5', '#0ea5e9', '#10b981', '#f59e0b', '#f43f5e', '#a855f7', '#ec4899'];
-
-    const fallingEmojis = [];
-    const particles = [];
-    const flashes = [];
-
-    function spawnFallingEmoji(randomY = false) {
-      const size = 24 + Math.random() * 14;
-      fallingEmojis.push({
-        char: LESSON_EMOJIS[Math.floor(Math.random() * LESSON_EMOJIS.length)],
-        x: 30 + Math.random() * Math.max(100, W - 60),
-        y: randomY ? Math.random() * H : -40 - Math.random() * 120,
-        vy: 0.45 + Math.random() * 0.65,
-        vx: (Math.random() - 0.5) * 0.35,
-        wobble: Math.random() * Math.PI * 2,
-        wobbleSpeed: 0.015 + Math.random() * 0.02,
-        rot: (Math.random() - 0.5) * 0.5,
-        vrot: (Math.random() - 0.5) * 0.012,
-        size: size,
-        radius: size * 0.72,
-        alpha: 0.34 + Math.random() * 0.22
-      });
-    }
-
-    const initialEmojiCount = Math.min(20, Math.max(11, Math.floor(W / 75)));
-    for (let i = 0; i < initialEmojiCount; i++) {
-      spawnFallingEmoji(true);
-    }
-
-    function createExplosion(x, y, count = 24, isBigFirework = false) {
-      flashes.push({
-        x, y,
-        r: 6,
-        maxR: isBigFirework ? 95 : 52,
-        alpha: 0.95,
-        color: SPARK_COLORS[Math.floor(Math.random() * SPARK_COLORS.length)]
-      });
-      for (let i = 0; i < count; i++) {
-        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.3;
-        const speed = (isBigFirework ? 3.2 : 1.8) + Math.random() * (isBigFirework ? 5.5 : 3.4);
-        particles.push({
-          x, y,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed - (isBigFirework ? 1.5 : 0.6),
-          gravity: 0.11,
-          drag: 0.96,
-          size: (isBigFirework ? 4.5 : 3.2) + Math.random() * 3,
-          color: SPARK_COLORS[Math.floor(Math.random() * SPARK_COLORS.length)],
-          alpha: 1,
-          decay: 0.018 + Math.random() * 0.014
-        });
-      }
-    }
-
-    // Listen to pointerdown globally without blocking slide UI
-    document.addEventListener('pointerdown', (e) => {
-      const px = e.clientX;
-      const py = e.clientY;
-      // Check if user hit any falling emoji
-      for (let i = fallingEmojis.length - 1; i >= 0; i--) {
-        const em = fallingEmojis[i];
-        const dist = Math.hypot(em.x - px, em.y - py);
-        if (dist <= em.radius * 1.45) {
-          fallingEmojis.splice(i, 1);
-          createExplosion(em.x, em.y, 26, false);
-          SoundFX.pop();
-          setTimeout(() => spawnFallingEmoji(false), 900);
-          break;
-        }
-      }
-    }, { passive: true });
-
-    function launchFireworksBurst(broadcastToClass = false) {
-      SoundFX.firework();
-      const bursts = 6;
-      for (let b = 0; b < bursts; b++) {
-        setTimeout(() => {
-          const bx = W * (0.18 + Math.random() * 0.64);
-          const by = H * (0.18 + Math.random() * 0.45);
-          createExplosion(bx, by, 44, true);
-          if (b % 2 === 1) SoundFX.firework();
-        }, b * 260);
-      }
-      if (broadcastToClass && isTeacher) {
-        publishFireworks();
-      }
-    }
-
-    function animateCanvases() {
-      // 1. Falling Emojis
-      bgCtx.clearRect(0, 0, W, H);
-      for (let i = 0; i < fallingEmojis.length; i++) {
-        const em = fallingEmojis[i];
-        em.wobble += em.wobbleSpeed;
-        em.x += em.vx + Math.sin(em.wobble) * 0.35;
-        em.y += em.vy;
-        em.rot += em.vrot;
-
-        if (em.y > H + 50) {
-          em.y = -40;
-          em.x = 30 + Math.random() * Math.max(100, W - 60);
-        }
-
-        bgCtx.save();
-        bgCtx.translate(em.x, em.y);
-        bgCtx.rotate(em.rot);
-        bgCtx.globalAlpha = em.alpha;
-        bgCtx.font = `${em.size}px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif`;
-        bgCtx.textAlign = 'center';
-        bgCtx.textBaseline = 'middle';
-        bgCtx.fillText(em.char, 0, 0);
-        bgCtx.restore();
-      }
-
-      // 2. Flashes & Spark Particles
-      fxCtx.clearRect(0, 0, W, H);
-      for (let i = flashes.length - 1; i >= 0; i--) {
-        const fl = flashes[i];
-        fl.r += (fl.maxR - fl.r) * 0.22;
-        fl.alpha -= 0.055;
-        if (fl.alpha <= 0) {
-          flashes.splice(i, 1);
-          continue;
-        }
-        fxCtx.save();
-        fxCtx.beginPath();
-        fxCtx.arc(fl.x, fl.y, fl.r, 0, Math.PI * 2);
-        fxCtx.strokeStyle = fl.color;
-        fxCtx.lineWidth = 4;
-        fxCtx.globalAlpha = fl.alpha;
-        fxCtx.stroke();
-        fxCtx.restore();
-      }
-
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        p.vx *= p.drag;
-        p.vy = p.vy * p.drag + p.gravity;
-        p.x += p.vx;
-        p.y += p.vy;
-        p.alpha -= p.decay;
-        if (p.alpha <= 0) {
-          particles.splice(i, 1);
-          continue;
-        }
-        fxCtx.save();
-        fxCtx.globalAlpha = p.alpha;
-        fxCtx.fillStyle = p.color;
-        fxCtx.beginPath();
-        fxCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        fxCtx.fill();
-        fxCtx.restore();
-      }
-
-      requestAnimationFrame(animateCanvases);
-    }
-    requestAnimationFrame(animateCanvases);
-
-    /* =====================================================================
-       4. SLIDE NAVIGATION & TEACHER/STUDENT REAL-TIME SYNC (MQTT + BroadcastChannel)
-       ===================================================================== */
-    const slides = Array.from(document.querySelectorAll('.slide'));
-    const totalSlides = slides.length;
-    let currentSlide = 1;
-    let followMode = true; // When true, teacher leads the class (students cannot flip slides)
-
-    const btnPrev = document.getElementById('btnPrev');
-    const btnNext = document.getElementById('btnNext');
-    const slideIndicator = document.getElementById('slideIndicator');
-    const progressFill = document.getElementById('progressFill');
-    const syncDot = document.getElementById('syncDot');
-    const syncText = document.getElementById('syncText');
-    const btnFollowToggle = document.getElementById('btnFollowToggle');
-
-    function renderSlide(targetIndex, fromSync = false) {
-      const clamped = Math.max(1, Math.min(totalSlides, targetIndex));
-      currentSlide = clamped;
-      slides.forEach((s, idx) => {
-        s.classList.toggle('active', idx + 1 === currentSlide);
-      });
-      slideIndicator.textContent = `Слайд ${currentSlide} / ${totalSlides}`;
-      progressFill.style.width = `${(currentSlide / totalSlides) * 100}%`;
-      updateNavLockUI();
-
-      if (isTeacher && !fromSync) {
-        publishState();
-      }
-    }
-
-    function updateNavLockUI() {
-      const lockedForStudent = !isTeacher && followMode;
-      btnPrev.disabled = currentSlide === 1 || lockedForStudent;
-      btnNext.disabled = currentSlide === totalSlides || lockedForStudent;
-
-      if (isTeacher) {
-        btnFollowToggle.textContent = followMode ? '🔒 Вести клас за собою' : '🔓 Вільний перегляд';
-        btnFollowToggle.className = followMode ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary';
-      } else {
-        if (followMode) {
-          syncDot.className = 'status-dot locked';
-          syncText.textContent = 'Керує вчитель';
-        } else {
-          syncDot.className = 'status-dot online';
-          syncText.textContent = 'Вільний перегляд';
-        }
-      }
-    }
-
-    function changeSlide(delta) {
-      if (!isTeacher && followMode) return;
-      SoundFX.click();
-      renderSlide(currentSlide + delta, false);
-    }
-
-    document.addEventListener('keydown', (e) => {
-      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA')) return;
-      if (!isTeacher && followMode) return;
-      if (e.key === 'ArrowRight' || e.key === 'PageDown') changeSlide(1);
-      if (e.key === 'ArrowLeft' || e.key === 'PageUp') changeSlide(-1);
-    });
-
-    if (btnFollowToggle) {
-      btnFollowToggle.addEventListener('click', () => {
-        if (!isTeacher) return;
-        followMode = !followMode;
-        SoundFX.click();
-        updateNavLockUI();
-        publishState();
-      });
-    }
-
-    document.getElementById('btnClassFireworks').addEventListener('click', () => {
-      launchFireworksBurst(true);
-    });
-
-    // Build a deterministic unique channel for this exact lesson deployment (no 4-digit codes!)
-    function computeLessonTopic() {
-      let basis = 'nush4-inf-urok9-2026';
-      try {
-        const clean = getCleanStudentUrl().replace(/\/index\.html$/i, '/');
-        if (clean && !clean.startsWith('file:')) {
-          basis = clean;
-        }
-      } catch (e) {}
-      let hash = 2166136261;
-      for (let i = 0; i < basis.length; i++) {
-        hash ^= basis.charCodeAt(i);
-        hash = Math.imul(hash, 16777619);
-      }
-      return 'nush4_urok9_2026_' + (hash >>> 0).toString(36);
-    }
-
-    const LESSON_TOPIC = computeLessonTopic();
-    const STATE_TOPIC = LESSON_TOPIC + '/state';
-    const FW_TOPIC = LESSON_TOPIC + '/fireworks';
-    const PRESENCE_PREFIX = LESSON_TOPIC + '/presence/';
-    const clientId = (isTeacher ? 't_' : 's_') + Math.random().toString(36).slice(2, 10);
-
-    let mqttClient = null;
-    let bcChannel = null;
-    const onlineStudents = new Map(); // id -> lastSeenTs
-    let lastFireworkId = '';
-
-    function refreshStudentCounter() {
-      const now = Date.now();
-      for (const [id, ts] of onlineStudents.entries()) {
-        if (now - ts > 45000) onlineStudents.delete(id);
-      }
-      const el = document.getElementById('studentCounter');
-      if (el) el.textContent = `👨‍🎓 Учнів онлайн: ${onlineStudents.size}`;
-    }
-    setInterval(refreshStudentCounter, 5000);
-
-    function handleIncomingState(data) {
-      if (!data || typeof data !== 'object') return;
-      if (typeof data.followMode === 'boolean') {
-        followMode = data.followMode;
-      }
-      if (!isTeacher && typeof data.slide === 'number') {
-        renderSlide(data.slide, true);
-      } else {
-        updateNavLockUI();
-      }
-    }
-
-    function handleIncomingFirework(data) {
-      if (!data || !data.id || data.id === lastFireworkId) return;
-      lastFireworkId = data.id;
-      launchFireworksBurst(false);
-    }
-
-    function publishState() {
-      const payload = { slide: currentSlide, followMode: followMode, ts: Date.now() };
-      try {
-        if (bcChannel) bcChannel.postMessage({ type: 'state', payload });
-      } catch (e) {}
-      try {
-        if (mqttClient && mqttClient.connected) {
-          mqttClient.publish(STATE_TOPIC, JSON.stringify(payload), { qos: 1, retain: true });
-        }
-      } catch (e) {}
-    }
-
-    function publishFireworks() {
-      const payload = { id: Date.now() + '_' + Math.random().toString(36).slice(2, 6) };
-      lastFireworkId = payload.id;
-      try {
-        if (bcChannel) bcChannel.postMessage({ type: 'fireworks', payload });
-      } catch (e) {}
-      try {
-        if (mqttClient && mqttClient.connected) {
-          mqttClient.publish(FW_TOPIC, JSON.stringify(payload), { qos: 0, retain: false });
-        }
-      } catch (e) {}
-    }
-
-    function publishPresence() {
-      if (isTeacher) return;
-      const payload = { id: clientId, ts: Date.now() };
-      try {
-        if (bcChannel) bcChannel.postMessage({ type: 'presence', payload });
-      } catch (e) {}
-      try {
-        if (mqttClient && mqttClient.connected) {
-          mqttClient.publish(PRESENCE_PREFIX + clientId, JSON.stringify(payload), { qos: 0, retain: true });
-        }
-      } catch (e) {}
-    }
-
-    // 1) Local BroadcastChannel (works offline between tabs too!)
-    try {
-      if ('BroadcastChannel' in window) {
-        bcChannel = new BroadcastChannel(LESSON_TOPIC);
-        bcChannel.onmessage = (ev) => {
-          const msg = ev.data || {};
-          if (msg.type === 'state') handleIncomingState(msg.payload);
-          if (msg.type === 'fireworks') handleIncomingFirework(msg.payload);
-          if (msg.type === 'presence' && isTeacher && msg.payload && msg.payload.id) {
-            onlineStudents.set(msg.payload.id, Date.now());
-            refreshStudentCounter();
-            publishState();
-          }
-          if (msg.type === 'hello' && isTeacher) {
-            publishState();
-          }
-        };
-        if (!isTeacher) {
-          bcChannel.postMessage({ type: 'hello' });
-          publishPresence();
-        }
-      }
+      if (!isTeacher) bc.postMessage({ type: 'hello' });
     } catch (e) {}
 
-    // 2) Asynchronous MQTT over WSS with primary + fallback brokers & CDNs
-    const BROKERS = [
-      'wss://broker.emqx.io:8084/mqtt',
-      'wss://broker.hivemq.com:8884/mqtt',
-      'wss://test.mosquitto.org:8081/mqtt'
-    ];
-    let brokerIdx = 0;
+    function publish() {
+      const payload = JSON.stringify(current);
+      try { if (bc) bc.postMessage({ type: 'current', payload: current }); } catch (e) {}
+      clients.forEach(c => { try { if (c.connected) c.publish(TOPIC, payload, { qos: 1, retain: true }); } catch (e) {} });
+    }
 
-    function connectMqttBroker() {
-      try {
-        if (!window.mqtt || typeof window.mqtt.connect !== 'function') return;
-        const url = BROKERS[brokerIdx % BROKERS.length];
-        const opts = {
-          clientId: clientId,
-          clean: true,
-          connectTimeout: 6000,
-          reconnectPeriod: 4000
-        };
-        if (!isTeacher) {
-          opts.will = {
-            topic: PRESENCE_PREFIX + clientId,
-            payload: '',
-            qos: 0,
-            retain: true
-          };
+    function netStatus() {
+      const n = clients.filter(c => c.connected).length;
+      const txt = n ? `Зв’язок є (${n}/${BROKERS.length})` : 'Немає зв’язку з сервером';
+      ['s', 't', 'c'].forEach(p => {
+        const d = document.getElementById(p + 'NetDot'), t = document.getElementById(p + 'NetText');
+        if (d) d.className = 'dot' + (n ? ' on' : '');
+        if (t) t.textContent = txt;
+      });
+    }
+
+    function connectAll() {
+      if (!window.mqtt) return;
+      BROKERS.forEach(url => {
+        try {
+          const c = window.mqtt.connect(url, {
+            clientId: (isTeacher ? 'tsh_' : 'ssh_') + Math.random().toString(36).slice(2, 10),
+            clean: true, connectTimeout: 8000, reconnectPeriod: 5000
+          });
+          c.on('connect', () => { c.subscribe(TOPIC, { qos: 1 }); if (isTeacher && ownState) publish(); netStatus(); });
+          c.on('message', (t, m) => { try { const s = m.toString(); if (s) applyCurrent(JSON.parse(s)); } catch (e) {} });
+          c.on('close', netStatus);
+          c.on('offline', netStatus);
+          c.on('error', () => {});
+          clients.push(c);
+        } catch (e) {}
+      });
+      netStatus();
+    }
+    (function loadMqtt(urls, i = 0) {
+      if (i >= urls.length) { netStatus(); return; }
+      const s = document.createElement('script');
+      s.src = urls[i];
+      s.async = true;
+      s.onload = connectAll;
+      s.onerror = () => loadMqtt(urls, i + 1);
+      document.head.appendChild(s);
+    })(['https://unpkg.com/mqtt@5/dist/mqtt.min.js', 'https://cdn.jsdelivr.net/npm/mqtt@5/dist/mqtt.min.js']);
+
+    // Вчитель тримає стан «живим» на випадок, якщо сервер його забуде
+    setInterval(() => { if (isTeacher && ownState) publish(); }, 20000);
+
+    /* ---------- Відображення ---------- */
+    function render() {
+      if (isTeacher) renderTeacher(); else renderStudent();
+    }
+
+    function renderStudent() {
+      const frame = document.getElementById('studentFrame');
+      const wait = document.getElementById('waitScreen');
+      if (current.lesson) {
+        if (loadedStudentLesson !== current.lesson) {
+          loadedStudentLesson = current.lesson;
+          frame.src = current.lesson;
         }
-
-        mqttClient = window.mqtt.connect(url, opts);
-
-        mqttClient.on('connect', () => {
-          if (isTeacher) {
-            syncDot.className = 'status-dot online';
-            syncText.textContent = 'Онлайн • Клас підключено';
-            mqttClient.subscribe(PRESENCE_PREFIX + '+');
-            publishState();
-          } else {
-            mqttClient.subscribe(STATE_TOPIC);
-            mqttClient.subscribe(FW_TOPIC);
-            publishPresence();
-            updateNavLockUI();
-          }
-        });
-
-        mqttClient.on('message', (topic, message) => {
-          try {
-            const raw = message ? message.toString() : '';
-            if (topic === STATE_TOPIC && raw) {
-              handleIncomingState(JSON.parse(raw));
-            } else if (topic === FW_TOPIC && raw) {
-              handleIncomingFirework(JSON.parse(raw));
-            } else if (topic.startsWith(PRESENCE_PREFIX) && isTeacher) {
-              const sid = topic.slice(PRESENCE_PREFIX.length);
-              if (!raw) {
-                onlineStudents.delete(sid);
-              } else {
-                onlineStudents.set(sid, Date.now());
-              }
-              refreshStudentCounter();
-            }
-          } catch (e) {}
-        });
-
-        mqttClient.on('error', () => {
-          try { mqttClient.end(true); } catch (e) {}
-          brokerIdx++;
-          if (brokerIdx < BROKERS.length * 2) {
-            setTimeout(connectMqttBroker, 1500);
-          }
-        });
-      } catch (e) {}
+        frame.classList.remove('hidden');
+        wait.classList.add('hidden');
+        document.title = current.title || 'Урок';
+      } else {
+        loadedStudentLesson = null;
+        frame.src = 'about:blank';
+        frame.classList.add('hidden');
+        wait.classList.remove('hidden');
+        document.title = 'Інформатика • Очікуємо урок';
+      }
     }
 
-    setInterval(() => {
-      if (!isTeacher) publishPresence();
-      else publishState();
-    }, 15000);
-
-    function loadMqttScriptAsync(urls, idx = 0) {
-      if (idx >= urls.length) return;
-      try {
-        const s = document.createElement('script');
-        s.src = urls[idx];
-        s.async = true;
-        s.onload = () => connectMqttBroker();
-        s.onerror = () => loadMqttScriptAsync(urls, idx + 1);
-        document.head.appendChild(s);
-      } catch (e) {}
+    function findLesson(path) {
+      if (!manifest) return null;
+      for (const c of manifest.classes) for (const l of c.lessons) if (l.path === path) return { cls: c, lesson: l };
+      return null;
     }
 
-    loadMqttScriptAsync([
-      'https://unpkg.com/mqtt/dist/mqtt.min.js',
-      'https://cdn.jsdelivr.net/npm/mqtt/dist/mqtt.min.js'
-    ]);
+    function renderTeacher() {
+      // блок «Зараз іде»
+      const box = document.getElementById('nowBox');
+      if (current.lesson) {
+        box.className = 'now';
+        box.innerHTML = `<div><div class="lbl"><span class="dot live" style="display:inline-block;margin-right:6px;"></span>ЗАРАЗ У КЛАСІ</div>
+          <div class="ttl">${esc(current.cls)} • ${esc(current.title)}</div></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn btn-success" onclick="openControl()">🎛 Керувати презентацією</button>
+            <button class="btn btn-danger" onclick="endLesson()">⏹ Завершити урок</button>
+          </div>`;
+      } else {
+        box.className = 'now idle';
+        box.innerHTML = `<div><div class="lbl">ЗАРАЗ У КЛАСІ</div><div class="ttl" style="color:#64748b;">Урок не обрано — учні бачать екран очікування</div></div>`;
+      }
+      renderGrid();
+      if (wantControl && current.lesson) openControl();
+      if (!document.getElementById('controlView').classList.contains('hidden')) {
+        if (current.lesson) openControl(); else showCatalog();
+      }
+    }
 
-    /* =====================================================================
-       5. EMBEDDED STANDARD QR CODE GENERATOR ON CANVAS (Zero external libs!)
-       Supports QR Model 2, Versions 1..9, Byte Mode, Reed-Solomon ECC Level L
-       ===================================================================== */
-    const QRCanvas = (() => {
+    function renderTabs() {
+      const tabs = document.getElementById('classTabs');
+      tabs.innerHTML = '';
+      manifest.classes.forEach(c => {
+        const b = document.createElement('button');
+        b.className = 'tab' + (c.id === activeClass ? ' active' : '');
+        b.textContent = `${c.name} (${c.lessons.length})`;
+        b.onclick = () => { activeClass = c.id; try { localStorage.setItem('shell_class', c.id); } catch (e) {} renderTabs(); renderGrid(); };
+        tabs.appendChild(b);
+      });
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById('lessonGrid');
+      if (!manifest) return;
+      const cls = manifest.classes.find(c => c.id === activeClass);
+      if (!cls || !cls.lessons.length) { grid.innerHTML = '<div class="empty">У цьому класі ще немає уроків</div>'; return; }
+      grid.innerHTML = '';
+      cls.lessons.forEach(l => {
+        const isCur = current.lesson === l.path;
+        const d = document.createElement('div');
+        d.className = 'card' + (isCur ? ' current' : '');
+        d.innerHTML = `<div class="num">УРОК ${l.num}${isCur ? ' • <span style="color:#ef4444;">🔴 ЗАРАЗ ІДЕ</span>' : ''}</div>
+          <div class="title">${esc(l.title)}</div>
+          <div class="meta">${l.slides ? `🖼️ Слайдів: ${l.slides}` : ''}</div>
+          <div class="actions"></div>`;
+        const a = d.querySelector('.actions');
+        if (isCur) {
+          a.appendChild(mkBtn('🎛 Керувати', 'btn btn-sm btn-success', () => openControl()));
+          a.appendChild(mkBtn('⏹ Завершити', 'btn btn-sm btn-danger', () => endLesson()));
+        } else {
+          a.appendChild(mkBtn('▶ Зробити поточним', 'btn btn-sm btn-primary', () => makeCurrent(cls, l)));
+        }
+        const pv = document.createElement('a');
+        pv.className = 'btn btn-sm btn-secondary';
+        pv.href = l.path + '?role=teacher&preview=1';
+        pv.target = '_blank';
+        pv.rel = 'noopener';
+        pv.textContent = '👁 Переглянути';
+        if (!isCur) a.appendChild(pv);
+        grid.appendChild(d);
+      });
+    }
+
+    function mkBtn(text, cls, fn) {
+      const b = document.createElement('button');
+      b.className = cls; b.textContent = text; b.onclick = fn;
+      return b;
+    }
+    function esc(s) { return String(s || '').replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch])); }
+
+    /* ---------- Дії вчителя ---------- */
+    function makeCurrent(cls, l) {
+      if (current.lesson && current.lesson !== l.path &&
+          !confirm(`Зараз у класі йде «${current.title}». Перемкнути учнів на «${l.title}»?`)) return;
+      current = { lesson: l.path, title: `Урок ${l.num}: ${l.title}`, cls: cls.name, ts: Date.now() };
+      ownState = true;
+      publish();
+      openControl();
+    }
+
+    function endLesson() {
+      if (!confirm('Завершити урок? Учні побачать екран очікування.')) return;
+      current = { lesson: null, title: '', cls: '', ts: Date.now() };
+      ownState = true;
+      publish();
+      showCatalog();
+    }
+
+    function openControl() {
+      if (!current.lesson) return;
+      wantControl = false;
+      if (loadedTeacherLesson !== current.lesson) {
+        loadedTeacherLesson = current.lesson;
+        document.getElementById('teacherFrame').src = current.lesson + '?role=teacher';
+      }
+      document.getElementById('ctrlTitle').textContent = `${current.cls} • ${current.title}`;
+      document.getElementById('catalogView').classList.add('hidden');
+      document.getElementById('controlView').classList.remove('hidden');
+      document.title = '🎛 ' + current.title;
+      if (location.hash !== '#control') history.replaceState(null, '', '?role=teacher#control');
+    }
+
+    function showCatalog() {
+      document.getElementById('controlView').classList.add('hidden');
+      document.getElementById('catalogView').classList.remove('hidden');
+      document.title = 'Інформатика • Панель уроків';
+      if (!current.lesson) { loadedTeacherLesson = null; document.getElementById('teacherFrame').src = 'about:blank'; }
+      history.replaceState(null, '', '?role=teacher');
+      renderTeacher();
+    }
+
+    /* ---------- QR ---------- */
+const QRCanvas = (() => {
       // GF(256) log/exp tables with primitive polynomial 0x11D
       const EXP = new Uint8Array(512);
       const LOG = new Uint8Array(256);
@@ -2436,648 +650,44 @@
       return { draw };
     })();
 
-    // Teacher Share Modal handlers
-    const shareModal = document.getElementById('shareModal');
-    document.getElementById('btnOpenShare').addEventListener('click', () => {
-      SoundFX.click();
-      const studentUrl = getCleanStudentUrl();
-      document.getElementById('studentUrlText').textContent = studentUrl;
-      document.getElementById('copyFeedback').textContent = '';
-      QRCanvas.draw(document.getElementById('qrCanvas'), studentUrl);
-      shareModal.classList.add('open');
-    });
+    
 
-    function closeShareModal() {
-      SoundFX.click();
-      shareModal.classList.remove('open');
+    function openQR() {
+      document.getElementById('qrUrl').textContent = ROOT;
+      document.getElementById('copyFb').textContent = '';
+      QRCanvas.draw(document.getElementById('qrCanvas'), ROOT);
+      document.getElementById('qrModal').classList.add('open');
+    }
+    function closeQR() { document.getElementById('qrModal').classList.remove('open'); }
+    function copyUrl() {
+      const fb = document.getElementById('copyFb');
+      (navigator.clipboard ? navigator.clipboard.writeText(ROOT) : Promise.reject())
+        .then(() => fb.textContent = '✅ Скопійовано!')
+        .catch(() => fb.textContent = 'Виділіть посилання й натисніть Ctrl+C');
     }
 
-    function copyStudentUrl() {
-      const url = getCleanStudentUrl();
-      const fb = document.getElementById('copyFeedback');
-      try {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(url).then(() => {
-            SoundFX.success();
-            fb.textContent = '✅ Посилання скопійовано у буфер обміну!';
-          }).catch(() => fallbackCopy(url, fb));
-          return;
-        }
-      } catch (e) {}
-      fallbackCopy(url, fb);
+    /* ---------- Старт ---------- */
+    if (isTeacher) {
+      document.getElementById('catalogView').classList.remove('hidden');
+      fetch('lessons.json', { cache: 'no-store' })
+        .then(r => r.json())
+        .then(m => {
+          manifest = m;
+          let saved = null;
+          try { saved = localStorage.getItem('shell_class'); } catch (e) {}
+          activeClass = (m.classes.find(c => c.id === saved) || m.classes[0] || {}).id;
+          renderTabs();
+          renderTeacher();
+        })
+        .catch(() => { document.getElementById('lessonGrid').innerHTML = '<div class="empty">⚠️ Не вдалося завантажити lessons.json</div>'; });
+      renderTeacher();
+    } else {
+      document.getElementById('studentView').classList.remove('hidden');
+      // Запасний варіант: ?lesson=2-klas/urok-01/ відкриває конкретний урок без вчителя
+      const direct = params.get('lesson');
+      if (direct && /^[\w\-\/]+\/$/.test(direct)) applyCurrent({ lesson: direct, title: 'Урок', ts: 1 });
+      renderStudent();
     }
-
-    function fallbackCopy(text, fb) {
-      try {
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        ta.style.position = 'fixed';
-        ta.style.opacity = '0';
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        SoundFX.success();
-        fb.textContent = '✅ Посилання скопійовано!';
-      } catch (e) {
-        fb.textContent = 'Виділіть посилання вище та натисніть Ctrl+C';
-      }
-    }
-
-    /* =====================================================================
-       6. SLIDE-BY-SLIDE INTERACTIVE ACTIVITIES
-       ===================================================================== */
-
-    // --- Slide 1: Crew Readiness Mission ---
-    function toggleMission(el) {
-      el.classList.toggle('done');
-      SoundFX.click();
-      const totalDone = document.querySelectorAll('.mission-item.done').length;
-      const st = document.getElementById('missionStatus');
-      if (totalDone === 3) {
-        SoundFX.success();
-        st.innerHTML = '🎉 Екіпаж на 100% готовий до старту! Тисни «Далі ➡»!';
-        st.style.color = '#059669';
-      } else {
-        st.textContent = `Виконано: ${totalDone} з 3`;
-        st.style.color = '#4f46e5';
-      }
-    }
-
-    // --- Slide 2: Flashcards Game (3 seconds per word) ---
-    const FLASH_WORDS = ['ІНФОРМАЦІЯ', 'ПОВІДОМЛЕННЯ', 'ВІДОМОСТІ', 'НОВИНА', 'МОНІТОР'];
-    let flashRunning = false;
-    let flashTimers = [];
-
-    function startFlashcards() {
-      if (flashRunning) return;
-      flashRunning = true;
-      SoundFX.click();
-      const btn = document.getElementById('btnStartFlash');
-      const display = document.getElementById('flashWordDisplay');
-      const counter = document.getElementById('flashCounter');
-      const fill = document.getElementById('flashTimerFill');
-      btn.disabled = true;
-
-      FLASH_WORDS.forEach((word, idx) => {
-        const t = setTimeout(() => {
-          SoundFX.tick();
-          counter.textContent = `Картка ${idx + 1} з ${FLASH_WORDS.length} (запам’ятай за 3 секунди!)`;
-          display.textContent = word;
-          fill.style.transition = 'none';
-          fill.style.width = '100%';
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              fill.style.transition = 'width 2.9s linear';
-              fill.style.width = '0%';
-            });
-          });
-        }, idx * 3200);
-        flashTimers.push(t);
-      });
-
-      const endT = setTimeout(() => {
-        display.textContent = '🙈 Картки сховані! Яке слово зайве?';
-        counter.textContent = 'Усі 5 слів показано! Обери зайве слово нижче.';
-        btn.disabled = false;
-        btn.textContent = '🔄 Повторити показ';
-        flashRunning = false;
-      }, FLASH_WORDS.length * 3200);
-      flashTimers.push(endT);
-    }
-
-    function checkFlashOdd(btn, isOdd) {
-      const fb = document.getElementById('flashFeedback');
-      if (isOdd) {
-        btn.classList.add('correct');
-        SoundFX.success();
-        fb.innerHTML = '🎉 Правильно! <strong>МОНІТОР</strong> — це пристрій виведення інформації, а інші 4 слова позначають саму інформацію!';
-        fb.style.color = '#059669';
-      } else {
-        btn.classList.add('wrong');
-        SoundFX.error();
-        fb.textContent = '🤔 Це слово означає відомості/новини. Подумай, яке слово називає частину комп’ютера!';
-        fb.style.color = '#be123c';
-      }
-    }
-
-    // --- Slide 3: Flip Cards ---
-    function flipCard(card) {
-      card.classList.toggle('flipped');
-      SoundFX.click();
-    }
-
-    // --- Slide 4: Ancient Artifacts ---
-    let artifactsSolved = 0;
-    function checkArtifact(sel) {
-      const card = sel.closest('.artifact-card');
-      const msg = card.querySelector('.art-msg');
-      const expected = card.dataset.ans;
-      if (!sel.value) return;
-      if (sel.value === expected) {
-        SoundFX.success();
-        if (!card.classList.contains('solved')) {
-          card.classList.add('solved');
-          artifactsSolved++;
-          document.getElementById('ancientScore').textContent = `Досліджено: ${artifactsSolved} / 5`;
-        }
-        sel.disabled = true;
-        msg.textContent = '✅ Точно!';
-        msg.style.color = '#065f46';
-      } else {
-        SoundFX.error();
-        msg.textContent = '❌ Спробуй інший варіант!';
-        msg.style.color = '#be123c';
-      }
-    }
-
-    // --- Slide 5: Evolution Timeline ---
-    const ERAS = [
-      {
-        icon: '🕳️',
-        title: 'Перфокарта (1960–1970-ті роки)',
-        cap: 'Обсяг: ~80 байт (1 речення)',
-        desc: 'Картонна картка, у якій спеціальна машина пробивала дірочки. Щоб записати одну шкільну програму, доводилося нести цілу коробку таких карток!',
-        pct: 4,
-        fact: '📸 Скільки фото зі смартфона 2026 року вміститься: 0 фото (замало місця!).'
-      },
-      {
-        icon: '💾',
-        title: 'Дискета (1980–1990-ті роки)',
-        cap: 'Обсяг: 1,44 МБ',
-        desc: 'Гнучкий магнітний диск у пластиковому корпусі. Сьогодні дискети вже не використовують, але саме її зображення назавжди стало іконкою кнопки «Зберегти»!',
-        pct: 14,
-        fact: '📸 Скільки сучасних фото вміститься: менше 1 фотографії!'
-      },
-      {
-        icon: '💿',
-        title: 'Оптичні диски CD / DVD / Blu-ray (2000-ні)',
-        cap: 'Обсяг: 700 МБ – 25 ГБ',
-        desc: 'Блискучі диски, інформацію на які записує та зчитує лазерний промінь. На них зберігали фільми, музику та ігри.',
-        pct: 32,
-        fact: '📸 Скільки фото вміститься: від 200 до 7 000 фотографій.'
-      },
-      {
-        icon: '🔌',
-        title: 'USB-флешнакопичувач (2010–2026)',
-        cap: 'Обсяг: 32 ГБ – 1 ТБ',
-        desc: 'Компактна флеш-пам’ять без рухомих деталей. Легко поміщається в кишені та підключається через USB-C або USB-A.',
-        pct: 58,
-        fact: '📸 Скільки фото вміститься: понад 30 000 фотографій!'
-      },
-      {
-        icon: '⚡',
-        title: 'Надшвидкий NVMe SSD (2026 рік)',
-        cap: 'Обсяг: 512 ГБ – 8 ТБ',
-        desc: 'Головний накопичувач сучасних ноутбуків, ПК і консолей 2026 року. Завантажує операційну систему та ігри за лічені секунди!',
-        pct: 84,
-        fact: '📸 Скільки фото вміститься: понад 500 000 фотографій і сотні 4K-відео!'
-      },
-      {
-        icon: '☁️',
-        title: 'Хмарні сховища (2026 рік)',
-        cap: 'Обсяг: практично необмежений',
-        desc: 'Google Диск, OneDrive, iCloud — твої файли зберігаються на захищених серверах і відкриваються з будь-якого смартфона чи комп’ютера через Інтернет.',
-        pct: 100,
-        fact: '🌍 Головна перевага: можна працювати над одним проєктом усьому класу одночасно!'
-      }
-    ];
-
-    function selectEra(idx, btn) {
-      SoundFX.click();
-      document.querySelectorAll('.era-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const e = ERAS[idx];
-      document.getElementById('eraIcon').textContent = e.icon;
-      document.getElementById('eraTitle').textContent = e.title;
-      document.getElementById('eraCapLabel').textContent = e.cap;
-      document.getElementById('eraDesc').textContent = e.desc;
-      document.getElementById('eraCapFill').style.width = e.pct + '%';
-      document.getElementById('eraFact').textContent = e.fact;
-    }
-
-    // --- Slide 6: PC Power Simulator ---
-    let pcPoweredOn = true;
-    function togglePcPower() {
-      pcPoweredOn = !pcPoweredOn;
-      const ramBox = document.getElementById('ramBox');
-      const ramContent = document.getElementById('ramContent');
-      const ramBadge = document.getElementById('ramBadge');
-      const btn = document.getElementById('btnPowerToggle');
-
-      if (!pcPoweredOn) {
-        SoundFX.error();
-        ramBox.classList.add('power-off');
-        ramBadge.textContent = '⚡ Живлення вимкнено!';
-        ramContent.style.background = '#0f172a';
-        ramContent.style.color = '#f87171';
-        ramContent.innerHTML = '💨 ПОРОЖНЬО! Уся незбережена інформація з оперативної пам’яті зникла!';
-        btn.textContent = '🟢 Увімкнути комп’ютер знову';
-        btn.className = 'btn btn-success';
-      } else {
-        SoundFX.success();
-        ramBox.classList.remove('power-off');
-        ramBadge.textContent = 'Внутрішня • Тимчасова';
-        ramContent.style.background = '#fff';
-        ramContent.style.color = '#be123c';
-        ramContent.innerHTML = '🎨 Відкритий новий чистий аркуш<br>🎮 Програми готові до запуску';
-        btn.textContent = '🔌 Вимкнути комп’ютер (Експеримент!)';
-        btn.className = 'btn btn-accent';
-      }
-    }
-
-    // --- Slide 8: Break Timer & "Не помились!" Game ---
-    const MOVE_COMMANDS = [
-      { word: '🙌 ПІДНІМИ РУКИ ВГОРУ!', trick: '🧎 ПРИСІДАЄ!' },
-      { word: '🧎 ПРИСЯДЬ ОДИН РАЗ!', trick: '🙌 ПІДНІМАЄ РУКИ ВГОРУ!' },
-      { word: '👏 ПЛЕСНИ В ДОЛОНІ!', trick: '🙆 ТРИМАЄ РУКИ НА ПОЯСІ!' },
-      { word: '🦩 ПОСТІЙ НА ОДНІЙ НОЗІ!', trick: '👏 ПЛЕСКАЄ В ДОЛОНІ!' },
-      { word: '🙆 ПОТЯГНИСЯ ДО СОНЕЧКА!', trick: '🏃 БІЖИТЬ НА МІСЦІ!' }
-    ];
-    let moveIdx = 0;
-    let breakMode = 'move';
-    let timerSec = 60;
-    let timerInterval = null;
-
-    function nextMoveCommand() {
-      SoundFX.click();
-      moveIdx = (moveIdx + 1) % MOVE_COMMANDS.length;
-      const item = MOVE_COMMANDS[moveIdx];
-      const wEl = document.getElementById('cmdWord');
-      const tEl = document.getElementById('cmdTrick');
-      if (wEl && tEl) {
-        wEl.textContent = item.word;
-        tEl.textContent = item.trick;
-      }
-    }
-
-    function setBreakMode(mode) {
-      breakMode = mode;
-      SoundFX.click();
-      const box = document.getElementById('breakContentBox');
-      document.getElementById('btnBreakMove').className = mode === 'move' ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary';
-      document.getElementById('btnBreakEyes').className = mode === 'eyes' ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary';
-
-      if (mode === 'move') {
-        const item = MOVE_COMMANDS[moveIdx];
-        box.innerHTML = `
-          <div style="font-size:0.9rem;font-weight:800;color:#4f46e5;">УВАГА! Виконуй те, що НАПИСАНО, а не те, що показує робот-жартівник!</div>
-          <div style="margin:14px 0;padding:14px;background:#fff;border-radius:18px;border:2px solid #cbd5e1;">
-            <div style="font-size:0.85rem;color:#64748b;font-weight:800;">КОМАНДА СЛОВАМИ (ВИКОНУЙ!):</div>
-            <div id="cmdWord" style="font-size:1.75rem;font-weight:900;color:#059669;margin-top:4px;">${item.word}</div>
-          </div>
-          <div style="padding:10px;background:#ffe4e6;border-radius:16px;">
-            <div style="font-size:0.8rem;color:#be123c;font-weight:800;">А РОБОТ ХИТРУЄ І ПОКАЗУЄ:</div>
-            <div id="cmdTrick" style="font-size:2.4rem;margin-top:2px;">${item.trick}</div>
-          </div>
-          <button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="nextMoveCommand()">🎲 Інша команда</button>
-        `;
-      } else {
-        box.innerHTML = `
-          <div style="font-size:1.1rem;font-weight:900;color:#1e1b4b;margin-bottom:8px;">👀 Гімнастика для очей (повторюємо 2 рази!)</div>
-          <div style="background:#fff;border-radius:18px;padding:16px;font-size:1.12rem;font-weight:800;line-height:1.65;color:#334155;border:2px solid #c7d2fe;">
-            ⬆️ Раз, два, три! <strong>Очі догори!</strong><br>
-            😌 На чотири, п’ять і шість — <strong>треба міцно їх стулить.</strong><br>
-            ⬆️ Знову очі догори, рахуємо: <strong>раз, два, три!</strong>
-          </div>
-          <div style="margin-top:10px;font-size:0.88rem;font-weight:800;color:#059669;">✨ Покліпай швидко-швидко, як метелик крильцями!</div>
-        `;
-      }
-    }
-
-    function updateTimerUI() {
-      document.getElementById('timerText').textContent = timerSec;
-      const deg = Math.round((timerSec / 60) * 360);
-      document.getElementById('timerCircle').style.setProperty('--deg', deg + 'deg');
-    }
-
-    function startBreakTimer() {
-      if (timerInterval) return;
-      SoundFX.click();
-      timerInterval = setInterval(() => {
-        if (timerSec > 0) {
-          timerSec--;
-          updateTimerUI();
-          if (breakMode === 'move' && timerSec > 0 && timerSec % 8 === 0) {
-            nextMoveCommand();
-          }
-          if (timerSec <= 3 && timerSec > 0) SoundFX.tick();
-        } else {
-          pauseBreakTimer();
-          SoundFX.success();
-        }
-      }, 1000);
-    }
-
-    function pauseBreakTimer() {
-      if (timerInterval) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-      }
-    }
-
-    function resetBreakTimer() {
-      pauseBreakTimer();
-      timerSec = 60;
-      updateTimerUI();
-      SoundFX.click();
-    }
-
-    // --- Slide 9: This PC Explorer ---
-    let usbConnected = true;
-    function toggleUsbDrive() {
-      usbConnected = !usbConnected;
-      const dE = document.getElementById('driveE');
-      const btn = document.getElementById('btnToggleUsbDrive');
-      SoundFX.click();
-      if (usbConnected) {
-        dE.style.display = 'block';
-        btn.textContent = '🔌 Від’єднати флешку (E:)';
-      } else {
-        dE.style.display = 'none';
-        btn.textContent = '🔌 Під’єднати флешку (E:)';
-      }
-    }
-
-    function selectSystemDrive(el) {
-      el.classList.add('selected-c');
-      SoundFX.success();
-      document.getElementById('driveQuizMsg').innerHTML = '🎉 <strong>Вірно!</strong> На диску <strong>(C:)</strong> зазвичай міститься операційна система (Windows 11).';
-    }
-
-    function checkAB() {
-      const v1 = (document.getElementById('ab1').value || '').trim().toUpperCase();
-      const v2 = (document.getElementById('ab2').value || '').trim().toUpperCase();
-      const msg = document.getElementById('abMsg');
-      if (v1 === 'A' || v1 === 'А') document.getElementById('ab1').classList.add('ok');
-      if (v2 === 'B' || v2 === 'В') document.getElementById('ab2').classList.add('ok');
-      if ((v1 === 'A' || v1 === 'А') && (v2 === 'B' || v2 === 'В')) {
-        SoundFX.success();
-        msg.textContent = '✅ Точно: A: і B:!';
-        msg.style.color = '#059669';
-      }
-    }
-
-    // --- Slide 10: Match Pairs Game ---
-    const PAIRS_DATA = [
-      { id: 'ssd', icon: '⚡', label: 'NVMe SSD — швидкісний головний диск' },
-      { id: 'ram', icon: '🧠', label: 'Оперативна пам’ять (RAM)' },
-      { id: 'usb', icon: '🔌', label: 'USB-флешнакопичувач' },
-      { id: 'sd',  icon: '📲', label: 'Карта пам’яті microSD' },
-      { id: 'fdd', icon: '💾', label: 'Дискета — іконка «Зберегти»' }
-    ];
-    let selectedLeft = null;
-    let matchedCount = 0;
-
-    function shuffleArr(arr) {
-      const copy = arr.slice();
-      for (let i = copy.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [copy[i], copy[j]] = [copy[j], copy[i]];
-      }
-      return copy;
-    }
-
-    function initMatchGame() {
-      selectedLeft = null;
-      matchedCount = 0;
-      document.getElementById('matchScore').textContent = 'Знайдено пар: 0 / 5';
-      const leftCol = document.getElementById('matchLeftCol');
-      const rightCol = document.getElementById('matchRightCol');
-      leftCol.innerHTML = '';
-      rightCol.innerHTML = '';
-
-      const leftItems = shuffleArr(PAIRS_DATA);
-      const rightItems = shuffleArr(PAIRS_DATA);
-
-      leftItems.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'pair-card';
-        div.dataset.id = item.id;
-        div.innerHTML = `<span style="font-size:1.7rem;">${item.icon}</span> <span>Пристрій №${leftCol.children.length + 1}</span>`;
-        div.onclick = () => {
-          if (div.classList.contains('matched')) return;
-          SoundFX.click();
-          leftCol.querySelectorAll('.pair-card').forEach(c => c.classList.remove('selected'));
-          div.classList.add('selected');
-          selectedLeft = div;
-        };
-        leftCol.appendChild(div);
-      });
-
-      rightItems.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'pair-card';
-        div.dataset.id = item.id;
-        div.innerHTML = `<span>🏷️</span> <span>${item.label}</span>`;
-        div.onclick = () => {
-          if (div.classList.contains('matched') || !selectedLeft) return;
-          if (selectedLeft.dataset.id === div.dataset.id) {
-            selectedLeft.classList.remove('selected');
-            selectedLeft.classList.add('matched');
-            div.classList.add('matched');
-            selectedLeft = null;
-            matchedCount++;
-            document.getElementById('matchScore').textContent = `Знайдено пар: ${matchedCount} / 5`;
-            SoundFX.success();
-            if (matchedCount === 5) launchFireworksBurst(false);
-          } else {
-            SoundFX.error();
-            div.style.borderColor = '#f43f5e';
-            setTimeout(() => { div.style.borderColor = ''; }, 450);
-          }
-        };
-        rightCol.appendChild(div);
-      });
-    }
-    initMatchGame();
-
-    // --- Slide 11: Sorter & Letter Riddles ---
-    const SORT_ITEMS = [
-      { id: 's1', name: '⚡ Оперативна пам’ять (RAM)', type: 'internal' },
-      { id: 's2', name: '🔌 USB-флешка', type: 'external' },
-      { id: 's3', name: '📲 Карта microSD', type: 'external' },
-      { id: 's4', name: '☁️ Хмарне сховище', type: 'external' }
-    ];
-    let activeSortChip = null;
-
-    function initSorter() {
-      const pool = document.getElementById('sortPool');
-      pool.innerHTML = '';
-      SORT_ITEMS.forEach(item => {
-        const btn = document.createElement('button');
-        btn.className = 'word-chip';
-        btn.textContent = item.name;
-        btn.dataset.type = item.type;
-        btn.onclick = () => {
-          SoundFX.click();
-          pool.querySelectorAll('.word-chip').forEach(c => c.style.borderColor = '');
-          btn.style.borderColor = '#f59e0b';
-          activeSortChip = btn;
-        };
-        pool.appendChild(btn);
-      });
-    }
-    initSorter();
-
-    function assignToBucket(targetType) {
-      if (!activeSortChip) return;
-      if (activeSortChip.dataset.type === targetType) {
-        SoundFX.success();
-        activeSortChip.style.borderColor = '#10b981';
-        activeSortChip.style.background = '#d1fae5';
-        activeSortChip.disabled = true;
-        const dest = targetType === 'internal' ? document.getElementById('bucketInternal') : document.getElementById('bucketExternal');
-        dest.appendChild(activeSortChip);
-        activeSortChip = null;
-      } else {
-        SoundFX.error();
-        activeSortChip.style.borderColor = '#f43f5e';
-      }
-    }
-
-    function buildRiddle(containerId, word) {
-      const box = document.getElementById(containerId);
-      const letters = word.split('');
-      const inputs = [];
-      letters.forEach((ch, idx) => {
-        const inp = document.createElement('input');
-        inp.className = 'letter-input';
-        inp.maxLength = 1;
-        if (idx === 0) {
-          inp.value = ch;
-          inp.classList.add('ok');
-        }
-        inp.addEventListener('input', () => {
-          const val = (inp.value || '').trim().toUpperCase();
-          if (val === ch) {
-            inp.classList.remove('bad');
-            inp.classList.add('ok');
-            SoundFX.click();
-            if (inputs[idx + 1]) inputs[idx + 1].focus();
-            if (inputs.every((el, i) => (el.value || '').trim().toUpperCase() === letters[i])) {
-              SoundFX.success();
-            }
-          } else if (val) {
-            inp.classList.add('bad');
-            SoundFX.error();
-          } else {
-            inp.classList.remove('bad', 'ok');
-          }
-        });
-        inputs.push(inp);
-        box.appendChild(inp);
-      });
-    }
-    buildRiddle('riddle1Boxes', 'ФЛЕШКА');
-    buildRiddle('riddle2Boxes', 'ДИСКЕТА');
-
-    // --- Slide 12: Creative Drawing Studio ---
-    const drawCanvas = document.getElementById('drawCanvas');
-    const dCtx = drawCanvas.getContext('2d');
-    let drawing = false;
-    let brushColor = '#4f46e5';
-
-    function drawDeviceTemplate() {
-      dCtx.fillStyle = '#ffffff';
-      dCtx.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
-      // Draw futuristic memory drive outline
-      dCtx.save();
-      dCtx.strokeStyle = '#6366f1';
-      dCtx.lineWidth = 4;
-      dCtx.fillStyle = '#eef2ff';
-      dCtx.beginPath();
-      if (typeof dCtx.roundRect === 'function') {
-        dCtx.roundRect(90, 45, 220, 140, 24);
-      } else {
-        dCtx.rect(90, 45, 220, 140);
-      }
-      dCtx.fill();
-      dCtx.stroke();
-
-      // USB-C connector
-      dCtx.fillStyle = '#cbd5e1';
-      dCtx.fillRect(310, 88, 46, 54);
-      dCtx.strokeRect(310, 88, 46, 54);
-
-      dCtx.fillStyle = '#4f46e5';
-      dCtx.font = '800 16px Nunito, sans-serif';
-      dCtx.fillText('СУПЕР-НОСІЙ 2026+', 122, 118);
-      dCtx.restore();
-    }
-    drawDeviceTemplate();
-
-    function setBrushColor(col, dot) {
-      brushColor = col;
-      SoundFX.click();
-      document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
-      if (dot) dot.classList.add('active');
-    }
-
-    function getCanvasPos(e) {
-      const rect = drawCanvas.getBoundingClientRect();
-      const scaleX = drawCanvas.width / rect.width;
-      const scaleY = drawCanvas.height / rect.height;
-      return {
-        x: (e.clientX - rect.left) * scaleX,
-        y: (e.clientY - rect.top) * scaleY
-      };
-    }
-
-    drawCanvas.addEventListener('pointerdown', (e) => {
-      drawing = true;
-      const pos = getCanvasPos(e);
-      dCtx.beginPath();
-      dCtx.moveTo(pos.x, pos.y);
-    });
-    drawCanvas.addEventListener('pointermove', (e) => {
-      if (!drawing) return;
-      const pos = getCanvasPos(e);
-      dCtx.lineTo(pos.x, pos.y);
-      dCtx.strokeStyle = brushColor;
-      dCtx.lineWidth = 5;
-      dCtx.lineCap = 'round';
-      dCtx.stroke();
-    });
-    window.addEventListener('pointerup', () => { drawing = false; });
-
-    function stampSticker(text) {
-      SoundFX.pop();
-      dCtx.save();
-      dCtx.font = '900 22px Nunito, "Segoe UI Emoji", sans-serif';
-      dCtx.fillStyle = brushColor;
-      const rx = 50 + Math.random() * 240;
-      const ry = 45 + Math.random() * 145;
-      dCtx.fillText(text, rx, ry);
-      dCtx.restore();
-    }
-
-    function clearDrawCanvas() {
-      SoundFX.click();
-      dCtx.fillStyle = '#ffffff';
-      dCtx.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
-    }
-
-    function downloadDrawing() {
-      SoundFX.success();
-      try {
-        const link = document.createElement('a');
-        link.download = 'nosii-maibutnyoho-2026.png';
-        link.href = drawCanvas.toDataURL('image/png');
-        link.click();
-      } catch (e) {}
-    }
-
-    function pickReflection(btn, label) {
-      SoundFX.success();
-      document.querySelectorAll('#reflectionBtns .btn').forEach(b => b.classList.remove('btn-success'));
-      btn.classList.add('btn-success');
-      document.getElementById('reflectionReply').textContent = `Дякуємо за відповідь: «${label}»! Ти чудово попрацював на уроці! 🌟`;
-      launchFireworksBurst(false);
-    }
-
-    // Initialize initial UI state
-    renderSlide(1, true);
   </script>
 </body>
 </html>
