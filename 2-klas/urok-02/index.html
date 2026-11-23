@@ -982,6 +982,61 @@
     table.props td:first-child { border-left: 2px solid #e2e8f0; border-radius: 12px 0 0 12px; }
     table.props td:last-child { border-right: 2px solid #e2e8f0; border-radius: 0 12px 12px 0; }
 
+    /* =====================================================================
+       ВЕЛИКІ Й ПОМІТНІ КНОПКИ ДЛЯ УЧНІВ (перекривають стилі вище)
+       ===================================================================== */
+    .slide .btn { min-height: 52px; padding: 12px 22px; font-size: 1.12rem; border-radius: 16px; }
+    .slide .btn-sm { min-height: 48px; padding: 10px 18px; font-size: 1.05rem; border-radius: 14px; }
+    .slide .btn-secondary { border: 3px solid #818cf8; box-shadow: 0 5px 0 #c7d2fe; }
+    .slide .btn-primary { box-shadow: 0 5px 0 #3730a3; }
+    .slide .btn-accent { box-shadow: 0 5px 0 #c2410c; }
+    .slide .btn-success { box-shadow: 0 5px 0 #047857; }
+    .slide .btn:active:not(:disabled) { transform: translateY(4px); box-shadow: none; }
+
+    .reveal-btn {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #fff; border: 3px solid #d97706; border-radius: 18px;
+      padding: 14px 24px; min-height: 56px; font-size: clamp(1.1rem, 1.6vw, 1.3rem); text-shadow: 0 1px 2px rgba(0, 0, 0, .25);
+      box-shadow: 0 5px 0 #b45309; animation: tapGlow 1.8s ease-in-out infinite;
+    }
+    .reveal-btn:active { transform: translateY(4px); }
+    .reveal-btn.revealed { animation: none; text-shadow: none; box-shadow: none; }
+    @keyframes tapGlow {
+      0%, 100% { box-shadow: 0 5px 0 #b45309, 0 0 0 0 rgba(245, 158, 11, .55); }
+      50% { box-shadow: 0 5px 0 #b45309, 0 0 0 12px rgba(245, 158, 11, 0); }
+    }
+
+    .opt-btn { min-height: 66px; padding: 14px 28px; font-size: clamp(1.2rem, 1.9vw, 1.5rem); border: 4px solid #818cf8; box-shadow: 0 6px 0 #c7d2fe; }
+    .opt-btn.big { min-height: 78px; padding: 18px 36px; font-size: clamp(1.35rem, 2.2vw, 1.8rem); }
+    .opt-btn:active:not(:disabled) { transform: translateY(5px); box-shadow: none; }
+    .opt-btn.correct { box-shadow: 0 6px 0 #047857; }
+    .opt-btn.wrong { box-shadow: none; }
+
+    .word-chip { min-height: 56px; padding: 13px 22px; font-size: clamp(1.1rem, 1.6vw, 1.3rem); border: 3px solid #818cf8; box-shadow: 0 5px 0 #c7d2fe; }
+    .word-chip.placed { box-shadow: none; min-height: 0; }
+    .sort-bucket2 { border-width: 4px; }
+
+    .mission-item { font-size: 1.15rem; padding: 14px 18px; border: 3px solid #a5b4fc; box-shadow: 0 4px 0 #e0e7ff; }
+    .mission-item::after { content: '👆'; margin-left: auto; font-size: 1.3rem; }
+    .mission-item.done::after { content: '✅'; }
+
+    .tile.click { border: 3px solid #818cf8; box-shadow: 0 6px 0 #c7d2fe; }
+    .tile.click .tap { font-size: 1rem; background: #4f46e5; color: #fff; padding: 6px 16px; border-radius: 999px; }
+    .flip-front { border: 3px solid #818cf8 !important; box-shadow: 0 6px 0 #c7d2fe; }
+
+    .hotspot { background: rgba(255, 255, 255, .8); box-shadow: 0 0 0 3px rgba(99, 102, 241, .5); animation: spotPulse 2s ease-in-out infinite; }
+    .hotspot.found, .hotspot.good { animation: none; }
+    @keyframes spotPulse { 50% { box-shadow: 0 0 0 8px rgba(99, 102, 241, .12); } }
+
+    select.pick { min-height: 54px; padding: 12px 16px; font-size: 1.2rem; border: 3px solid #818cf8; }
+    .letter-input { width: 54px; height: 62px; font-size: 1.6rem; border-width: 3px; }
+    .color-dot { width: 46px; height: 46px; }
+
+
+    /* ===== Поступова подача ===== */
+    .step-hidden { visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
+    .step-in { animation: stepIn .55s cubic-bezier(.22, 1, .36, 1); }
+    @keyframes stepIn { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: none; } }
+
   </style>
 </head>
 <body>
@@ -1065,13 +1120,13 @@
               <div class="big-text">Учні гралися на перерві водяними пістолетами й обливали один одного. Пролунав дзвоник — і мокрі діти прийшли в кабінет інформатики.</div>
               <button class="reveal-btn" data-answer="⛔ Так! Мокрими руками не можна торкатися комп’ютера — вода й електрика небезпечні!" onclick="reveal(this)">❓ Чи порушили правила?</button>
             </div>
-            <div class="tile" style="justify-content:space-between;">
+            <div data-step="1" class="tile" style="justify-content:space-between;">
               <div class="em">📝🖥️🩹</div>
               <div class="big-text">Учень прикріпив картку із завданням скотчем просто до екрана монітора, щоб було зручно дивитися.</div>
               <button class="reveal-btn" data-answer="⛔ Так! Не можна торкатися екрана й чіпляти на нього речі — його легко пошкодити." onclick="reveal(this)">❓ Яке правило порушено?</button>
             </div>
           </div>
-          <div class="tile" style="flex-direction:row;gap:14px;justify-content:center;">
+          <div data-step="2" class="tile" style="flex-direction:row;gap:14px;justify-content:center;">
             <div class="em">📏</div>
             <div class="ttl">А на якій відстані від екрана треба сидіти?</div>
             <button class="reveal-btn" data-answer="✅ Не менше 50 см!" onclick="reveal(this)">❓ Перевірити</button>
@@ -1110,8 +1165,8 @@
         </div>
         <div class="slide-body">
           <div class="def-box">📌 <b>Інформація</b> — це відомості про навколишній світ, про події та явища, які в ньому відбуваються.</div>
-          <div style="font-weight:900;font-size:1.2rem;text-align:center;">✏️ Яким одним словом можна замінити виділені слова? Натисни на них!</div>
-          <div class="grid g3">
+          <div data-step="1" style="font-weight:900;font-size:1.2rem;text-align:center;">✏️ Яким одним словом можна замінити виділені слова? Натисни на них!</div>
+          <div data-step="1" class="grid g3">
             <div class="tile"><div class="em">📖</div><div class="big-text">Я читаю книжку і отримую <button class="reveal-btn" data-answer="інформацію ✨" onclick="reveal(this)">знання</button>.</div></div>
             <div class="tile"><div class="em">🗣️</div><div class="big-text">Друг розповів мені цікаву <button class="reveal-btn" data-answer="інформацію ✨" onclick="reveal(this)">історію</button>.</div></div>
             <div class="tile"><div class="em">✉️</div><div class="big-text">Я дізналася з листа друга <button class="reveal-btn" data-answer="інформацію ✨" onclick="reveal(this)">новину</button>.</div></div>
@@ -1151,7 +1206,7 @@
               <div class="flip-back" style="font-size:1rem;"><b>Дотикова</b> інформація:<br>тепле, холодне, гладеньке, шорстке</div>
             </div></div>
           </div>
-          <div class="def-box">За способом сприйняття інформацію поділяють на: <b>зорову, слухову, нюхову, смакову, дотикову</b>.</div>
+          <div data-step="1" class="def-box">За способом сприйняття інформацію поділяють на: <b>зорову, слухову, нюхову, смакову, дотикову</b>.</div>
         </div>
       </section>
 
@@ -1189,15 +1244,14 @@
             <span class="slide-tag">🔍 Розбираємо приклад</span>
             <h2 class="slide-title">На перерві пролунав дзвоник 🔔</h2>
           </div>
-          <button class="btn btn-accent" onclick="revealStep(this,'bellSteps')">➡ Наступне питання</button>
         </div>
         <div class="slide-body" id="bellSteps" style="gap:12px;">
-          <div class="step shown"><div class="tile" style="flex-direction:row;justify-content:flex-start;gap:14px;"><div class="em">❓</div><div class="ttl" style="font-size:1.3rem;">Завдяки якому органу чуття ти почув дзвоник?</div></div></div>
-          <div class="step"><div class="tile" style="flex-direction:row;justify-content:flex-start;gap:14px;background:#d1fae5;border-color:#10b981;"><div class="em">👂</div><div class="ttl" style="font-size:1.3rem;">Завдяки органу слуху — вухам!</div></div></div>
-          <div class="step"><div class="tile" style="flex-direction:row;justify-content:flex-start;gap:14px;"><div class="em">❓</div><div class="ttl" style="font-size:1.3rem;">Яке повідомлення ти отримав?</div></div></div>
-          <div class="step"><div class="tile" style="flex-direction:row;justify-content:flex-start;gap:14px;background:#d1fae5;border-color:#10b981;"><div class="em">🔊</div><div class="ttl" style="font-size:1.3rem;">Слухове (звукове).</div></div></div>
-          <div class="step"><div class="tile" style="flex-direction:row;justify-content:flex-start;gap:14px;"><div class="em">❓</div><div class="ttl" style="font-size:1.3rem;">Яку інформацію передає це повідомлення?</div></div></div>
-          <div class="step"><div class="tile" style="flex-direction:row;justify-content:flex-start;gap:14px;background:#d1fae5;border-color:#10b981;"><div class="em">📚</div><div class="ttl" style="font-size:1.3rem;">Що починається урок! Час сідати за парти.</div></div></div>
+          <div><div class="tile" style="flex-direction:row;justify-content:flex-start;gap:14px;"><div class="em">❓</div><div class="ttl" style="font-size:1.3rem;">Завдяки якому органу чуття ти почув дзвоник?</div></div></div>
+          <div data-step="1"><div class="tile" style="flex-direction:row;justify-content:flex-start;gap:14px;background:#d1fae5;border-color:#10b981;"><div class="em">👂</div><div class="ttl" style="font-size:1.3rem;">Завдяки органу слуху — вухам!</div></div></div>
+          <div data-step="2"><div class="tile" style="flex-direction:row;justify-content:flex-start;gap:14px;"><div class="em">❓</div><div class="ttl" style="font-size:1.3rem;">Яке повідомлення ти отримав?</div></div></div>
+          <div data-step="3"><div class="tile" style="flex-direction:row;justify-content:flex-start;gap:14px;background:#d1fae5;border-color:#10b981;"><div class="em">🔊</div><div class="ttl" style="font-size:1.3rem;">Слухове (звукове).</div></div></div>
+          <div data-step="4"><div class="tile" style="flex-direction:row;justify-content:flex-start;gap:14px;"><div class="em">❓</div><div class="ttl" style="font-size:1.3rem;">Яку інформацію передає це повідомлення?</div></div></div>
+          <div data-step="5"><div class="tile" style="flex-direction:row;justify-content:flex-start;gap:14px;background:#d1fae5;border-color:#10b981;"><div class="em">📚</div><div class="ttl" style="font-size:1.3rem;">Що починається урок! Час сідати за парти.</div></div></div>
         </div>
       </section>
 
@@ -1283,7 +1337,7 @@
               <div class="why" style="font-size:1.05rem;background:#e0e7ff;color:#3730a3;">Першу електронну книжку створили в <b>1971</b> році — <b id="yearsEbook"></b> тому. Це набагато пізніше!</div>
             </button>
           </div>
-          <div class="def-box" style="background:#e0f2fe;border-color:#0ea5e9;color:#075985;">📖 І паперову, і електронну книжку ми сприймаємо <b>зором</b> — це зорова інформація!</div>
+          <div data-step="1" class="def-box" style="background:#e0f2fe;border-color:#0ea5e9;color:#075985;">📖 І паперову, і електронну книжку ми сприймаємо <b>зором</b> — це зорова інформація!</div>
         </div>
       </section>
 
@@ -1315,10 +1369,10 @@
         <div class="slide-body">
           <div class="grid g3">
             <div class="tile"><div class="em">🌍</div><div class="ttl">Що таке інформація?</div><button class="reveal-btn" data-answer="Відомості про світ навколо нас" onclick="reveal(this)">Перевірити</button></div>
-            <div class="tile"><div class="em">👀👂👃👅✋</div><div class="ttl">Як людина сприймає інформацію?</div><button class="reveal-btn" data-answer="Органами чуття: зір, слух, нюх, смак, дотик" onclick="reveal(this)">Перевірити</button></div>
-            <div class="tile"><div class="em">☀️</div><div class="ttl">Яку інформацію ти отримуєш протягом дня? Наведи приклад!</div><div style="font-size:.9rem;font-weight:700;color:#64748b;">Скажи вголос 🎤</div></div>
+            <div data-step="1" class="tile"><div class="em">👀👂👃👅✋</div><div class="ttl">Як людина сприймає інформацію?</div><button class="reveal-btn" data-answer="Органами чуття: зір, слух, нюх, смак, дотик" onclick="reveal(this)">Перевірити</button></div>
+            <div data-step="2" class="tile"><div class="em">☀️</div><div class="ttl">Яку інформацію ти отримуєш протягом дня? Наведи приклад!</div><div style="font-size:.9rem;font-weight:700;color:#64748b;">Скажи вголос 🎤</div></div>
           </div>
-          <div style="background:#f1f5f9;border-radius:16px;padding:11px 14px;">
+          <div data-step="3" style="background:#f1f5f9;border-radius:16px;padding:11px 14px;">
             <div style="font-weight:900;font-size:1rem;margin-bottom:6px;">🌟 Як тобі урок?</div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
               <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🚀 Супер! Усе зрозуміло!')">🚀 Супер! Усе зрозуміло!</button>
@@ -1363,6 +1417,46 @@
   </div>
 
   <script>
+
+    /* =====================================================================
+       0. ПОСТУПОВА ПОДАЧА: елементи з data-step відкриває вчитель кнопкою «Далі»
+       (для старих уроків кроки задаються через window.STEP_RULES)
+       ===================================================================== */
+    const LessonSteps = (() => {
+      const allSlides = () => Array.from(document.querySelectorAll('section.slide'));
+      function applyRules(rules) {
+        const sl = allSlides();
+        Object.keys(rules || {}).forEach(n => {
+          const s = sl[+n - 1];
+          if (!s) return;
+          rules[n].forEach((sel, i) => s.querySelectorAll(sel).forEach(el => {
+            if (!el.dataset.step) el.dataset.step = String(i + 1);
+          }));
+        });
+      }
+      function max(slideEl) {
+        let m = 0;
+        if (slideEl) slideEl.querySelectorAll('[data-step]').forEach(e => { m = Math.max(m, parseInt(e.dataset.step, 10) || 0); });
+        return m;
+      }
+      function show(slideEl, step) {
+        if (!slideEl) return;
+        slideEl.querySelectorAll('[data-step]').forEach(e => {
+          const hide = (parseInt(e.dataset.step, 10) || 0) > step;
+          if (hide) {
+            e.classList.add('step-hidden');
+            e.classList.remove('step-in');
+          } else if (e.classList.contains('step-hidden')) {
+            e.classList.remove('step-hidden');
+            e.classList.add('step-in');
+          }
+        });
+      }
+      applyRules(window.STEP_RULES);
+      allSlides().forEach(s => show(s, 0));
+      return { max, show, applyRules };
+    })();
+
     /* =====================================================================
        1. SAFE STORAGE & ROLE DETECTION (Default = Student; ?role=teacher / #teacher = Teacher)
        ===================================================================== */
@@ -1705,13 +1799,20 @@
     const syncText = document.getElementById('syncText');
     const btnFollowToggle = document.getElementById('btnFollowToggle');
 
-    function renderSlide(targetIndex, fromSync = false) {
+    let currentStep = 0;
+    function stepsLeft() { return Math.max(0, LessonSteps.max(slides[currentSlide - 1]) - currentStep); }
+
+    function renderSlide(targetIndex, fromSync = false, step = 0) {
       const clamped = Math.max(1, Math.min(totalSlides, targetIndex));
       currentSlide = clamped;
       slides.forEach((s, idx) => {
         s.classList.toggle('active', idx + 1 === currentSlide);
       });
-      slideIndicator.textContent = `Слайд ${currentSlide} / ${totalSlides}`;
+      const slideEl = slides[currentSlide - 1];
+      currentStep = Math.max(0, Math.min(step, LessonSteps.max(slideEl)));
+      LessonSteps.show(slideEl, currentStep);
+      const left = stepsLeft();
+      slideIndicator.textContent = `Слайд ${currentSlide} / ${totalSlides}` + (left ? ` • ще ${left} ⬇` : '');
       progressFill.style.width = `${(currentSlide / totalSlides) * 100}%`;
       updateNavLockUI();
 
@@ -1722,8 +1823,12 @@
 
     function updateNavLockUI() {
       const lockedForStudent = !isTeacher && followMode;
-      btnPrev.disabled = currentSlide === 1 || lockedForStudent;
-      btnNext.disabled = currentSlide === totalSlides || lockedForStudent;
+      const left = stepsLeft();
+      btnPrev.disabled = (currentSlide === 1 && currentStep === 0) || lockedForStudent;
+      btnNext.disabled = (currentSlide === totalSlides && !left) || lockedForStudent;
+      btnNext.textContent = left ? 'Показати ще ⬇' : 'Далі ➡';
+      btnNext.classList.toggle('btn-accent', !!left);
+      btnNext.classList.toggle('btn-primary', !left);
 
       if (isTeacher) {
         btnFollowToggle.textContent = followMode ? '🔒 Вести клас за собою' : '🔓 Вільний перегляд';
@@ -1741,8 +1846,12 @@
 
     function changeSlide(delta) {
       if (!isTeacher && followMode) return;
+      const max = LessonSteps.max(slides[currentSlide - 1]);
+      if (delta > 0 && currentStep < max) { SoundFX.pop(); renderSlide(currentSlide, false, currentStep + 1); return; }
+      if (delta < 0 && currentStep > 0) { SoundFX.click(); renderSlide(currentSlide, false, currentStep - 1); return; }
+      if ((delta > 0 && currentSlide === totalSlides) || (delta < 0 && currentSlide === 1)) return;
       SoundFX.click();
-      renderSlide(currentSlide + delta, false);
+      renderSlide(currentSlide + delta, false, delta < 0 ? 999 : 0);
     }
 
     document.addEventListener('keydown', (e) => {
@@ -1810,7 +1919,7 @@
         followMode = data.followMode;
       }
       if (!isTeacher && typeof data.slide === 'number') {
-        renderSlide(data.slide, true);
+        renderSlide(data.slide, true, typeof data.step === 'number' ? data.step : 999);
       } else {
         updateNavLockUI();
       }
@@ -1823,7 +1932,7 @@
     }
 
     function publishState() {
-      const payload = { slide: currentSlide, followMode: followMode, ts: Date.now() };
+      const payload = { slide: currentSlide, step: currentStep, followMode: followMode, ts: Date.now() };
       try {
         if (bcChannel) bcChannel.postMessage({ type: 'state', payload });
       } catch (e) {}

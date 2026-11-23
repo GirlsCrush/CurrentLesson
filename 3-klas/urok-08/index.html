@@ -1283,6 +1283,44 @@
         padding: 16px 18px;
       }
     }
+  
+    /* =====================================================================
+       ВЕЛИКІ Й ПОМІТНІ КНОПКИ ДЛЯ УЧНІВ (латка для старих уроків)
+       ===================================================================== */
+    .step-hidden { visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
+    .step-in { animation: stepIn .55s cubic-bezier(.22, 1, .36, 1); }
+    @keyframes stepIn { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: none; } }
+
+    /* рушій 4 класу */
+    .slide .btn { min-height: 50px; padding: 11px 20px; font-size: 1.08rem; }
+    .slide .btn-sm { min-height: 46px; padding: 9px 16px; font-size: 1.02rem; }
+    .slide .btn-secondary { border: 3px solid #818cf8; box-shadow: 0 5px 0 #c7d2fe; }
+    .slide .btn-primary { box-shadow: 0 5px 0 #3730a3; }
+    .slide .btn-accent { box-shadow: 0 5px 0 #c2410c; }
+    .slide .btn-success { box-shadow: 0 5px 0 #047857; }
+    .slide .btn:active:not(:disabled) { transform: translateY(4px); box-shadow: none; }
+    .word-chip { min-height: 54px; font-size: 1.15rem; border: 3px solid #818cf8; box-shadow: 0 5px 0 #c7d2fe; }
+    .word-chip:disabled { box-shadow: none; }
+    .mission-item { font-size: 1.1rem; padding: 13px 16px; border: 3px solid #a5b4fc; box-shadow: 0 4px 0 #e0e7ff; }
+    .pair-card { min-height: 56px; font-size: 1.08rem; border: 3px solid #818cf8; box-shadow: 0 5px 0 #c7d2fe; }
+    .pair-card.matched { box-shadow: none; }
+    .era-btn { font-size: 1rem; padding: 13px 8px; border: 3px solid #818cf8; box-shadow: 0 5px 0 #c7d2fe; }
+    .drive-tile { border: 3px solid #818cf8; box-shadow: 0 5px 0 #c7d2fe; }
+    .artifact-card select { min-height: 48px; font-size: 1rem; }
+    .flip-front { border: 3px solid #818cf8 !important; box-shadow: 0 6px 0 #c7d2fe; }
+    .color-dot { width: 42px; height: 42px; }
+    .letter-input { width: 48px; height: 54px; font-size: 1.4rem; }
+
+    /* рушій 3 класу */
+    .slide .btn-action { min-height: 52px; padding: 12px 24px; font-size: 1.1rem; box-shadow: 0 5px 0 rgba(30, 41, 59, .25); }
+    .slide .btn-action:active { transform: translateY(4px); box-shadow: none; }
+    .quiz-option { padding: 13px 16px; font-size: 1.08rem; border: 3px solid #93c5fd; box-shadow: 0 4px 0 #dbeafe; }
+    .num-input { height: 54px; font-size: 1.35rem; border-width: 3px; }
+    .syllable-input { height: 60px; font-size: 1.6rem; }
+    .swatch { width: 40px; height: 40px; }
+    .os-tab { padding: 12px 20px; font-size: 1.05rem; border: 3px solid #93c5fd; box-shadow: 0 4px 0 #dbeafe; }
+    .nav-btn { min-height: 50px; font-size: 1.05rem; }
+
   </style>
 </head>
 <body>
@@ -2099,6 +2137,48 @@
   </div>
 
   <script>
+    window.STEP_RULES = {"3": [".charade-layout > div:nth-child(2)"], "4": [".charade-layout > div:nth-child(2)"], "5": [".tux-card"], "6": [".obj-card:nth-child(3), .obj-card:nth-child(4)", ".slide-body > div:nth-child(2), .slide-body > div:nth-child(3)"], "10": [".puzzle-card:nth-child(2)"], "11": [".win-workspace"], "12": [".draw-box"]};
+
+    /* =====================================================================
+       0. ПОСТУПОВА ПОДАЧА: елементи з data-step відкриває вчитель кнопкою «Далі»
+       (для старих уроків кроки задаються через window.STEP_RULES)
+       ===================================================================== */
+    const LessonSteps = (() => {
+      const allSlides = () => Array.from(document.querySelectorAll('section.slide'));
+      function applyRules(rules) {
+        const sl = allSlides();
+        Object.keys(rules || {}).forEach(n => {
+          const s = sl[+n - 1];
+          if (!s) return;
+          rules[n].forEach((sel, i) => s.querySelectorAll(sel).forEach(el => {
+            if (!el.dataset.step) el.dataset.step = String(i + 1);
+          }));
+        });
+      }
+      function max(slideEl) {
+        let m = 0;
+        if (slideEl) slideEl.querySelectorAll('[data-step]').forEach(e => { m = Math.max(m, parseInt(e.dataset.step, 10) || 0); });
+        return m;
+      }
+      function show(slideEl, step) {
+        if (!slideEl) return;
+        slideEl.querySelectorAll('[data-step]').forEach(e => {
+          const hide = (parseInt(e.dataset.step, 10) || 0) > step;
+          if (hide) {
+            e.classList.add('step-hidden');
+            e.classList.remove('step-in');
+          } else if (e.classList.contains('step-hidden')) {
+            e.classList.remove('step-hidden');
+            e.classList.add('step-in');
+          }
+        });
+      }
+      applyRules(window.STEP_RULES);
+      allSlides().forEach(s => show(s, 0));
+      return { max, show, applyRules };
+    })();
+
+
     /* =====================================================================
        1. SOUND EFFECTS (Web Audio API - Safe & Self-Contained)
        ===================================================================== */
@@ -2607,6 +2687,8 @@
     const slides = Array.from(document.querySelectorAll('.slide'));
     const totalSlides = slides.length;
     let currentSlide = 0;
+    let currentStep = 0;
+    function stepsLeft() { return Math.max(0, LessonSteps.max(slides[currentSlide]) - currentStep); }
     let lockStudents = true; // Teacher leads class by default
 
     const prevBtn = document.getElementById('prev-btn');
@@ -2638,11 +2720,13 @@
         d.disabled = (!isTeacher && lockStudents);
       });
 
-      slideCounter.textContent = `Слайд ${currentSlide + 1} / ${totalSlides}`;
+      slideCounter.textContent = `Слайд ${currentSlide + 1} / ${totalSlides}` + (stepsLeft() ? ` • ще ${stepsLeft()} ⬇️` : '');
 
       const lockedForStudent = (!isTeacher && lockStudents);
-      prevBtn.disabled = lockedForStudent || currentSlide === 0;
-      nextBtn.disabled = lockedForStudent || currentSlide === totalSlides - 1;
+      prevBtn.disabled = lockedForStudent || (currentSlide === 0 && currentStep === 0);
+      nextBtn.disabled = lockedForStudent || (currentSlide === totalSlides - 1 && !stepsLeft());
+      nextBtn.textContent = stepsLeft() ? 'Показати ще ⬇️' : 'Далі ➡️';
+      nextBtn.style.background = stepsLeft() ? 'linear-gradient(135deg, #f59e0b, #f97316)' : '';
 
       const studentLockPill = document.getElementById('student-lock-pill');
       if (!isTeacher) {
@@ -2650,12 +2734,14 @@
       }
     }
 
-    function goToSlide(index, broadcast = false) {
+    function goToSlide(index, broadcast = false, step = 0) {
       const clamped = Math.max(0, Math.min(totalSlides - 1, index));
       if (clamped !== currentSlide) {
         playClickSound();
       }
       currentSlide = clamped;
+      currentStep = Math.max(0, Math.min(step, LessonSteps.max(slides[currentSlide])));
+      LessonSteps.show(slides[currentSlide], currentStep);
       updateNavigationUI();
       if (isTeacher && broadcast) {
         publishTeacherState();
@@ -2664,7 +2750,11 @@
 
     function changeSlide(delta) {
       if (!isTeacher && lockStudents) return;
-      goToSlide(currentSlide + delta, true);
+      const max = LessonSteps.max(slides[currentSlide]);
+      if (delta > 0 && currentStep < max) { playClickSound(); goToSlide(currentSlide, true, currentStep + 1); return; }
+      if (delta < 0 && currentStep > 0) { playClickSound(); goToSlide(currentSlide, true, currentStep - 1); return; }
+      if ((delta > 0 && currentSlide === totalSlides - 1) || (delta < 0 && currentSlide === 0)) return;
+      goToSlide(currentSlide + delta, true, delta < 0 ? 999 : 0);
     }
 
     document.addEventListener('keydown', (e) => {
@@ -2719,6 +2809,7 @@
     function publishTeacherState() {
       const payload = {
         slide: currentSlide,
+        step: currentStep,
         lock: lockStudents,
         ts: Date.now()
       };
@@ -2735,8 +2826,9 @@
     function applyTeacherState(payload) {
       if (!payload || typeof payload.slide !== 'number') return;
       lockStudents = payload.lock !== false;
-      if (lockStudents && payload.slide !== currentSlide) {
-        currentSlide = Math.max(0, Math.min(totalSlides - 1, payload.slide));
+      if (lockStudents) {
+        goToSlide(payload.slide, false, typeof payload.step === 'number' ? payload.step : 999);
+        return;
       }
       updateNavigationUI();
     }
@@ -2818,8 +2910,8 @@
 
       function getCleanStudentUrl() {
         try {
-          const url = new URL(window.location.href);
-          url.searchParams.delete('role');
+          const url = new URL((window.top !== window ? window.top : window).location.href);
+          url.search = '';
           if (url.hash.toLowerCase().includes('teacher')) url.hash = '';
           return url.toString();
         } catch (e) {

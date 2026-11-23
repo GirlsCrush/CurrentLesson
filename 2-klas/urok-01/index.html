@@ -982,6 +982,61 @@
     table.props td:first-child { border-left: 2px solid #e2e8f0; border-radius: 12px 0 0 12px; }
     table.props td:last-child { border-right: 2px solid #e2e8f0; border-radius: 0 12px 12px 0; }
 
+    /* =====================================================================
+       ВЕЛИКІ Й ПОМІТНІ КНОПКИ ДЛЯ УЧНІВ (перекривають стилі вище)
+       ===================================================================== */
+    .slide .btn { min-height: 52px; padding: 12px 22px; font-size: 1.12rem; border-radius: 16px; }
+    .slide .btn-sm { min-height: 48px; padding: 10px 18px; font-size: 1.05rem; border-radius: 14px; }
+    .slide .btn-secondary { border: 3px solid #818cf8; box-shadow: 0 5px 0 #c7d2fe; }
+    .slide .btn-primary { box-shadow: 0 5px 0 #3730a3; }
+    .slide .btn-accent { box-shadow: 0 5px 0 #c2410c; }
+    .slide .btn-success { box-shadow: 0 5px 0 #047857; }
+    .slide .btn:active:not(:disabled) { transform: translateY(4px); box-shadow: none; }
+
+    .reveal-btn {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #fff; border: 3px solid #d97706; border-radius: 18px;
+      padding: 14px 24px; min-height: 56px; font-size: clamp(1.1rem, 1.6vw, 1.3rem); text-shadow: 0 1px 2px rgba(0, 0, 0, .25);
+      box-shadow: 0 5px 0 #b45309; animation: tapGlow 1.8s ease-in-out infinite;
+    }
+    .reveal-btn:active { transform: translateY(4px); }
+    .reveal-btn.revealed { animation: none; text-shadow: none; box-shadow: none; }
+    @keyframes tapGlow {
+      0%, 100% { box-shadow: 0 5px 0 #b45309, 0 0 0 0 rgba(245, 158, 11, .55); }
+      50% { box-shadow: 0 5px 0 #b45309, 0 0 0 12px rgba(245, 158, 11, 0); }
+    }
+
+    .opt-btn { min-height: 66px; padding: 14px 28px; font-size: clamp(1.2rem, 1.9vw, 1.5rem); border: 4px solid #818cf8; box-shadow: 0 6px 0 #c7d2fe; }
+    .opt-btn.big { min-height: 78px; padding: 18px 36px; font-size: clamp(1.35rem, 2.2vw, 1.8rem); }
+    .opt-btn:active:not(:disabled) { transform: translateY(5px); box-shadow: none; }
+    .opt-btn.correct { box-shadow: 0 6px 0 #047857; }
+    .opt-btn.wrong { box-shadow: none; }
+
+    .word-chip { min-height: 56px; padding: 13px 22px; font-size: clamp(1.1rem, 1.6vw, 1.3rem); border: 3px solid #818cf8; box-shadow: 0 5px 0 #c7d2fe; }
+    .word-chip.placed { box-shadow: none; min-height: 0; }
+    .sort-bucket2 { border-width: 4px; }
+
+    .mission-item { font-size: 1.15rem; padding: 14px 18px; border: 3px solid #a5b4fc; box-shadow: 0 4px 0 #e0e7ff; }
+    .mission-item::after { content: '👆'; margin-left: auto; font-size: 1.3rem; }
+    .mission-item.done::after { content: '✅'; }
+
+    .tile.click { border: 3px solid #818cf8; box-shadow: 0 6px 0 #c7d2fe; }
+    .tile.click .tap { font-size: 1rem; background: #4f46e5; color: #fff; padding: 6px 16px; border-radius: 999px; }
+    .flip-front { border: 3px solid #818cf8 !important; box-shadow: 0 6px 0 #c7d2fe; }
+
+    .hotspot { background: rgba(255, 255, 255, .8); box-shadow: 0 0 0 3px rgba(99, 102, 241, .5); animation: spotPulse 2s ease-in-out infinite; }
+    .hotspot.found, .hotspot.good { animation: none; }
+    @keyframes spotPulse { 50% { box-shadow: 0 0 0 8px rgba(99, 102, 241, .12); } }
+
+    select.pick { min-height: 54px; padding: 12px 16px; font-size: 1.2rem; border: 3px solid #818cf8; }
+    .letter-input { width: 54px; height: 62px; font-size: 1.6rem; border-width: 3px; }
+    .color-dot { width: 46px; height: 46px; }
+
+
+    /* ===== Поступова подача ===== */
+    .step-hidden { visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
+    .step-in { animation: stepIn .55s cubic-bezier(.22, 1, .36, 1); }
+    @keyframes stepIn { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: none; } }
+
   </style>
 </head>
 <body>
@@ -1099,7 +1154,7 @@
               <div class="flip-back" style="font-size:1.1rem;">Клас, у якому учні вивчають інформатику. Тут діють особливі правила!</div>
             </div></div>
           </div>
-          <div class="def-box">📌 <b>Інформатика</b> — це наука, яка вчить працювати з інформацією за допомогою комп’ютера.</div>
+          <div data-step="1" class="def-box">📌 <b>Інформатика</b> — це наука, яка вчить працювати з інформацією за допомогою комп’ютера.</div>
         </div>
       </section>
 
@@ -1119,12 +1174,12 @@
               <div class="poem" style="font-size:1.12rem;">Як зайшли до класу, діти,<br>Припиняйте гомоніти!<br>Слід усім запам’ятати:</div>
               <button class="reveal-btn" data-answer="✅ Тут не варто пустувати!" onclick="reveal(this)">❓ Яке правило?</button>
             </div>
-            <div class="tile" style="justify-content:space-between;">
+            <div data-step="1" class="tile" style="justify-content:space-between;">
               <div class="em">🍔🚫</div>
               <div class="poem" style="font-size:1.12rem;">В класі вирішили сісти<br>І добряче попоїсти?<br>Слід усім запам’ятати:</div>
               <button class="reveal-btn" data-answer="✅ На уроках — не жувати!" onclick="reveal(this)">❓ Яке правило?</button>
             </div>
-            <div class="tile" style="justify-content:space-between;">
+            <div data-step="2" class="tile" style="justify-content:space-between;">
               <div class="em">🧼</div>
               <div class="poem" style="font-size:1.12rem;">До комп’ютерів ви сіли.<br>А чи руки з милом мили?<br>Слід усім запам’ятати:</div>
               <button class="reveal-btn" data-answer="✅ Треба чисті руки мати!" onclick="reveal(this)">❓ Яке правило?</button>
@@ -1147,10 +1202,10 @@
           <div class="grid g3" id="elGrid">
             <div class="tile click" onclick="openTile(this);countOpen('elGrid','elCount')"><div class="em">🙋‍♂️</div><div class="ttl">Не вмикай комп’ютер без дозволу вчителя</div><div class="tap">Чому? 👆</div><div class="why">Учитель знає, коли все готово і безпечно.</div></div>
             <div class="tile click" onclick="openTile(this);countOpen('elGrid','elCount')"><div class="em">🔌</div><div class="ttl">Не торкайся дротів і розеток</div><div class="tap">Чому? 👆</div><div class="why">Там електричний струм — він може вдарити!</div></div>
-            <div class="tile click" onclick="openTile(this);countOpen('elGrid','elCount')"><div class="em">⌨️📚</div><div class="ttl">Не клади речі на клавіатуру</div><div class="tap">Чому? 👆</div><div class="why">Клавіші можуть зламатися, а комп’ютер — «збожеволіти»!</div></div>
-            <div class="tile click" onclick="openTile(this);countOpen('elGrid','elCount')"><div class="em">🖥️👆</div><div class="ttl">Не торкайся екрана монітора</div><div class="tap">Чому? 👆</div><div class="why">На екрані лишаються плями, і його легко подряпати.</div></div>
-            <div class="tile click" onclick="openTile(this);countOpen('elGrid','elCount')"><div class="em">🗄️</div><div class="ttl">Не торкайся задньої стінки системного блока</div><div class="tap">Чому? 👆</div><div class="why">Там підключені дроти з електрикою.</div></div>
-            <div class="tile click" onclick="openTile(this);countOpen('elGrid','elCount')"><div class="em">🔧🚫</div><div class="ttl">Не ремонтуй сам — поклич учителя!</div><div class="tap">Чому? 👆</div><div class="why">Щось не працює? Підніми руку — учитель допоможе.</div></div>
+            <div data-step="1" class="tile click" onclick="openTile(this);countOpen('elGrid','elCount')"><div class="em">⌨️📚</div><div class="ttl">Не клади речі на клавіатуру</div><div class="tap">Чому? 👆</div><div class="why">Клавіші можуть зламатися, а комп’ютер — «збожеволіти»!</div></div>
+            <div data-step="1" class="tile click" onclick="openTile(this);countOpen('elGrid','elCount')"><div class="em">🖥️👆</div><div class="ttl">Не торкайся екрана монітора</div><div class="tap">Чому? 👆</div><div class="why">На екрані лишаються плями, і його легко подряпати.</div></div>
+            <div data-step="2" class="tile click" onclick="openTile(this);countOpen('elGrid','elCount')"><div class="em">🗄️</div><div class="ttl">Не торкайся задньої стінки системного блока</div><div class="tap">Чому? 👆</div><div class="why">Там підключені дроти з електрикою.</div></div>
+            <div data-step="2" class="tile click" onclick="openTile(this);countOpen('elGrid','elCount')"><div class="em">🔧🚫</div><div class="ttl">Не ремонтуй сам — поклич учителя!</div><div class="tap">Чому? 👆</div><div class="why">Щось не працює? Підніми руку — учитель допоможе.</div></div>
           </div>
         </div>
       </section>
@@ -1174,7 +1229,7 @@
             <input type="range" id="distRange" min="15" max="80" value="25" oninput="updateDistance()" style="width:100%;accent-color:#4f46e5;height:28px;cursor:pointer;">
             <div id="distMsg" style="text-align:center;font-weight:900;font-size:1.35rem;margin-top:6px;"></div>
           </div>
-          <div class="grid g4">
+          <div data-step="1" class="grid g4">
             <div class="tile"><div class="em">📏</div><div class="ttl">Від очей до екрана — не менше 50 см</div></div>
             <div class="tile"><div class="em">🧍</div><div class="ttl">Спина рівна, плечі розслаблені</div></div>
             <div class="tile"><div class="em">🦶</div><div class="ttl">Ноги стоять на підлозі</div></div>
@@ -1236,14 +1291,14 @@
               <div class="ttl" style="font-size:1.4rem;">26 листопада — Всесвітній день інформації</div>
               <div id="infoDayMsg" class="feedback-pill" style="background:#fef3c7;color:#92400e;font-size:1.05rem;"></div>
             </div>
-            <div class="tile" style="background:linear-gradient(135deg,#fff1f2,#fff);">
+            <div data-step="1" class="tile" style="background:linear-gradient(135deg,#fff1f2,#fff);">
               <div class="em">📱🔋</div>
               <div class="ttl" style="font-size:1.25rem;">Смартфон — це кишеньковий комп’ютер</div>
               <div class="big-text" style="font-size:1.05rem;">Він теж може бути небезпечним: якщо неправильно заряджати або батарея пошкоджена, вона може дуже нагрітися.</div>
               <button class="reveal-btn" data-answer="✅ Не заряджай під подушкою, не користуйся зламаним зарядним!" onclick="reveal(this)">🛡️ Як бути обережним?</button>
             </div>
           </div>
-          <div class="tile">
+          <div data-step="2" class="tile">
             <div class="ttl" style="font-size:1.2rem;">🎬 Мультфільм «Корисні підказки. Електрично-фантастично»</div>
             <div class="link-row" style="justify-content:center;">
               <a class="btn btn-accent" href="https://1plus1.video/video/embed/DaUAqU2f" target="_blank" rel="noopener">▶ Дивитися мультик</a>
@@ -1313,7 +1368,7 @@
             <div class="rebus-card" style="background:#fef3c7;border-color:#fcd34d;"><div style="font-weight:900;color:#92400e;">Приклад 1</div><div class="rebus">🦔<span class="apos">’</span> = ЇЖА</div><div style="font-weight:700;">ЇЖАК без К = ЇЖА</div></div>
             <div class="rebus-card" style="background:#fef3c7;border-color:#fcd34d;"><div style="font-weight:900;color:#92400e;">Приклад 2</div><div class="rebus">☀️<span class="apos">’’</span> = СОН</div><div style="font-weight:700;">СОНЦЕ без ЦЕ = СОН</div></div>
           </div>
-          <div class="grid g3">
+          <div data-step="1" class="grid g3">
             <div class="rebus-card"><div class="rebus">🐐 + К</div><div class="letter-boxes" id="rb1"></div><button class="btn btn-sm btn-secondary t-only" onclick="rebus[0].showAnswer()">👁 Відповідь</button></div>
             <div class="rebus-card"><div class="rebus">🐄 + Й</div><div class="letter-boxes" id="rb2"></div><button class="btn btn-sm btn-secondary t-only" onclick="rebus[1].showAnswer()">👁 Відповідь</button></div>
             <div class="rebus-card"><div class="rebus">✋ + В</div><div class="letter-boxes" id="rb3"></div><button class="btn btn-sm btn-secondary t-only" onclick="rebus[2].showAnswer()">👁 Відповідь</button></div>
@@ -1429,6 +1484,46 @@
   </div>
 
   <script>
+
+    /* =====================================================================
+       0. ПОСТУПОВА ПОДАЧА: елементи з data-step відкриває вчитель кнопкою «Далі»
+       (для старих уроків кроки задаються через window.STEP_RULES)
+       ===================================================================== */
+    const LessonSteps = (() => {
+      const allSlides = () => Array.from(document.querySelectorAll('section.slide'));
+      function applyRules(rules) {
+        const sl = allSlides();
+        Object.keys(rules || {}).forEach(n => {
+          const s = sl[+n - 1];
+          if (!s) return;
+          rules[n].forEach((sel, i) => s.querySelectorAll(sel).forEach(el => {
+            if (!el.dataset.step) el.dataset.step = String(i + 1);
+          }));
+        });
+      }
+      function max(slideEl) {
+        let m = 0;
+        if (slideEl) slideEl.querySelectorAll('[data-step]').forEach(e => { m = Math.max(m, parseInt(e.dataset.step, 10) || 0); });
+        return m;
+      }
+      function show(slideEl, step) {
+        if (!slideEl) return;
+        slideEl.querySelectorAll('[data-step]').forEach(e => {
+          const hide = (parseInt(e.dataset.step, 10) || 0) > step;
+          if (hide) {
+            e.classList.add('step-hidden');
+            e.classList.remove('step-in');
+          } else if (e.classList.contains('step-hidden')) {
+            e.classList.remove('step-hidden');
+            e.classList.add('step-in');
+          }
+        });
+      }
+      applyRules(window.STEP_RULES);
+      allSlides().forEach(s => show(s, 0));
+      return { max, show, applyRules };
+    })();
+
     /* =====================================================================
        1. SAFE STORAGE & ROLE DETECTION (Default = Student; ?role=teacher / #teacher = Teacher)
        ===================================================================== */
@@ -1771,13 +1866,20 @@
     const syncText = document.getElementById('syncText');
     const btnFollowToggle = document.getElementById('btnFollowToggle');
 
-    function renderSlide(targetIndex, fromSync = false) {
+    let currentStep = 0;
+    function stepsLeft() { return Math.max(0, LessonSteps.max(slides[currentSlide - 1]) - currentStep); }
+
+    function renderSlide(targetIndex, fromSync = false, step = 0) {
       const clamped = Math.max(1, Math.min(totalSlides, targetIndex));
       currentSlide = clamped;
       slides.forEach((s, idx) => {
         s.classList.toggle('active', idx + 1 === currentSlide);
       });
-      slideIndicator.textContent = `Слайд ${currentSlide} / ${totalSlides}`;
+      const slideEl = slides[currentSlide - 1];
+      currentStep = Math.max(0, Math.min(step, LessonSteps.max(slideEl)));
+      LessonSteps.show(slideEl, currentStep);
+      const left = stepsLeft();
+      slideIndicator.textContent = `Слайд ${currentSlide} / ${totalSlides}` + (left ? ` • ще ${left} ⬇` : '');
       progressFill.style.width = `${(currentSlide / totalSlides) * 100}%`;
       updateNavLockUI();
 
@@ -1788,8 +1890,12 @@
 
     function updateNavLockUI() {
       const lockedForStudent = !isTeacher && followMode;
-      btnPrev.disabled = currentSlide === 1 || lockedForStudent;
-      btnNext.disabled = currentSlide === totalSlides || lockedForStudent;
+      const left = stepsLeft();
+      btnPrev.disabled = (currentSlide === 1 && currentStep === 0) || lockedForStudent;
+      btnNext.disabled = (currentSlide === totalSlides && !left) || lockedForStudent;
+      btnNext.textContent = left ? 'Показати ще ⬇' : 'Далі ➡';
+      btnNext.classList.toggle('btn-accent', !!left);
+      btnNext.classList.toggle('btn-primary', !left);
 
       if (isTeacher) {
         btnFollowToggle.textContent = followMode ? '🔒 Вести клас за собою' : '🔓 Вільний перегляд';
@@ -1807,8 +1913,12 @@
 
     function changeSlide(delta) {
       if (!isTeacher && followMode) return;
+      const max = LessonSteps.max(slides[currentSlide - 1]);
+      if (delta > 0 && currentStep < max) { SoundFX.pop(); renderSlide(currentSlide, false, currentStep + 1); return; }
+      if (delta < 0 && currentStep > 0) { SoundFX.click(); renderSlide(currentSlide, false, currentStep - 1); return; }
+      if ((delta > 0 && currentSlide === totalSlides) || (delta < 0 && currentSlide === 1)) return;
       SoundFX.click();
-      renderSlide(currentSlide + delta, false);
+      renderSlide(currentSlide + delta, false, delta < 0 ? 999 : 0);
     }
 
     document.addEventListener('keydown', (e) => {
@@ -1876,7 +1986,7 @@
         followMode = data.followMode;
       }
       if (!isTeacher && typeof data.slide === 'number') {
-        renderSlide(data.slide, true);
+        renderSlide(data.slide, true, typeof data.step === 'number' ? data.step : 999);
       } else {
         updateNavLockUI();
       }
@@ -1889,7 +1999,7 @@
     }
 
     function publishState() {
-      const payload = { slide: currentSlide, followMode: followMode, ts: Date.now() };
+      const payload = { slide: currentSlide, step: currentStep, followMode: followMode, ts: Date.now() };
       try {
         if (bcChannel) bcChannel.postMessage({ type: 'state', payload });
       } catch (e) {}

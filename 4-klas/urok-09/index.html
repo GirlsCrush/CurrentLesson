@@ -845,6 +845,44 @@
       font-weight: 800;
       font-size: 0.9rem;
     }
+  
+    /* =====================================================================
+       ВЕЛИКІ Й ПОМІТНІ КНОПКИ ДЛЯ УЧНІВ (латка для старих уроків)
+       ===================================================================== */
+    .step-hidden { visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
+    .step-in { animation: stepIn .55s cubic-bezier(.22, 1, .36, 1); }
+    @keyframes stepIn { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: none; } }
+
+    /* рушій 4 класу */
+    .slide .btn { min-height: 50px; padding: 11px 20px; font-size: 1.08rem; }
+    .slide .btn-sm { min-height: 46px; padding: 9px 16px; font-size: 1.02rem; }
+    .slide .btn-secondary { border: 3px solid #818cf8; box-shadow: 0 5px 0 #c7d2fe; }
+    .slide .btn-primary { box-shadow: 0 5px 0 #3730a3; }
+    .slide .btn-accent { box-shadow: 0 5px 0 #c2410c; }
+    .slide .btn-success { box-shadow: 0 5px 0 #047857; }
+    .slide .btn:active:not(:disabled) { transform: translateY(4px); box-shadow: none; }
+    .word-chip { min-height: 54px; font-size: 1.15rem; border: 3px solid #818cf8; box-shadow: 0 5px 0 #c7d2fe; }
+    .word-chip:disabled { box-shadow: none; }
+    .mission-item { font-size: 1.1rem; padding: 13px 16px; border: 3px solid #a5b4fc; box-shadow: 0 4px 0 #e0e7ff; }
+    .pair-card { min-height: 56px; font-size: 1.08rem; border: 3px solid #818cf8; box-shadow: 0 5px 0 #c7d2fe; }
+    .pair-card.matched { box-shadow: none; }
+    .era-btn { font-size: 1rem; padding: 13px 8px; border: 3px solid #818cf8; box-shadow: 0 5px 0 #c7d2fe; }
+    .drive-tile { border: 3px solid #818cf8; box-shadow: 0 5px 0 #c7d2fe; }
+    .artifact-card select { min-height: 48px; font-size: 1rem; }
+    .flip-front { border: 3px solid #818cf8 !important; box-shadow: 0 6px 0 #c7d2fe; }
+    .color-dot { width: 42px; height: 42px; }
+    .letter-input { width: 48px; height: 54px; font-size: 1.4rem; }
+
+    /* рушій 3 класу */
+    .slide .btn-action { min-height: 52px; padding: 12px 24px; font-size: 1.1rem; box-shadow: 0 5px 0 rgba(30, 41, 59, .25); }
+    .slide .btn-action:active { transform: translateY(4px); box-shadow: none; }
+    .quiz-option { padding: 13px 16px; font-size: 1.08rem; border: 3px solid #93c5fd; box-shadow: 0 4px 0 #dbeafe; }
+    .num-input { height: 54px; font-size: 1.35rem; border-width: 3px; }
+    .syllable-input { height: 60px; font-size: 1.6rem; }
+    .swatch { width: 40px; height: 40px; }
+    .os-tab { padding: 12px 20px; font-size: 1.05rem; border: 3px solid #93c5fd; box-shadow: 0 4px 0 #dbeafe; }
+    .nav-btn { min-height: 50px; font-size: 1.05rem; }
+
   </style>
 </head>
 <body>
@@ -1562,6 +1600,48 @@
   </div>
 
   <script>
+    window.STEP_RULES = {"2": [".slide-body > div:nth-child(2)", ".slide-body > div:nth-child(3)"], "3": [".slide-body > div:nth-child(2)"], "6": [".pc-sim-grid"], "7": [".device-card:nth-child(3), .device-card:nth-child(4)", ".device-card:nth-child(5), .device-card:nth-child(6)"], "9": [".slide-body > div:nth-child(2)"], "11": [".slide-body > div:nth-child(2)"]};
+
+    /* =====================================================================
+       0. ПОСТУПОВА ПОДАЧА: елементи з data-step відкриває вчитель кнопкою «Далі»
+       (для старих уроків кроки задаються через window.STEP_RULES)
+       ===================================================================== */
+    const LessonSteps = (() => {
+      const allSlides = () => Array.from(document.querySelectorAll('section.slide'));
+      function applyRules(rules) {
+        const sl = allSlides();
+        Object.keys(rules || {}).forEach(n => {
+          const s = sl[+n - 1];
+          if (!s) return;
+          rules[n].forEach((sel, i) => s.querySelectorAll(sel).forEach(el => {
+            if (!el.dataset.step) el.dataset.step = String(i + 1);
+          }));
+        });
+      }
+      function max(slideEl) {
+        let m = 0;
+        if (slideEl) slideEl.querySelectorAll('[data-step]').forEach(e => { m = Math.max(m, parseInt(e.dataset.step, 10) || 0); });
+        return m;
+      }
+      function show(slideEl, step) {
+        if (!slideEl) return;
+        slideEl.querySelectorAll('[data-step]').forEach(e => {
+          const hide = (parseInt(e.dataset.step, 10) || 0) > step;
+          if (hide) {
+            e.classList.add('step-hidden');
+            e.classList.remove('step-in');
+          } else if (e.classList.contains('step-hidden')) {
+            e.classList.remove('step-hidden');
+            e.classList.add('step-in');
+          }
+        });
+      }
+      applyRules(window.STEP_RULES);
+      allSlides().forEach(s => show(s, 0));
+      return { max, show, applyRules };
+    })();
+
+
     /* =====================================================================
        1. SAFE STORAGE & ROLE DETECTION (Default = Student; ?role=teacher / #teacher = Teacher)
        ===================================================================== */
@@ -1587,13 +1667,25 @@
 
     // Secret double-click on badge to switch to teacher mode if opened locally without params
     document.getElementById('brandBadge').addEventListener('dblclick', () => {
-      if (!isTeacher) {
+      if (!isTeacher && window.top === window) {
         try {
           window.location.hash = 'teacher';
           window.location.reload();
         } catch (e) {}
       }
     });
+
+    function getShareUrl() {
+      try {
+        if (window.top !== window && window.top.location.href) {
+          const t = new URL(window.top.location.href);
+          t.search = '';
+          t.hash = '';
+          return t.toString();
+        }
+      } catch (e) {}
+      return getCleanStudentUrl();
+    }
 
     function getCleanStudentUrl() {
       try {
@@ -1891,13 +1983,20 @@
     const syncText = document.getElementById('syncText');
     const btnFollowToggle = document.getElementById('btnFollowToggle');
 
-    function renderSlide(targetIndex, fromSync = false) {
+    let currentStep = 0;
+    function stepsLeft() { return Math.max(0, LessonSteps.max(slides[currentSlide - 1]) - currentStep); }
+
+    function renderSlide(targetIndex, fromSync = false, step = 0) {
       const clamped = Math.max(1, Math.min(totalSlides, targetIndex));
       currentSlide = clamped;
       slides.forEach((s, idx) => {
         s.classList.toggle('active', idx + 1 === currentSlide);
       });
-      slideIndicator.textContent = `Слайд ${currentSlide} / ${totalSlides}`;
+      const slideEl = slides[currentSlide - 1];
+      currentStep = Math.max(0, Math.min(step, LessonSteps.max(slideEl)));
+      LessonSteps.show(slideEl, currentStep);
+      const left = stepsLeft();
+      slideIndicator.textContent = `Слайд ${currentSlide} / ${totalSlides}` + (left ? ` • ще ${left} ⬇` : '');
       progressFill.style.width = `${(currentSlide / totalSlides) * 100}%`;
       updateNavLockUI();
 
@@ -1908,8 +2007,12 @@
 
     function updateNavLockUI() {
       const lockedForStudent = !isTeacher && followMode;
-      btnPrev.disabled = currentSlide === 1 || lockedForStudent;
-      btnNext.disabled = currentSlide === totalSlides || lockedForStudent;
+      const left = stepsLeft();
+      btnPrev.disabled = (currentSlide === 1 && currentStep === 0) || lockedForStudent;
+      btnNext.disabled = (currentSlide === totalSlides && !left) || lockedForStudent;
+      btnNext.textContent = left ? 'Показати ще ⬇' : 'Далі ➡';
+      btnNext.classList.toggle('btn-accent', !!left);
+      btnNext.classList.toggle('btn-primary', !left);
 
       if (isTeacher) {
         btnFollowToggle.textContent = followMode ? '🔒 Вести клас за собою' : '🔓 Вільний перегляд';
@@ -1927,8 +2030,12 @@
 
     function changeSlide(delta) {
       if (!isTeacher && followMode) return;
+      const max = LessonSteps.max(slides[currentSlide - 1]);
+      if (delta > 0 && currentStep < max) { SoundFX.pop(); renderSlide(currentSlide, false, currentStep + 1); return; }
+      if (delta < 0 && currentStep > 0) { SoundFX.click(); renderSlide(currentSlide, false, currentStep - 1); return; }
+      if ((delta > 0 && currentSlide === totalSlides) || (delta < 0 && currentSlide === 1)) return;
       SoundFX.click();
-      renderSlide(currentSlide + delta, false);
+      renderSlide(currentSlide + delta, false, delta < 0 ? 999 : 0);
     }
 
     document.addEventListener('keydown', (e) => {
@@ -1996,7 +2103,7 @@
         followMode = data.followMode;
       }
       if (!isTeacher && typeof data.slide === 'number') {
-        renderSlide(data.slide, true);
+        renderSlide(data.slide, true, typeof data.step === 'number' ? data.step : 999);
       } else {
         updateNavLockUI();
       }
@@ -2009,7 +2116,7 @@
     }
 
     function publishState() {
-      const payload = { slide: currentSlide, followMode: followMode, ts: Date.now() };
+      const payload = { slide: currentSlide, step: currentStep, followMode: followMode, ts: Date.now() };
       try {
         if (bcChannel) bcChannel.postMessage({ type: 'state', payload });
       } catch (e) {}
@@ -2440,7 +2547,7 @@
     const shareModal = document.getElementById('shareModal');
     document.getElementById('btnOpenShare').addEventListener('click', () => {
       SoundFX.click();
-      const studentUrl = getCleanStudentUrl();
+      const studentUrl = getShareUrl();
       document.getElementById('studentUrlText').textContent = studentUrl;
       document.getElementById('copyFeedback').textContent = '';
       QRCanvas.draw(document.getElementById('qrCanvas'), studentUrl);
@@ -2453,7 +2560,7 @@
     }
 
     function copyStudentUrl() {
-      const url = getCleanStudentUrl();
+      const url = getShareUrl();
       const fb = document.getElementById('copyFeedback');
       try {
         if (navigator.clipboard && navigator.clipboard.writeText) {
