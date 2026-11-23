@@ -1013,7 +1013,7 @@
 
     .word-chip { min-height: 56px; padding: 13px 22px; font-size: clamp(1.1rem, 1.6vw, 1.3rem); border: 3px solid #818cf8; box-shadow: 0 5px 0 #c7d2fe; }
     .word-chip.placed { box-shadow: none; min-height: 0; }
-    .sort-bucket2 { border-width: 4px; }
+    .sort-bucket2 { border-width: 4px; min-height: 96px; padding: 10px; }
 
     .mission-item { font-size: 1.15rem; padding: 14px 18px; border: 3px solid #a5b4fc; box-shadow: 0 4px 0 #e0e7ff; }
     .mission-item::after { content: '👆'; margin-left: auto; font-size: 1.3rem; }
@@ -1030,6 +1030,37 @@
     select.pick { min-height: 54px; padding: 12px 16px; font-size: 1.2rem; border: 3px solid #818cf8; }
     .letter-input { width: 54px; height: 62px; font-size: 1.6rem; border-width: 3px; }
     .color-dot { width: 46px; height: 46px; }
+
+    /* Розстав по порядку */
+    .order-list { display: flex; flex-direction: column; gap: 8px; }
+    .order-slot { display: flex; align-items: center; gap: 12px; background: #f8fafc; border: 3px dashed #c7d2fe; border-radius: 16px; padding: 8px 14px; min-height: 54px; font-weight: 800; font-size: 1.15rem; color: #94a3b8; }
+    .order-slot.filled { border-style: solid; border-color: #10b981; background: #f0fdf4; color: #065f46; animation: slidePop .35s; }
+    .order-num { width: 38px; height: 38px; border-radius: 50%; background: #4f46e5; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 900; flex-shrink: 0; }
+    .hotspot.removed { opacity: .12; transform: translate(-50%, -50%) scale(.6); pointer-events: none; animation: none; transition: all .4s; }
+    .mission-item.sim-task { cursor: default; box-shadow: none; }
+    .mission-item.sim-task::after { content: '⬜'; }
+    .mission-item.sim-task.done::after { content: '✅'; }
+
+    /* Симулятор Робочого стола */
+    .desk-sim { position: relative; height: clamp(250px, 40vh, 360px); border-radius: 18px; overflow: hidden; border: 6px solid #1e293b;
+      background: linear-gradient(135deg, #38bdf8, #6366f1 60%, #a855f7); touch-action: none; }
+    .desk-icon2 { position: absolute; width: 96px; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 4px; border-radius: 12px;
+      cursor: grab; color: #fff; font-weight: 900; font-size: .88rem; text-align: center; text-shadow: 0 1px 3px rgba(0,0,0,.6); user-select: none; border: 2px solid transparent; }
+    .desk-icon2 .ic { font-size: 2.6rem; line-height: 1; text-shadow: none; }
+    .desk-icon2:hover { background: rgba(255,255,255,.2); border-color: rgba(255,255,255,.6); }
+    .desk-icon2.dragging { cursor: grabbing; background: rgba(255,255,255,.3); z-index: 5; }
+    .desk-taskbar { position: absolute; left: 0; right: 0; bottom: 0; height: 44px; background: rgba(15,23,42,.88); display: flex; align-items: center; gap: 6px; padding: 0 8px; }
+    .desk-taskbar button { height: 36px; min-width: 44px; padding: 0 10px; border-radius: 8px; border: 2px solid transparent; background: rgba(255,255,255,.1); color: #fff;
+      font-family: inherit; font-weight: 900; font-size: 1rem; cursor: pointer; }
+    .desk-taskbar button:hover { border-color: #93c5fd; }
+    .desk-taskbar button.seen { border-color: #4ade80; }
+    .sim-window { position: absolute; left: 30%; top: 12%; width: 46%; min-width: 230px; background: #fff; border-radius: 10px; box-shadow: 0 14px 30px rgba(0,0,0,.35); overflow: hidden; z-index: 6; }
+    .sim-window .bar { display: flex; align-items: center; gap: 6px; background: #e0e7ff; padding: 4px 6px 4px 12px; font-weight: 900; color: #1e1b4b; }
+    .sim-window .bar span { flex: 1; }
+    .sim-window .bar button { width: 40px; height: 34px; border: none; border-radius: 6px; font-size: 1.2rem; font-weight: 900; cursor: pointer; background: #fff; }
+    .sim-window .bar button.cls:hover { background: #ef4444; color: #fff; }
+    .sim-window .body { padding: 16px; font-size: 1.6rem; font-weight: 900; color: #334155; text-align: center; min-height: 90px; }
+    .star-target { position: absolute; font-size: 2.8rem; transform: translate(-50%, -50%); transition: transform .2s; cursor: default; user-select: none; }
 
 
     /* ===== Поступова подача ===== */
@@ -2613,7 +2644,7 @@
           if (s.target === false) { SoundFX.click(); b.classList.add('good'); return; }
           if (b.dataset.done) return;
           b.dataset.done = 1;
-          b.classList.add(opts.mode === 'good' ? 'good' : 'found');
+          b.classList.add(opts.mode === 'good' ? 'good' : opts.mode === 'remove' ? 'removed' : 'found');
           if (s.label) b.insertAdjacentHTML('beforeend', `<span class="lbl">${s.label}</span>`);
           found++;
           SoundFX.success();
@@ -2775,6 +2806,48 @@
       btn.classList.add('btn-success');
       $id('reflectionReply').textContent = `Дякуємо! «${label}» 🌟 Ти чудово попрацював(-ла) на уроці!`;
       launchFireworksBurst(false);
+    }
+
+    // --- Розстав кроки по порядку: натискай кроки в правильній послідовності ---
+    function makeOrder(id, steps, opts = {}) {
+      const root = $id(id);
+      let next = 0;
+      root.innerHTML = `<div class="order-list"></div><div class="sort-pool order-pool" style="margin-top:12px;"></div>
+        <div class="sort-status" style="margin-top:10px;"><span class="st"></span><button class="btn btn-sm btn-secondary">🔄 Спочатку</button></div>`;
+      const list = root.querySelector('.order-list');
+      const pool = root.querySelector('.order-pool');
+      const st = root.querySelector('.st');
+      root.querySelector('.sort-status button').onclick = () => { SoundFX.click(); makeOrder(id, steps, opts); };
+      const upd = () => { st.textContent = next < steps.length ? `Який крок №${next + 1}? Натисни на нього!` : '🎉 Усе по порядку!'; };
+      steps.forEach((t, i) => {
+        const slot = document.createElement('div');
+        slot.className = 'order-slot';
+        slot.innerHTML = `<span class="order-num">${i + 1}</span><span class="order-text">…</span>`;
+        list.appendChild(slot);
+      });
+      shuffleArr(steps.map((t, i) => ({ t, i }))).forEach(it => {
+        const b = document.createElement('button');
+        b.className = 'word-chip';
+        b.innerHTML = it.t;
+        b.onclick = () => {
+          if (it.i === next) {
+            SoundFX.success();
+            const slot = list.children[next];
+            slot.classList.add('filled');
+            slot.querySelector('.order-text').innerHTML = it.t;
+            b.remove();
+            next++;
+            upd();
+            if (next === steps.length) { launchFireworksBurst(false); if (opts.onDone) opts.onDone(); }
+          } else {
+            SoundFX.error();
+            b.classList.add('shake');
+            setTimeout(() => b.classList.remove('shake'), 420);
+          }
+        };
+        pool.appendChild(b);
+      });
+      upd();
     }
 
 

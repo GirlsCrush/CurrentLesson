@@ -1,0 +1,2907 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Урок 8 • Світ сучасних професій (2 клас НУШ)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-grad: linear-gradient(135deg, #eef6ff 0%, #f5f3ff 48%, #fff7ed 100%);
+      --card-bg: rgba(255, 255, 255, 0.94);
+      --primary: #4f46e5;
+      --primary-light: #e0e7ff;
+      --primary-dark: #3730a3;
+      --secondary: #0ea5e9;
+      --accent: #f59e0b;
+      --accent-light: #fef3c7;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --danger: #f43f5e;
+      --danger-light: #ffe4e6;
+      --text-main: #1e293b;
+      --text-muted: #475569;
+      --border-soft: rgba(99, 102, 241, 0.18);
+      --shadow-card: 0 18px 40px -12px rgba(30, 41, 59, 0.14), 0 4px 14px -2px rgba(79, 70, 229, 0.08);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-grad);
+      color: var(--text-main);
+      user-select: none;
+    }
+
+    /* Animated Emoji Background & Fireworks Layers (NEVER block clicks!) */
+    #emojiBgCanvas, #fxCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    #emojiBgCanvas { z-index: 1; }
+    #fxCanvas { z-index: 9999; }
+
+    /* Decorative soft blobs */
+    .bg-blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.45;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .blob-1 { width: 380px; height: 380px; background: #bae6fd; top: -100px; left: -80px; }
+    .blob-2 { width: 420px; height: 420px; background: #ddd6fe; bottom: -120px; right: -80px; }
+    .blob-3 { width: 300px; height: 300px; background: #fde68a; top: 40%; left: 55%; }
+
+    /* Main App Shell */
+    .app-shell {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 10px 18px 12px;
+      max-width: 1360px;
+      margin: 0 auto;
+    }
+
+    /* Top Header & Teacher Panel */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      border: 2px solid var(--border-soft);
+      border-radius: 20px;
+      padding: 8px 16px;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+
+    .brand-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 0.98rem;
+      color: var(--primary-dark);
+      cursor: pointer;
+    }
+
+    .brand-pill {
+      background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+      color: #fff;
+      padding: 4px 11px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+    }
+
+    .top-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      background: #f1f5f9;
+      color: var(--text-muted);
+      border: 1.5px solid #e2e8f0;
+    }
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #94a3b8;
+    }
+    .status-dot.online {
+      background: var(--success);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+    }
+    .status-dot.locked {
+      background: var(--accent);
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
+    }
+
+    /* Teacher Controls Bar (visible only in teacher mode) */
+    .teacher-bar {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: linear-gradient(135deg, #eef2ff, #e0f2fe);
+      border: 2px solid #818cf8;
+      border-radius: 16px;
+      padding: 5px 12px;
+    }
+    body.is-teacher .teacher-bar {
+      display: flex;
+    }
+
+    .t-counter {
+      font-weight: 900;
+      font-size: 0.86rem;
+      color: var(--primary-dark);
+      background: #fff;
+      padding: 5px 11px;
+      border-radius: 12px;
+      border: 1.5px solid #c7d2fe;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 14px;
+      padding: 8px 15px;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: transform 0.14s ease, box-shadow 0.14s ease, background 0.15s ease;
+    }
+    .btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+    }
+    .btn:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(79, 70, 229, 0.28);
+    }
+    .btn-secondary {
+      background: #fff;
+      color: var(--primary-dark);
+      border: 2px solid #c7d2fe;
+    }
+    .btn-accent {
+      background: linear-gradient(135deg, #f59e0b, #f97316);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(245, 158, 11, 0.28);
+    }
+    .btn-success {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.28);
+    }
+    .btn-sm {
+      padding: 6px 11px;
+      font-size: 0.82rem;
+      border-radius: 11px;
+    }
+
+    /* Slides Viewport */
+    .slides-stage {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      margin: 10px 0;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      height: 100%;
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      border: 3px solid rgba(255, 255, 255, 0.9);
+      box-shadow: var(--shadow-card);
+      border-radius: var(--radius-xl);
+      padding: 22px 28px;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-y: auto;
+      animation: slidePop 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Slide 1 is immediately visible on load without JS delay */
+    .slide.active {
+      display: flex;
+    }
+
+    @keyframes slidePop {
+      from { opacity: 0; transform: translateY(10px) scale(0.99); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .slide-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .slide-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      font-weight: 800;
+      font-size: 0.82rem;
+      padding: 5px 13px;
+      border-radius: 999px;
+    }
+
+    .slide-title {
+      font-size: clamp(1.35rem, 2.4vw, 2rem);
+      font-weight: 900;
+      color: #1e1b4b;
+      line-height: 1.2;
+    }
+
+    .slide-subtitle {
+      font-size: clamp(0.95rem, 1.3vw, 1.12rem);
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 14px;
+      min-height: 0;
+    }
+
+    /* Hero Slide 1 */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 24px;
+      align-items: center;
+    }
+    @media (max-width: 860px) {
+      .hero-grid { grid-template-columns: 1fr; }
+    }
+
+    .hero-title {
+      font-size: clamp(1.75rem, 3.2vw, 2.65rem);
+      font-weight: 900;
+      line-height: 1.15;
+      background: linear-gradient(135deg, #312e81, #4f46e5, #0284c7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 10px 0;
+    }
+
+    .mission-box {
+      background: linear-gradient(135deg, #f8fafc, #eef2ff);
+      border: 2.5px dashed #818cf8;
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    .mission-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 11px 15px;
+      margin-top: 10px;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+    .mission-item:hover {
+      border-color: #818cf8;
+      transform: translateX(4px);
+    }
+    .mission-item.done {
+      background: var(--success-light);
+      border-color: var(--success);
+      color: #065f46;
+    }
+
+    /* Flashcards Slide 2 */
+    .flash-stage {
+      background: linear-gradient(135deg, #312e81, #4338ca);
+      color: #fff;
+      border-radius: 24px;
+      padding: 26px;
+      text-align: center;
+      box-shadow: 0 14px 30px rgba(49, 46, 129, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+    .flash-word {
+      font-size: clamp(2rem, 4.5vw, 3.4rem);
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .flash-timer-bar {
+      width: 100%;
+      height: 10px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 999px;
+      margin-top: 14px;
+      overflow: hidden;
+    }
+    .flash-timer-fill {
+      height: 100%;
+      width: 0%;
+      background: #fbbf24;
+      transition: width 0.1s linear;
+    }
+    .word-choices {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .word-chip {
+      background: #fff;
+      border: 2.5px solid #cbd5e1;
+      border-radius: 16px;
+      padding: 11px 18px;
+      font-weight: 900;
+      font-size: 1.02rem;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .word-chip:hover { border-color: var(--primary); transform: translateY(-2px); }
+    .word-chip.correct { background: var(--success); color: #fff; border-color: #059669; }
+    .word-chip.wrong { background: var(--danger-light); color: #be123c; border-color: var(--danger); }
+
+    /* 3D Flip Cards Slide 3 */
+    .flip-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 900px) {
+      .flip-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .flip-card {
+      perspective: 1000px;
+      height: 230px;
+      cursor: pointer;
+    }
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-style: preserve-3d;
+    }
+    .flip-card.flipped .flip-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-front, .flip-back {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 22px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+    }
+    .flip-front {
+      background: linear-gradient(145deg, #ffffff, #eef2ff);
+      border: 2.5px solid #c7d2fe;
+    }
+    .flip-back {
+      background: linear-gradient(145deg, #4f46e5, #0ea5e9);
+      color: #fff;
+      transform: rotateY(180deg);
+      font-weight: 700;
+      font-size: 0.96rem;
+      line-height: 1.4;
+    }
+
+    /* Ancient Artifacts Slide 4 */
+    .artifacts-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 920px) {
+      .artifacts-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .artifact-card {
+      background: #fffbeb;
+      border: 2.5px solid #fcd34d;
+      border-radius: 20px;
+      padding: 14px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .artifact-card.solved {
+      background: var(--success-light);
+      border-color: var(--success);
+    }
+
+    /* Timeline Slide 5 */
+    .timeline-tabs {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+    }
+    @media (max-width: 820px) {
+      .timeline-tabs { grid-template-columns: repeat(3, 1fr); }
+    }
+    .era-btn {
+      background: #f8fafc;
+      border: 2px solid #cbd5e1;
+      border-radius: 16px;
+      padding: 10px 8px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 0.84rem;
+      transition: all 0.2s;
+    }
+    .era-btn.active {
+      background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+      color: #fff;
+      border-color: #4f46e5;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 18px rgba(79, 70, 229, 0.25);
+    }
+    .era-showcase {
+      background: linear-gradient(135deg, #f8fafc, #eef2ff);
+      border: 2.5px solid #c7d2fe;
+      border-radius: 22px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 20px;
+      align-items: center;
+    }
+    .cap-meter {
+      height: 14px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    .cap-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #0ea5e9);
+      border-radius: 999px;
+      transition: width 0.45s ease;
+    }
+
+    /* Power Simulator Slide 6 */
+    .pc-sim-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    @media (max-width: 780px) {
+      .pc-sim-grid { grid-template-columns: 1fr; }
+    }
+    .mem-box {
+      border-radius: 22px;
+      padding: 18px;
+      border: 3px solid;
+      transition: all 0.35s ease;
+    }
+    .mem-ram {
+      background: #fff1f2;
+      border-color: #fda4af;
+    }
+    .mem-ram.power-off {
+      background: #1e293b;
+      border-color: #475569;
+      color: #94a3b8;
+    }
+    .mem-ssd {
+      background: #ecfdf5;
+      border-color: #6ee7b7;
+    }
+
+    /* Modern Devices Grid Slide 7 */
+    .devices-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 860px) {
+      .devices-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .device-card {
+      background: #fff;
+      border: 2px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 6px;
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+    }
+
+    /* Break / Timer Slide 8 */
+    .break-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 20px;
+      align-items: center;
+    }
+    @media (max-width: 820px) {
+      .break-grid { grid-template-columns: 1fr; }
+    }
+    .timer-circle {
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      background: conic-gradient(#4f46e5 var(--deg, 360deg), #e2e8f0 0deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      box-shadow: 0 12px 28px rgba(79, 70, 229, 0.22);
+    }
+    .timer-inner {
+      width: 138px;
+      height: 138px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 2.2rem;
+      color: var(--primary-dark);
+    }
+
+    /* This PC Explorer Slide 9 */
+    .win11-window {
+      background: #f8fafc;
+      border: 2.5px solid #94a3b8;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+    }
+    .win11-titlebar {
+      background: linear-gradient(90deg, #e0e7ff, #f1f5f9);
+      padding: 9px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1.5px solid #cbd5e1;
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+    .drives-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      padding: 16px;
+    }
+    .drive-tile {
+      background: #fff;
+      border: 2px solid #cbd5e1;
+      border-radius: 16px;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .drive-tile:hover { border-color: #0ea5e9; transform: translateY(-2px); }
+    .drive-tile.selected-c { border-color: var(--success); background: var(--success-light); }
+    .drive-bar {
+      height: 9px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 7px 0;
+    }
+    .drive-bar-fill {
+      height: 100%;
+      background: #0ea5e9;
+    }
+
+    /* Match Pairs Game Slide 10 */
+    .match-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .match-col {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .pair-card {
+      background: #fff;
+      border: 2.5px solid #cbd5e1;
+      border-radius: 16px;
+      padding: 11px 15px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.18s;
+    }
+    .pair-card:hover:not(.matched) { border-color: var(--primary); }
+    .pair-card.selected { border-color: var(--accent); background: var(--accent-light); transform: scale(1.02); }
+    .pair-card.matched { border-color: var(--success); background: var(--success-light); color: #065f46; cursor: default; }
+
+    /* Sorter & Letter Riddles Slide 11 */
+    .sort-zone-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .sort-bucket {
+      border-radius: 20px;
+      padding: 14px;
+      border: 2.5px dashed;
+      min-height: 115px;
+    }
+    .letter-boxes {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .letter-input {
+      width: 40px;
+      height: 44px;
+      border: 2.5px solid #818cf8;
+      border-radius: 12px;
+      text-align: center;
+      font-family: inherit;
+      font-size: 1.25rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--primary-dark);
+      background: #fff;
+      user-select: text;
+    }
+    .letter-input.ok { background: var(--success-light); border-color: var(--success); color: #065f46; }
+    .letter-input.bad { background: var(--danger-light); border-color: var(--danger); }
+
+    /* Drawing Studio Slide 12 */
+    .studio-wrap {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 18px;
+      align-items: center;
+    }
+    @media (max-width: 840px) {
+      .studio-wrap { grid-template-columns: 1fr; }
+    }
+    .draw-canvas {
+      background: #ffffff;
+      border: 3px solid #818cf8;
+      border-radius: 20px;
+      box-shadow: 0 10px 24px rgba(79, 70, 229, 0.14);
+      cursor: crosshair;
+      touch-action: none;
+      max-width: 100%;
+    }
+    .color-dot {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      box-shadow: 0 0 0 2px #cbd5e1;
+      cursor: pointer;
+    }
+    .color-dot.active {
+      box-shadow: 0 0 0 3px #1e1b4b;
+      transform: scale(1.12);
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      border: 2px solid var(--border-soft);
+      border-radius: 20px;
+      padding: 8px 16px;
+      flex-shrink: 0;
+    }
+
+    .progress-track {
+      flex: 1;
+      max-width: 440px;
+      height: 11px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 8.33%;
+      background: linear-gradient(90deg, #4f46e5, #0ea5e9, #10b981);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    /* Modal for Teacher Share & QR */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(6px);
+      z-index: 5000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-backdrop.open {
+      display: flex;
+    }
+    .modal-card {
+      background: #fff;
+      border-radius: 26px;
+      padding: 24px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.3);
+      border: 3px solid #c7d2fe;
+    }
+    .url-box {
+      background: #f1f5f9;
+      border: 2px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #334155;
+      word-break: break-all;
+      margin: 12px 0;
+      user-select: all;
+    }
+
+    .feedback-pill {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+
+    /* ===== Додаткові стилі для 2 класу (крупніше, яскравіше) ===== */
+    .slide { padding: 20px 28px; }
+    .slide-title { font-size: clamp(1.5rem, 2.7vw, 2.25rem); }
+    .slide-subtitle { font-size: clamp(1rem, 1.5vw, 1.25rem); }
+    .slide-body { justify-content: flex-start; padding-top: 4px; }
+    .t-only { display: none !important; }
+    body.is-teacher .t-only { display: block !important; }
+    body.is-teacher .t-only.t-flex { display: flex !important; }
+    .teacher-note {
+      background: #eef2ff; border: 2px dashed #6366f1; border-radius: 14px;
+      padding: 8px 14px; font-size: 0.88rem; font-weight: 700; color: #3730a3;
+    }
+    .teacher-note::before { content: '👩‍🏫 Вчителю: '; font-weight: 900; }
+
+    .big-text { font-size: clamp(1.1rem, 1.7vw, 1.4rem); font-weight: 700; line-height: 1.45; color: #1e293b; }
+    .def-box {
+      background: #fef3c7; border: 2.5px solid #f59e0b; border-radius: 20px;
+      padding: 12px 20px; font-weight: 800; color: #78350f; text-align: center;
+      font-size: clamp(1.05rem, 1.6vw, 1.35rem); line-height: 1.4;
+    }
+    .grid { display: grid; gap: 14px; }
+    .g2 { grid-template-columns: repeat(2, 1fr); }
+    .g3 { grid-template-columns: repeat(3, 1fr); }
+    .g4 { grid-template-columns: repeat(4, 1fr); }
+    .g5 { grid-template-columns: repeat(5, 1fr); }
+    .g6 { grid-template-columns: repeat(6, 1fr); }
+    @media (max-width: 900px) { .g3, .g4, .g5, .g6 { grid-template-columns: repeat(2, 1fr); } .g2 { grid-template-columns: 1fr; } }
+
+    .tile {
+      background: #fff; border: 2.5px solid #e2e8f0; border-radius: 22px; padding: 14px;
+      text-align: center; box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+    }
+    .tile .em { font-size: clamp(2.4rem, 4vw, 3.4rem); line-height: 1.1; }
+    .tile .ttl { font-weight: 900; font-size: clamp(1rem, 1.5vw, 1.2rem); }
+    .tile.click { cursor: pointer; transition: all .2s; }
+    .tile.click:hover { border-color: #818cf8; transform: translateY(-3px); }
+    .tile .why { display: none; font-weight: 700; font-size: 0.95rem; color: #065f46; background: #d1fae5; border-radius: 12px; padding: 6px 10px; }
+    .tile.open { border-color: #10b981; background: #f0fdf4; }
+    .tile.open .why { display: block; animation: slidePop .3s; }
+    .tile .tap { font-size: 0.8rem; font-weight: 800; color: #6366f1; }
+    .tile.open .tap { display: none; }
+
+    .poem {
+      font-size: clamp(1.1rem, 1.8vw, 1.45rem); font-weight: 800; line-height: 1.6; color: #312e81;
+      background: #fff; border-radius: 20px; padding: 14px 22px; border: 2.5px dashed #a5b4fc;
+    }
+    .reveal-btn {
+      border: 2.5px dashed #818cf8; background: #eef2ff; color: #3730a3; border-radius: 14px;
+      padding: 9px 14px; font-family: inherit; font-weight: 900; font-size: 1rem; cursor: pointer; transition: all .2s;
+    }
+    .reveal-btn:hover { transform: translateY(-2px); }
+    .reveal-btn.revealed { border-style: solid; border-color: #10b981; background: #d1fae5; color: #065f46; cursor: default; }
+
+    /* Вікторина */
+    .quiz-box { background: linear-gradient(135deg, #f8fafc, #eef2ff); border: 2.5px solid #c7d2fe; border-radius: 24px; padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+    .quiz-emoji { font-size: clamp(3rem, 6vw, 4.6rem); text-align: center; line-height: 1.1; }
+    .quiz-q { font-size: clamp(1.2rem, 2vw, 1.65rem); font-weight: 900; text-align: center; color: #1e1b4b; }
+    .quiz-opts { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+    .opt-btn {
+      background: #fff; border: 3px solid #cbd5e1; border-radius: 18px; padding: 12px 20px;
+      font-family: inherit; font-weight: 900; font-size: clamp(1rem, 1.6vw, 1.25rem); cursor: pointer; transition: all .18s; color: #1e293b;
+    }
+    .opt-btn.big { font-size: clamp(1.2rem, 2vw, 1.6rem); padding: 16px 30px; }
+    .opt-btn:hover:not(:disabled) { border-color: #6366f1; transform: translateY(-2px); }
+    .opt-btn.correct { background: #10b981; border-color: #059669; color: #fff; }
+    .opt-btn.wrong { background: #ffe4e6; border-color: #f43f5e; color: #be123c; opacity: .75; }
+    .quiz-fb { text-align: center; font-weight: 800; font-size: 1.05rem; min-height: 1.6em; }
+    .quiz-fb.ok { color: #047857; }
+    .quiz-fb.bad { color: #be123c; }
+    .quiz-fb .btn { margin-top: 8px; }
+    .quiz-done { text-align: center; font-size: 1.3rem; font-weight: 900; color: #065f46; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+
+    /* Сортування */
+    .sort-pool { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; min-height: 52px; }
+    .sort-buckets { display: grid; gap: 12px; }
+    .sort-bucket2 { border-radius: 20px; padding: 12px; border: 3px dashed; min-height: 120px; cursor: pointer; transition: transform .15s; }
+    .sort-bucket2:hover { transform: scale(1.01); }
+    .bucket-title { font-weight: 900; font-size: clamp(1rem, 1.5vw, 1.2rem); text-align: center; }
+    .bucket-items { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; justify-content: center; }
+    .word-chip.picked { border-color: #f59e0b; background: #fef3c7; transform: scale(1.06); box-shadow: 0 6px 14px rgba(245, 158, 11, .3); }
+    .word-chip.placed { background: #d1fae5; border-color: #10b981; cursor: default; font-size: .92rem; padding: 7px 12px; }
+    .sort-status { text-align: center; font-weight: 900; color: #4f46e5; display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; }
+    .shake { animation: shake .4s; }
+    @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-7px); } 75% { transform: translateX(7px); } }
+
+    /* Сцена з об'єктами */
+    .scene { position: relative; height: clamp(260px, 42vh, 380px); border-radius: 24px; border: 3px solid #93c5fd; overflow: hidden; }
+    .hotspot {
+      position: absolute; transform: translate(-50%, -50%); background: none; border: none; cursor: pointer;
+      font-size: clamp(2rem, 3.6vw, 3rem); line-height: 1; padding: 6px; border-radius: 50%; transition: transform .15s;
+      font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+    }
+    .hotspot:hover { transform: translate(-50%, -50%) scale(1.18); }
+    .hotspot.found { box-shadow: 0 0 0 4px #f43f5e; background: rgba(255, 228, 230, .85); }
+    .hotspot.good { box-shadow: 0 0 0 4px #10b981; background: rgba(209, 250, 229, .85); }
+    .hotspot .lbl { position: absolute; left: 50%; top: 100%; transform: translateX(-50%); white-space: nowrap; font-size: .8rem; font-weight: 900; background: #fff; border-radius: 8px; padding: 1px 6px; color: #1e293b; font-family: Nunito, sans-serif; box-shadow: 0 2px 6px rgba(0,0,0,.1); }
+    .scene-fb { text-align: center; font-weight: 800; font-size: 1.05rem; min-height: 1.5em; color: #4f46e5; }
+
+    /* Гра з мишею */
+    .click-arena { position: relative; height: clamp(230px, 38vh, 330px); background: #f8fafc; border: 3px dashed #a5b4fc; border-radius: 24px; overflow: hidden; cursor: default; }
+    .click-target {
+      position: absolute; width: 74px; height: 74px; border-radius: 50%; transform: translate(-50%, -50%);
+      background: radial-gradient(circle at 35% 35%, #93c5fd, #2563eb); border: 5px solid #fff;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, .4); cursor: pointer; animation: popIn .25s ease-out;
+    }
+    @keyframes popIn { from { transform: translate(-50%, -50%) scale(0); } to { transform: translate(-50%, -50%) scale(1); } }
+
+    /* Літери */
+    .letter-tile {
+      width: clamp(52px, 6vw, 72px); height: clamp(60px, 7vw, 82px); border-radius: 16px; border: 3px solid #818cf8; background: #fff;
+      display: flex; align-items: center; justify-content: center; font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 900; color: transparent; cursor: pointer; transition: all .2s; position: relative;
+    }
+    .letter-tile:not(.on)::before { content: '?'; position: absolute; color: #a5b4fc; }
+    .letter-tile.on { background: #4f46e5; color: #fff; border-color: #3730a3; transform: translateY(-4px); }
+    .rebus { display: flex; align-items: center; gap: 8px; font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 900; flex-wrap: wrap; justify-content: center; }
+    .apos { color: #f43f5e; font-size: .8em; }
+    .rebus-card { background: #fff; border: 2.5px solid #c7d2fe; border-radius: 22px; padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .rebus-card.solved { border-color: #10b981; background: #f0fdf4; }
+
+    .step { display: none; }
+    .step.shown { display: block; animation: slidePop .35s; }
+    .link-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .link-row a { text-decoration: none; }
+    .num-input { width: 58px; height: 58px; border: 3px solid #818cf8; border-radius: 14px; text-align: center; font-family: inherit; font-size: 1.6rem; font-weight: 900; color: #3730a3; user-select: text; }
+    .num-input.ok { background: #d1fae5; border-color: #10b981; color: #065f46; }
+    .num-input.bad { background: #ffe4e6; border-color: #f43f5e; }
+    select.pick { font-family: inherit; font-size: 1.05rem; font-weight: 800; padding: 8px 12px; border-radius: 12px; border: 2.5px solid #c7d2fe; background: #fff; color: #1e293b; cursor: pointer; }
+    select.pick.ok { background: #d1fae5; border-color: #10b981; }
+    select.pick.bad { background: #ffe4e6; border-color: #f43f5e; }
+    table.props { width: 100%; border-collapse: separate; border-spacing: 0 6px; font-size: clamp(1rem, 1.5vw, 1.2rem); }
+    table.props th { text-align: left; color: #4f46e5; font-weight: 900; padding: 4px 12px; }
+    table.props td { background: #fff; padding: 8px 12px; font-weight: 800; border-top: 2px solid #e2e8f0; border-bottom: 2px solid #e2e8f0; }
+    table.props td:first-child { border-left: 2px solid #e2e8f0; border-radius: 12px 0 0 12px; }
+    table.props td:last-child { border-right: 2px solid #e2e8f0; border-radius: 0 12px 12px 0; }
+
+    /* =====================================================================
+       ВЕЛИКІ Й ПОМІТНІ КНОПКИ ДЛЯ УЧНІВ (перекривають стилі вище)
+       ===================================================================== */
+    .slide .btn { min-height: 52px; padding: 12px 22px; font-size: 1.12rem; border-radius: 16px; }
+    .slide .btn-sm { min-height: 48px; padding: 10px 18px; font-size: 1.05rem; border-radius: 14px; }
+    .slide .btn-secondary { border: 3px solid #818cf8; box-shadow: 0 5px 0 #c7d2fe; }
+    .slide .btn-primary { box-shadow: 0 5px 0 #3730a3; }
+    .slide .btn-accent { box-shadow: 0 5px 0 #c2410c; }
+    .slide .btn-success { box-shadow: 0 5px 0 #047857; }
+    .slide .btn:active:not(:disabled) { transform: translateY(4px); box-shadow: none; }
+
+    .reveal-btn {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #fff; border: 3px solid #d97706; border-radius: 18px;
+      padding: 14px 24px; min-height: 56px; font-size: clamp(1.1rem, 1.6vw, 1.3rem); text-shadow: 0 1px 2px rgba(0, 0, 0, .25);
+      box-shadow: 0 5px 0 #b45309; animation: tapGlow 1.8s ease-in-out infinite;
+    }
+    .reveal-btn:active { transform: translateY(4px); }
+    .reveal-btn.revealed { animation: none; text-shadow: none; box-shadow: none; }
+    @keyframes tapGlow {
+      0%, 100% { box-shadow: 0 5px 0 #b45309, 0 0 0 0 rgba(245, 158, 11, .55); }
+      50% { box-shadow: 0 5px 0 #b45309, 0 0 0 12px rgba(245, 158, 11, 0); }
+    }
+
+    .opt-btn { min-height: 66px; padding: 14px 28px; font-size: clamp(1.2rem, 1.9vw, 1.5rem); border: 4px solid #818cf8; box-shadow: 0 6px 0 #c7d2fe; }
+    .opt-btn.big { min-height: 78px; padding: 18px 36px; font-size: clamp(1.35rem, 2.2vw, 1.8rem); }
+    .opt-btn:active:not(:disabled) { transform: translateY(5px); box-shadow: none; }
+    .opt-btn.correct { box-shadow: 0 6px 0 #047857; }
+    .opt-btn.wrong { box-shadow: none; }
+
+    .word-chip { min-height: 56px; padding: 13px 22px; font-size: clamp(1.1rem, 1.6vw, 1.3rem); border: 3px solid #818cf8; box-shadow: 0 5px 0 #c7d2fe; }
+    .word-chip.placed { box-shadow: none; min-height: 0; }
+    .sort-bucket2 { border-width: 4px; min-height: 96px; padding: 10px; }
+
+    .mission-item { font-size: 1.15rem; padding: 14px 18px; border: 3px solid #a5b4fc; box-shadow: 0 4px 0 #e0e7ff; }
+    .mission-item::after { content: '👆'; margin-left: auto; font-size: 1.3rem; }
+    .mission-item.done::after { content: '✅'; }
+
+    .tile.click { border: 3px solid #818cf8; box-shadow: 0 6px 0 #c7d2fe; }
+    .tile.click .tap { font-size: 1rem; background: #4f46e5; color: #fff; padding: 6px 16px; border-radius: 999px; }
+    .flip-front { border: 3px solid #818cf8 !important; box-shadow: 0 6px 0 #c7d2fe; }
+
+    .hotspot { background: rgba(255, 255, 255, .8); box-shadow: 0 0 0 3px rgba(99, 102, 241, .5); animation: spotPulse 2s ease-in-out infinite; }
+    .hotspot.found, .hotspot.good { animation: none; }
+    @keyframes spotPulse { 50% { box-shadow: 0 0 0 8px rgba(99, 102, 241, .12); } }
+
+    select.pick { min-height: 54px; padding: 12px 16px; font-size: 1.2rem; border: 3px solid #818cf8; }
+    .letter-input { width: 54px; height: 62px; font-size: 1.6rem; border-width: 3px; }
+    .color-dot { width: 46px; height: 46px; }
+
+    /* Розстав по порядку */
+    .order-list { display: flex; flex-direction: column; gap: 8px; }
+    .order-slot { display: flex; align-items: center; gap: 12px; background: #f8fafc; border: 3px dashed #c7d2fe; border-radius: 16px; padding: 8px 14px; min-height: 54px; font-weight: 800; font-size: 1.15rem; color: #94a3b8; }
+    .order-slot.filled { border-style: solid; border-color: #10b981; background: #f0fdf4; color: #065f46; animation: slidePop .35s; }
+    .order-num { width: 38px; height: 38px; border-radius: 50%; background: #4f46e5; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 900; flex-shrink: 0; }
+    .hotspot.removed { opacity: .12; transform: translate(-50%, -50%) scale(.6); pointer-events: none; animation: none; transition: all .4s; }
+    .mission-item.sim-task { cursor: default; box-shadow: none; }
+    .mission-item.sim-task::after { content: '⬜'; }
+    .mission-item.sim-task.done::after { content: '✅'; }
+
+    /* Симулятор Робочого стола */
+    .desk-sim { position: relative; height: clamp(250px, 40vh, 360px); border-radius: 18px; overflow: hidden; border: 6px solid #1e293b;
+      background: linear-gradient(135deg, #38bdf8, #6366f1 60%, #a855f7); touch-action: none; }
+    .desk-icon2 { position: absolute; width: 96px; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 4px; border-radius: 12px;
+      cursor: grab; color: #fff; font-weight: 900; font-size: .88rem; text-align: center; text-shadow: 0 1px 3px rgba(0,0,0,.6); user-select: none; border: 2px solid transparent; }
+    .desk-icon2 .ic { font-size: 2.6rem; line-height: 1; text-shadow: none; }
+    .desk-icon2:hover { background: rgba(255,255,255,.2); border-color: rgba(255,255,255,.6); }
+    .desk-icon2.dragging { cursor: grabbing; background: rgba(255,255,255,.3); z-index: 5; }
+    .desk-taskbar { position: absolute; left: 0; right: 0; bottom: 0; height: 44px; background: rgba(15,23,42,.88); display: flex; align-items: center; gap: 6px; padding: 0 8px; }
+    .desk-taskbar button { height: 36px; min-width: 44px; padding: 0 10px; border-radius: 8px; border: 2px solid transparent; background: rgba(255,255,255,.1); color: #fff;
+      font-family: inherit; font-weight: 900; font-size: 1rem; cursor: pointer; }
+    .desk-taskbar button:hover { border-color: #93c5fd; }
+    .desk-taskbar button.seen { border-color: #4ade80; }
+    .sim-window { position: absolute; left: 30%; top: 12%; width: 46%; min-width: 230px; background: #fff; border-radius: 10px; box-shadow: 0 14px 30px rgba(0,0,0,.35); overflow: hidden; z-index: 6; }
+    .sim-window .bar { display: flex; align-items: center; gap: 6px; background: #e0e7ff; padding: 4px 6px 4px 12px; font-weight: 900; color: #1e1b4b; }
+    .sim-window .bar span { flex: 1; }
+    .sim-window .bar button { width: 40px; height: 34px; border: none; border-radius: 6px; font-size: 1.2rem; font-weight: 900; cursor: pointer; background: #fff; }
+    .sim-window .bar button.cls:hover { background: #ef4444; color: #fff; }
+    .sim-window .body { padding: 16px; font-size: 1.6rem; font-weight: 900; color: #334155; text-align: center; min-height: 90px; }
+    .star-target { position: absolute; font-size: 2.8rem; transform: translate(-50%, -50%); transition: transform .2s; cursor: default; user-select: none; }
+
+
+    /* ===== Поступова подача ===== */
+    .step-hidden { visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
+    .step-in { animation: stepIn .55s cubic-bezier(.22, 1, .36, 1); }
+    @keyframes stepIn { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: none; } }
+
+  </style>
+</head>
+<body>
+  <div class="bg-blob blob-1"></div>
+  <div class="bg-blob blob-2"></div>
+  <div class="bg-blob blob-3"></div>
+
+  <canvas id="emojiBgCanvas"></canvas>
+  <canvas id="fxCanvas"></canvas>
+
+  <div class="app-shell">
+    <header class="top-bar">
+      <div class="brand-badge" id="brandBadge" title="Інформатика • 2 клас НУШ">
+        <span class="brand-pill">НУШ • 2 КЛАС</span>
+        <span>Урок 8: Світ сучасних професій</span>
+      </div>
+
+      <div class="teacher-bar" id="teacherBar">
+        <span class="t-counter" id="studentCounter">👨‍🎓 Учнів онлайн: 0</span>
+        <button class="btn btn-sm btn-primary" id="btnFollowToggle" title="Перемкнути керування слайдами для класу">🔒 Вести клас за собою</button>
+        <button class="btn btn-sm btn-accent" id="btnClassFireworks" title="Запустити салют на екранах усіх учнів">🎆 Салют класу</button>
+        <button class="btn btn-sm btn-secondary" id="btnOpenShare" title="Показати посилання та QR-код для учнів">📲 QR-код учням</button>
+      </div>
+
+      <div class="top-controls">
+        <div class="status-chip" id="syncStatusChip">
+          <span class="status-dot" id="syncDot"></span>
+          <span id="syncText">Готово до роботи</span>
+        </div>
+        <button class="btn btn-sm btn-secondary" id="btnSoundToggle" aria-label="Увімкнути або вимкнути звук">🔊 Звук</button>
+      </div>
+    </header>
+
+    <main class="slides-stage" id="slidesStage">
+
+      <!-- SLIDE 1 -->
+      <section class="slide active" data-slide="1">
+        <div class="slide-header">
+          <span class="slide-tag">👷 Урок 8 • Світ сучасних професій</span>
+          <span class="slide-tag" style="background:#fef3c7;color:#92400e;">💡 Натискай на падаючі смайлики!</span>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="hero-grid">
+            <div>
+              <div style="font-size:3.2rem;line-height:1;">👩‍⚕️ 🧑‍💻 👨‍🏫 💻</div>
+              <h1 class="hero-title">Світ сучасних професій</h1>
+              <p class="slide-subtitle" style="font-size:1.25rem;margin-bottom:14px;">
+                Комп’ютер — помічник людей багатьох професій. Сьогодні дізнаємося, кому і як він допомагає!
+              </p>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <span class="feedback-pill" style="background:#e0e7ff;color:#3730a3;">🕵️ Гра «Хто я?»</span>
+                <span class="feedback-pill" style="background:#d1fae5;color:#065f46;">🏠 Розумний дім</span>
+                <span class="feedback-pill" style="background:#ffe4e6;color:#9f1239;">🔢 Числа по порядку</span>
+              </div>
+            </div>
+            <div class="mission-box">
+              <div style="font-weight:900;font-size:1.2rem;color:#312e81;">🎯 Розкажи про себе:</div>
+              <p style="font-size:0.95rem;color:#475569;margin-top:2px;">Натисни на пункт, якщо це про тебе:</p>
+              <div class="mission-item" onclick="toggleMission(this)"><span>🎬</span><span>Я дивлюся мультики на комп’ютері</span></div>
+              <div class="mission-item" onclick="toggleMission(this)"><span>🧳</span><span>Я брав(-ла) планшет у подорож</span></div>
+              <div class="mission-item" onclick="toggleMission(this)"><span>👪</span><span>У моїй родині працюють з комп’ютером</span></div>
+              <div class="mission-status" style="margin-top:10px;font-weight:800;font-size:0.95rem;color:#4f46e5;">Виконано: 0 з 3</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Згадаймо -->
+      <section class="slide" data-slide="2">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🧠 Розминка</span>
+            <h2 class="slide-title">Що ми вже знаємо?</h2>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div id="warmQuiz"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Комп'ютер допомагає -->
+      <section class="slide" data-slide="3">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">💼 Відкриваємо нове</span>
+            <h2 class="slide-title">Кому допомагає комп’ютер?</h2>
+            <p class="slide-subtitle">Люди різних професій мають свої інструменти. А тепер їм допомагає ще й комп’ютер! Переверни картки.</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="flip-grid">
+            <div class="flip-card" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:3.4rem;">👩‍⚕️</div><div style="font-weight:900;font-size:1.3rem;">Лікар</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.1rem;">Комп’ютер допомагає стежити за здоров’ям людей і роздивлятися знімки.</div>
+            </div></div>
+            <div class="flip-card" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:3.4rem;">👨‍🏫</div><div style="font-weight:900;font-size:1.3rem;">Учитель</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.1rem;">Показує на уроках презентації, відео та ігри — як ось ця!</div>
+            </div></div>
+            <div class="flip-card" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:3.4rem;">📚</div><div style="font-weight:900;font-size:1.3rem;">Бібліотекар</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.1rem;">Швидко знаходить потрібну книжку серед тисяч інших.</div>
+            </div></div>
+            <div class="flip-card" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:3.4rem;">🧑‍🔬</div><div style="font-weight:900;font-size:1.3rem;">Учень-дослідник</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.1rem;">З комп’ютером учні проводять досліди й дізнаються нове.</div>
+            </div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Де працюють комп'ютери -->
+      <section class="slide" data-slide="4">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🏙️ Мандруємо містом</span>
+            <h2 class="slide-title">Де працюють комп’ютери?</h2>
+            <p class="slide-subtitle">Натисни на місце — дізнаєшся, що там робить комп’ютер.</p>
+          </div>
+          <span class="feedback-pill" id="placeCount" style="background:#d1fae5;color:#065f46;">Відкрито: 0 / 6</span>
+        </div>
+        <div class="slide-body">
+          <div class="grid g3" id="placeGrid">
+            <div class="tile click" onclick="openTile(this);countOpen('placeGrid','placeCount')"><div class="em">🛒</div><div class="ttl">Супермаркет</div><div class="tap">Як? 👆</div><div class="why">Каса-комп’ютер рахує ціну покупок.</div></div>
+            <div class="tile click" onclick="openTile(this);countOpen('placeGrid','placeCount')"><div class="em">🏦</div><div class="ttl">Банк</div><div class="tap">Як? 👆</div><div class="why">Рахує гроші та береже їх у безпеці.</div></div>
+            <div class="tile click" data-step="1" onclick="openTile(this);countOpen('placeGrid','placeCount')"><div class="em">🏥</div><div class="ttl">Лікарня</div><div class="tap">Як? 👆</div><div class="why">Допомагає лікарям лікувати людей.</div></div>
+            <div class="tile click" data-step="1" onclick="openTile(this);countOpen('placeGrid','placeCount')"><div class="em">🏫</div><div class="ttl">Школа</div><div class="tap">Як? 👆</div><div class="why">Допомагає вчитися — як на нашому уроці!</div></div>
+            <div class="tile click" data-step="2" onclick="openTile(this);countOpen('placeGrid','placeCount')"><div class="em">🚉</div><div class="ttl">Вокзал</div><div class="tap">Як? 👆</div><div class="why">Продає квитки й показує розклад потягів.</div></div>
+            <div class="tile click" data-step="2" onclick="openTile(this);countOpen('placeGrid','placeCount')"><div class="em">🚇</div><div class="ttl">Метро</div><div class="tap">Як? 👆</div><div class="why">Керує поїздами, щоб вони їздили вчасно.</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Хто я? -->
+      <section class="slide" data-slide="5">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🕵️ Гра</span>
+            <h2 class="slide-title">Хто я? Вгадай професію!</h2>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div id="profQuiz"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: Навчаюсь / працюю / відпочиваю -->
+      <section class="slide" data-slide="6">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🧺 Сортування</span>
+            <h2 class="slide-title">Комп’ютер допомагає, коли людина…</h2>
+            <p class="slide-subtitle">Натисни на картку, а потім на кошик.</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div id="useSorter"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: Твоя родина -->
+      <section class="slide" data-slide="7">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">👪 Поговорімо</span>
+            <h2 class="slide-title">А як комп’ютер допомагає вам?</h2>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="grid g3">
+            <div class="tile" style="padding:22px;"><div class="em">👩‍👧</div><div class="ttl" style="font-size:1.3rem;">Ким працюють твої рідні? Чи потрібен їм комп’ютер?</div></div>
+            <div class="tile" data-step="1" style="padding:22px;"><div class="em">🧒💻</div><div class="ttl" style="font-size:1.3rem;">Як ти використовуєш комп’ютер чи планшет?</div></div>
+            <div class="tile" data-step="2" style="padding:22px;"><div class="em">🌟</div><div class="ttl" style="font-size:1.3rem;">Ким ти хочеш стати? Як тобі допоможе комп’ютер?</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: Фізкультхвилинка -->
+      <section class="slide" data-slide="8">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🤸 Фізкультхвилинка</span>
+            <h2 class="slide-title">Ой ходили журавлі!</h2>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-sm btn-primary" data-tabbtn onclick="showTab(this,'breakBox','move')">🕊️ Журавлі</button>
+            <button class="btn btn-sm btn-secondary" data-tabbtn onclick="showTab(this,'breakBox','eyes')">👀 Для очей</button>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="break-grid">
+            <div style="text-align:center;background:#f8fafc;border:2.5px solid #c7d2fe;border-radius:24px;padding:18px;">
+              <div class="timer-circle" id="timerCircle" style="--deg: 360deg;"><div class="timer-inner"><span id="timerText">60</span><span style="font-size:0.75rem;color:#64748b;font-weight:800;">СЕКУНД</span></div></div>
+              <div style="display:flex;gap:8px;justify-content:center;margin-top:14px;">
+                <button class="btn btn-success btn-sm" onclick="startBreakTimer()">▶ Старт</button>
+                <button class="btn btn-accent btn-sm" onclick="pauseBreakTimer()">⏸ Пауза</button>
+                <button class="btn btn-secondary btn-sm" onclick="resetBreakTimer()">🔄 Скинути</button>
+              </div>
+            </div>
+            <div id="breakBox" style="background:linear-gradient(135deg,#eef2ff,#fff7ed);border:2.5px solid #818cf8;border-radius:24px;padding:20px;text-align:center;">
+              <div data-tab="move">
+                <div style="font-size:3rem;">🕊️🌾</div>
+                <div class="poem" style="border:none;">
+                  Ой ходили журавлі 🚶<br>
+                  То великі, 🙆 то малі. 🧎<br>
+                  Сіли собі на ріллі, 🪑<br>
+                  Та й співають: тра-ла-лі! 🎶
+                </div>
+              </div>
+              <div data-tab="eyes" style="display:none;">
+                <div style="font-size:3rem;">👀✨</div>
+                <div class="poem" style="border:none;">
+                  1. Міцно заплющ очі 😌<br>
+                  2. Порахуй до трьох<br>
+                  3. Розплющ і подивись удалечінь 🌄<br>
+                  4. Порахуй до п’яти<br>
+                  🔁 Повтори 4–5 разів!
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: Розумний дім -->
+      <section class="slide" data-slide="9">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">💎 Скарбничка цікавого</span>
+            <h2 class="slide-title">Що таке «розумний дім»?</h2>
+            <p class="slide-subtitle">Це будинок, яким керує комп’ютер. Натискай на речі в будинку!</p>
+          </div>
+          <span class="feedback-pill" id="homeCount" style="background:#d1fae5;color:#065f46;">Знайдено: 0 / 6</span>
+        </div>
+        <div class="slide-body">
+          <div class="scene" id="homeScene" style="background:linear-gradient(#ede9fe 0 66%, #fcd9b6 66%);">
+            <div style="position:absolute;left:8%;top:10%;font-size:2.8rem;">🪟</div>
+            <div style="position:absolute;left:40%;top:44%;font-size:3.4rem;">🛋️</div>
+            <div style="position:absolute;right:8%;top:10%;font-size:2.8rem;">🖼️</div>
+          </div>
+          <div class="scene-fb" id="homeFb">👆 Натисни на лампу, робота, колонку…</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: Числа по порядку -->
+      <section class="slide" data-slide="10">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🖱️ Працюємо мишею</span>
+            <h2 class="slide-title">Натискай на числа по порядку: 1, 2, 3…</h2>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span class="feedback-pill" id="numScore" style="background:#e0e7ff;color:#3730a3;">Наступне: 1</span>
+            <button class="btn btn-sm btn-primary" onclick="startNumbers()">▶ Почати</button>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="click-arena" id="numArena">
+            <div id="numIntro" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;font-weight:900;font-size:1.3rem;color:#6366f1;text-align:center;padding:10px;">
+              <div style="font-size:3.5rem;">🔢</div>Натисни «▶ Почати» і клацай на числа від 1 до 10 по черзі!
+            </div>
+          </div>
+          <div class="t-only teacher-note">Робота за комп’ютером: «Знайди значок і запусти програму». Додатково: <a href="http://learningapps.org/watch?v=p4qqk7mcn" target="_blank" rel="noopener">LearningApps — Професії та комп’ютер</a>.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 11: Підсумки -->
+      <section class="slide" data-slide="11">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🎨 Ким я стану? • Підсумки</span>
+            <h2 class="slide-title">Намалюй себе в майбутній професії!</h2>
+          </div>
+          <button class="btn btn-accent" onclick="launchFireworksBurst(true)">🎆 Салют!</button>
+        </div>
+        <div class="slide-body">
+          <div class="studio-wrap">
+            <div>
+              <canvas id="drawCanvas" class="draw-canvas" width="460" height="260"></canvas>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px;">
+                <button class="color-dot active" style="background:#4f46e5;" onclick="setBrushColor('#4f46e5', this)"></button>
+                <button class="color-dot" style="background:#10b981;" onclick="setBrushColor('#10b981', this)"></button>
+                <button class="color-dot" style="background:#f59e0b;" onclick="setBrushColor('#f59e0b', this)"></button>
+                <button class="color-dot" style="background:#f43f5e;" onclick="setBrushColor('#f43f5e', this)"></button>
+                <button class="btn btn-sm btn-secondary" onclick="stampSticker('💻')">+ 💻</button>
+                <button class="btn btn-sm btn-secondary" onclick="clearDrawCanvas()">🗑️</button>
+                <button class="btn btn-sm btn-primary" onclick="downloadDrawing('moya-profesiya')">📥</button>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div class="tile"><div class="em">💻</div><div class="ttl">Комп’ютер допомагає людині, коли вона…</div><button class="reveal-btn" data-answer="📖 навчається, 🛠️ працює, 🎮 відпочиває" onclick="reveal(this)">Перевірити</button></div>
+              <div style="background:#f1f5f9;border-radius:16px;padding:11px 14px;">
+                <div style="font-weight:900;font-size:1rem;margin-bottom:6px;">🌟 Як тобі урок?</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                  <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🚀 Супер!')">🚀 Супер!</button>
+                  <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '😊 Цікаво!')">😊 Цікаво!</button>
+                  <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🤔 Треба повторити')">🤔 Повторю</button>
+                </div>
+                <div id="reflectionReply" style="margin-top:6px;font-weight:800;font-size:0.9rem;color:#059669;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="bottom-nav">
+      <button class="btn btn-secondary" id="btnPrev" onclick="changeSlide(-1)">⬅ Назад</button>
+      <div style="display:flex;align-items:center;gap:12px;flex:1;justify-content:center;">
+        <span style="font-weight:900;font-size:0.95rem;color:var(--primary-dark);" id="slideIndicator">Слайд 1 / 11</span>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+      <button class="btn btn-primary" id="btnNext" onclick="changeSlide(1)">Далі ➡</button>
+    </footer>
+  </div>
+
+  <div class="modal-backdrop" id="shareModal">
+    <div class="modal-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <h3 style="font-weight:900;font-size:1.2rem;color:#1e1b4b;">📲 Посилання для учнів</h3>
+        <button class="btn btn-sm btn-secondary" onclick="closeShareModal()">✕</button>
+      </div>
+      <p style="font-size:0.88rem;color:#475569;font-weight:600;">Учні відкривають учнівську версію і підключаються до вашого екрана автоматично!</p>
+      <div style="margin:14px auto;padding:12px;background:#fff;border:2px solid #e2e8f0;border-radius:18px;display:inline-block;">
+        <canvas id="qrCanvas" width="210" height="210"></canvas>
+      </div>
+      <div class="url-box" id="studentUrlText"></div>
+      <div style="display:flex;gap:10px;justify-content:center;">
+        <button class="btn btn-primary" id="btnCopyUrl" onclick="copyStudentUrl()">📋 Копіювати посилання</button>
+        <button class="btn btn-secondary" onclick="closeShareModal()">Закрити</button>
+      </div>
+      <div id="copyFeedback" style="margin-top:8px;font-weight:800;font-size:0.85rem;color:#059669;"></div>
+    </div>
+  </div>
+
+  <script>
+
+    /* =====================================================================
+       0. ПОСТУПОВА ПОДАЧА: елементи з data-step відкриває вчитель кнопкою «Далі»
+       (для старих уроків кроки задаються через window.STEP_RULES)
+       ===================================================================== */
+    const LessonSteps = (() => {
+      const allSlides = () => Array.from(document.querySelectorAll('section.slide'));
+      function applyRules(rules) {
+        const sl = allSlides();
+        Object.keys(rules || {}).forEach(n => {
+          const s = sl[+n - 1];
+          if (!s) return;
+          rules[n].forEach((sel, i) => s.querySelectorAll(sel).forEach(el => {
+            if (!el.dataset.step) el.dataset.step = String(i + 1);
+          }));
+        });
+      }
+      function max(slideEl) {
+        let m = 0;
+        if (slideEl) slideEl.querySelectorAll('[data-step]').forEach(e => { m = Math.max(m, parseInt(e.dataset.step, 10) || 0); });
+        return m;
+      }
+      function show(slideEl, step) {
+        if (!slideEl) return;
+        slideEl.querySelectorAll('[data-step]').forEach(e => {
+          const hide = (parseInt(e.dataset.step, 10) || 0) > step;
+          if (hide) {
+            e.classList.add('step-hidden');
+            e.classList.remove('step-in');
+          } else if (e.classList.contains('step-hidden')) {
+            e.classList.remove('step-hidden');
+            e.classList.add('step-in');
+          }
+        });
+      }
+      applyRules(window.STEP_RULES);
+      allSlides().forEach(s => show(s, 0));
+      return { max, show, applyRules };
+    })();
+
+    /* =====================================================================
+       1. SAFE STORAGE & ROLE DETECTION (Default = Student; ?role=teacher / #teacher = Teacher)
+       ===================================================================== */
+    function safeStorageGet(key, fallback) {
+      try { return window.localStorage.getItem(key) ?? fallback; } catch (e) { return fallback; }
+    }
+    function safeStorageSet(key, val) {
+      try { window.localStorage.setItem(key, val); } catch (e) {}
+    }
+
+    let isTeacher = false;
+    try {
+      const params = new URLSearchParams(window.location.search || '');
+      const hash = (window.location.hash || '').toLowerCase();
+      if (params.get('role') === 'teacher' || hash.includes('teacher')) {
+        isTeacher = true;
+      }
+    } catch (e) {}
+
+    if (isTeacher) {
+      document.body.classList.add('is-teacher');
+    }
+
+    // Secret double-click on badge to switch to teacher mode if opened locally without params
+    document.getElementById('brandBadge').addEventListener('dblclick', () => {
+      if (!isTeacher && window.top === window) {
+        try {
+          window.location.hash = 'teacher';
+          window.location.reload();
+        } catch (e) {}
+      }
+    });
+
+    // Посилання для учнів: якщо урок відкрито всередині головної сторінки — даємо адресу головної сторінки
+    function getShareUrl() {
+      try {
+        if (window.top !== window && window.top.location.href) {
+          const t = new URL(window.top.location.href);
+          t.search = '';
+          t.hash = '';
+          return t.toString();
+        }
+      } catch (e) {}
+      return getCleanStudentUrl();
+    }
+
+    function getCleanStudentUrl() {
+      try {
+        const u = new URL(window.location.href);
+        u.search = '';
+        u.hash = '';
+        return u.toString();
+      } catch (e) {
+        return (window.location.href || '').split('?')[0].split('#')[0];
+      }
+    }
+
+    /* =====================================================================
+       2. WEB AUDIO API SOUND EFFECTS (Zero external audio files)
+       ===================================================================== */
+    const SoundFX = (() => {
+      let ctx = null;
+      let enabled = safeStorageGet('nush4_sound', '1') !== '0';
+
+      function getCtx() {
+        try {
+          if (!ctx) {
+            const AC = window.AudioContext || window.webkitAudioContext;
+            if (AC) ctx = new AC();
+          }
+          if (ctx && ctx.state === 'suspended') {
+            ctx.resume().catch(() => {});
+          }
+        } catch (e) {}
+        return ctx;
+      }
+
+      function tone(freq, endFreq, duration, type = 'sine', gainVal = 0.14, delay = 0) {
+        if (!enabled) return;
+        try {
+          const c = getCtx();
+          if (!c) return;
+          const now = c.currentTime + delay;
+          const osc = c.createOscillator();
+          const gain = c.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, now);
+          if (endFreq && endFreq !== freq) {
+            osc.frequency.exponentialRampToValueAtTime(endFreq, now + duration);
+          }
+          gain.gain.setValueAtTime(0.001, now);
+          gain.gain.linearRampToValueAtTime(gainVal, now + 0.015);
+          gain.gain.exponentialRampToValueAtTime(0.0008, now + duration);
+          osc.connect(gain);
+          gain.connect(c.destination);
+          osc.start(now);
+          osc.stop(now + duration + 0.02);
+        } catch (e) {}
+      }
+
+      return {
+        isEnabled: () => enabled,
+        toggle: () => {
+          enabled = !enabled;
+          safeStorageSet('nush4_sound', enabled ? '1' : '0');
+          if (enabled) SoundFX.click();
+          return enabled;
+        },
+        click: () => tone(540, 720, 0.07, 'sine', 0.11),
+        pop: () => {
+          tone(420, 960, 0.09, 'triangle', 0.15, 0);
+          tone(1180, 1560, 0.11, 'sine', 0.09, 0.04);
+        },
+        success: () => {
+          tone(523.25, 523.25, 0.12, 'triangle', 0.14, 0);
+          tone(659.25, 659.25, 0.12, 'triangle', 0.14, 0.09);
+          tone(783.99, 783.99, 0.14, 'triangle', 0.14, 0.18);
+          tone(1046.5, 1046.5, 0.28, 'sine', 0.16, 0.27);
+        },
+        error: () => {
+          tone(280, 210, 0.18, 'sawtooth', 0.08, 0);
+          tone(220, 175, 0.22, 'sawtooth', 0.08, 0.14);
+        },
+        tick: () => tone(880, 880, 0.05, 'sine', 0.08),
+        firework: () => {
+          if (!enabled) return;
+          try {
+            const c = getCtx();
+            if (!c) return;
+            // Whistle + Boom + Sparkles
+            tone(450, 1250, 0.22, 'sine', 0.07, 0);
+            tone(140, 42, 0.45, 'triangle', 0.22, 0.20);
+            [1320, 1580, 1860, 2100].forEach((f, idx) => {
+              tone(f, f * 0.75, 0.16, 'sine', 0.07, 0.24 + idx * 0.05);
+            });
+          } catch (e) {}
+        }
+      };
+    })();
+
+    const btnSoundToggle = document.getElementById('btnSoundToggle');
+    function updateSoundBtn() {
+      btnSoundToggle.textContent = SoundFX.isEnabled() ? '🔊 Звук' : '🔇 Без звуку';
+    }
+    updateSoundBtn();
+    btnSoundToggle.addEventListener('click', () => {
+      SoundFX.toggle();
+      updateSoundBtn();
+    });
+
+    /* =====================================================================
+       3. FALLING THEMATIC EMOJIS & CLICK-TO-EXPLODE + FIREWORKS CANVAS
+       ===================================================================== */
+    const bgCanvas = document.getElementById('emojiBgCanvas');
+    const bgCtx = bgCanvas.getContext('2d');
+    const fxCanvas = document.getElementById('fxCanvas');
+    const fxCtx = fxCanvas.getContext('2d');
+
+    let W = window.innerWidth;
+    let H = window.innerHeight;
+    function resizeCanvases() {
+      W = bgCanvas.width = fxCanvas.width = window.innerWidth;
+      H = bgCanvas.height = fxCanvas.height = window.innerHeight;
+    }
+    resizeCanvases();
+    window.addEventListener('resize', resizeCanvases);
+
+    const LESSON_EMOJIS = ["👩‍⚕️", "👨‍🏫", "🧑‍💻", "🏦", "🏥", "🚇", "💻", "🏠", "🤖", "🎨"];
+    const SPARK_COLORS = ['#4f46e5', '#0ea5e9', '#10b981', '#f59e0b', '#f43f5e', '#a855f7', '#ec4899'];
+
+    const fallingEmojis = [];
+    const particles = [];
+    const flashes = [];
+
+    function spawnFallingEmoji(randomY = false) {
+      const size = 24 + Math.random() * 14;
+      fallingEmojis.push({
+        char: LESSON_EMOJIS[Math.floor(Math.random() * LESSON_EMOJIS.length)],
+        x: 30 + Math.random() * Math.max(100, W - 60),
+        y: randomY ? Math.random() * H : -40 - Math.random() * 120,
+        vy: 0.45 + Math.random() * 0.65,
+        vx: (Math.random() - 0.5) * 0.35,
+        wobble: Math.random() * Math.PI * 2,
+        wobbleSpeed: 0.015 + Math.random() * 0.02,
+        rot: (Math.random() - 0.5) * 0.5,
+        vrot: (Math.random() - 0.5) * 0.012,
+        size: size,
+        radius: size * 0.72,
+        alpha: 0.34 + Math.random() * 0.22
+      });
+    }
+
+    const initialEmojiCount = Math.min(20, Math.max(11, Math.floor(W / 75)));
+    for (let i = 0; i < initialEmojiCount; i++) {
+      spawnFallingEmoji(true);
+    }
+
+    function createExplosion(x, y, count = 24, isBigFirework = false) {
+      flashes.push({
+        x, y,
+        r: 6,
+        maxR: isBigFirework ? 95 : 52,
+        alpha: 0.95,
+        color: SPARK_COLORS[Math.floor(Math.random() * SPARK_COLORS.length)]
+      });
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.3;
+        const speed = (isBigFirework ? 3.2 : 1.8) + Math.random() * (isBigFirework ? 5.5 : 3.4);
+        particles.push({
+          x, y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - (isBigFirework ? 1.5 : 0.6),
+          gravity: 0.11,
+          drag: 0.96,
+          size: (isBigFirework ? 4.5 : 3.2) + Math.random() * 3,
+          color: SPARK_COLORS[Math.floor(Math.random() * SPARK_COLORS.length)],
+          alpha: 1,
+          decay: 0.018 + Math.random() * 0.014
+        });
+      }
+    }
+
+    // Listen to pointerdown globally without blocking slide UI
+    document.addEventListener('pointerdown', (e) => {
+      const px = e.clientX;
+      const py = e.clientY;
+      // Check if user hit any falling emoji
+      for (let i = fallingEmojis.length - 1; i >= 0; i--) {
+        const em = fallingEmojis[i];
+        const dist = Math.hypot(em.x - px, em.y - py);
+        if (dist <= em.radius * 1.45) {
+          fallingEmojis.splice(i, 1);
+          createExplosion(em.x, em.y, 26, false);
+          SoundFX.pop();
+          setTimeout(() => spawnFallingEmoji(false), 900);
+          break;
+        }
+      }
+    }, { passive: true });
+
+    function launchFireworksBurst(broadcastToClass = false) {
+      SoundFX.firework();
+      const bursts = 6;
+      for (let b = 0; b < bursts; b++) {
+        setTimeout(() => {
+          const bx = W * (0.18 + Math.random() * 0.64);
+          const by = H * (0.18 + Math.random() * 0.45);
+          createExplosion(bx, by, 44, true);
+          if (b % 2 === 1) SoundFX.firework();
+        }, b * 260);
+      }
+      if (broadcastToClass && isTeacher) {
+        publishFireworks();
+      }
+    }
+
+    function animateCanvases() {
+      // 1. Falling Emojis
+      bgCtx.clearRect(0, 0, W, H);
+      for (let i = 0; i < fallingEmojis.length; i++) {
+        const em = fallingEmojis[i];
+        em.wobble += em.wobbleSpeed;
+        em.x += em.vx + Math.sin(em.wobble) * 0.35;
+        em.y += em.vy;
+        em.rot += em.vrot;
+
+        if (em.y > H + 50) {
+          em.y = -40;
+          em.x = 30 + Math.random() * Math.max(100, W - 60);
+        }
+
+        bgCtx.save();
+        bgCtx.translate(em.x, em.y);
+        bgCtx.rotate(em.rot);
+        bgCtx.globalAlpha = em.alpha;
+        bgCtx.font = `${em.size}px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif`;
+        bgCtx.textAlign = 'center';
+        bgCtx.textBaseline = 'middle';
+        bgCtx.fillText(em.char, 0, 0);
+        bgCtx.restore();
+      }
+
+      // 2. Flashes & Spark Particles
+      fxCtx.clearRect(0, 0, W, H);
+      for (let i = flashes.length - 1; i >= 0; i--) {
+        const fl = flashes[i];
+        fl.r += (fl.maxR - fl.r) * 0.22;
+        fl.alpha -= 0.055;
+        if (fl.alpha <= 0) {
+          flashes.splice(i, 1);
+          continue;
+        }
+        fxCtx.save();
+        fxCtx.beginPath();
+        fxCtx.arc(fl.x, fl.y, fl.r, 0, Math.PI * 2);
+        fxCtx.strokeStyle = fl.color;
+        fxCtx.lineWidth = 4;
+        fxCtx.globalAlpha = fl.alpha;
+        fxCtx.stroke();
+        fxCtx.restore();
+      }
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.vx *= p.drag;
+        p.vy = p.vy * p.drag + p.gravity;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= p.decay;
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+        fxCtx.save();
+        fxCtx.globalAlpha = p.alpha;
+        fxCtx.fillStyle = p.color;
+        fxCtx.beginPath();
+        fxCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        fxCtx.fill();
+        fxCtx.restore();
+      }
+
+      requestAnimationFrame(animateCanvases);
+    }
+    requestAnimationFrame(animateCanvases);
+
+    /* =====================================================================
+       4. SLIDE NAVIGATION & TEACHER/STUDENT REAL-TIME SYNC (MQTT + BroadcastChannel)
+       ===================================================================== */
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const totalSlides = slides.length;
+    let currentSlide = 1;
+    let followMode = true; // When true, teacher leads the class (students cannot flip slides)
+
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+    const slideIndicator = document.getElementById('slideIndicator');
+    const progressFill = document.getElementById('progressFill');
+    const syncDot = document.getElementById('syncDot');
+    const syncText = document.getElementById('syncText');
+    const btnFollowToggle = document.getElementById('btnFollowToggle');
+
+    let currentStep = 0;
+    function stepsLeft() { return Math.max(0, LessonSteps.max(slides[currentSlide - 1]) - currentStep); }
+
+    function renderSlide(targetIndex, fromSync = false, step = 0) {
+      const clamped = Math.max(1, Math.min(totalSlides, targetIndex));
+      currentSlide = clamped;
+      slides.forEach((s, idx) => {
+        s.classList.toggle('active', idx + 1 === currentSlide);
+      });
+      const slideEl = slides[currentSlide - 1];
+      currentStep = Math.max(0, Math.min(step, LessonSteps.max(slideEl)));
+      LessonSteps.show(slideEl, currentStep);
+      const left = stepsLeft();
+      slideIndicator.textContent = `Слайд ${currentSlide} / ${totalSlides}` + (left ? ` • ще ${left} ⬇` : '');
+      progressFill.style.width = `${(currentSlide / totalSlides) * 100}%`;
+      updateNavLockUI();
+
+      if (isTeacher && !fromSync) {
+        publishState();
+      }
+    }
+
+    function updateNavLockUI() {
+      const lockedForStudent = !isTeacher && followMode;
+      const left = stepsLeft();
+      btnPrev.disabled = (currentSlide === 1 && currentStep === 0) || lockedForStudent;
+      btnNext.disabled = (currentSlide === totalSlides && !left) || lockedForStudent;
+      btnNext.textContent = left ? 'Показати ще ⬇' : 'Далі ➡';
+      btnNext.classList.toggle('btn-accent', !!left);
+      btnNext.classList.toggle('btn-primary', !left);
+
+      if (isTeacher) {
+        btnFollowToggle.textContent = followMode ? '🔒 Вести клас за собою' : '🔓 Вільний перегляд';
+        btnFollowToggle.className = followMode ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-secondary';
+      } else {
+        if (followMode) {
+          syncDot.className = 'status-dot locked';
+          syncText.textContent = 'Керує вчитель';
+        } else {
+          syncDot.className = 'status-dot online';
+          syncText.textContent = 'Вільний перегляд';
+        }
+      }
+    }
+
+    function changeSlide(delta) {
+      if (!isTeacher && followMode) return;
+      const max = LessonSteps.max(slides[currentSlide - 1]);
+      if (delta > 0 && currentStep < max) { SoundFX.pop(); renderSlide(currentSlide, false, currentStep + 1); return; }
+      if (delta < 0 && currentStep > 0) { SoundFX.click(); renderSlide(currentSlide, false, currentStep - 1); return; }
+      if ((delta > 0 && currentSlide === totalSlides) || (delta < 0 && currentSlide === 1)) return;
+      SoundFX.click();
+      renderSlide(currentSlide + delta, false, delta < 0 ? 999 : 0);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA')) return;
+      if (!isTeacher && followMode) return;
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') changeSlide(1);
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') changeSlide(-1);
+    });
+
+    if (btnFollowToggle) {
+      btnFollowToggle.addEventListener('click', () => {
+        if (!isTeacher) return;
+        followMode = !followMode;
+        SoundFX.click();
+        updateNavLockUI();
+        publishState();
+      });
+    }
+
+    document.getElementById('btnClassFireworks').addEventListener('click', () => {
+      launchFireworksBurst(true);
+    });
+
+    // Build a deterministic unique channel for this exact lesson deployment (no 4-digit codes!)
+    function computeLessonTopic() {
+      let basis = "nush2-urok8-profesii";
+      try {
+        const clean = getCleanStudentUrl().replace(/\/index\.html$/i, '/');
+        if (clean && !clean.startsWith('file:')) {
+          basis = clean;
+        }
+      } catch (e) {}
+      let hash = 2166136261;
+      for (let i = 0; i < basis.length; i++) {
+        hash ^= basis.charCodeAt(i);
+        hash = Math.imul(hash, 16777619);
+      }
+      return "nush2_urok8_profesii_" + (hash >>> 0).toString(36);
+    }
+
+    const LESSON_TOPIC = computeLessonTopic();
+    const STATE_TOPIC = LESSON_TOPIC + '/state';
+    const FW_TOPIC = LESSON_TOPIC + '/fireworks';
+    const PRESENCE_PREFIX = LESSON_TOPIC + '/presence/';
+    const clientId = (isTeacher ? 't_' : 's_') + Math.random().toString(36).slice(2, 10);
+
+    let mqttClient = null;
+    let bcChannel = null;
+    const onlineStudents = new Map(); // id -> lastSeenTs
+    let lastFireworkId = '';
+
+    function refreshStudentCounter() {
+      const now = Date.now();
+      for (const [id, ts] of onlineStudents.entries()) {
+        if (now - ts > 45000) onlineStudents.delete(id);
+      }
+      const el = document.getElementById('studentCounter');
+      if (el) el.textContent = `👨‍🎓 Учнів онлайн: ${onlineStudents.size}`;
+    }
+    setInterval(refreshStudentCounter, 5000);
+
+    function handleIncomingState(data) {
+      if (!data || typeof data !== 'object') return;
+      if (typeof data.followMode === 'boolean') {
+        followMode = data.followMode;
+      }
+      if (!isTeacher && typeof data.slide === 'number') {
+        renderSlide(data.slide, true, typeof data.step === 'number' ? data.step : 999);
+      } else {
+        updateNavLockUI();
+      }
+    }
+
+    function handleIncomingFirework(data) {
+      if (!data || !data.id || data.id === lastFireworkId) return;
+      lastFireworkId = data.id;
+      launchFireworksBurst(false);
+    }
+
+    function publishState() {
+      const payload = { slide: currentSlide, step: currentStep, followMode: followMode, ts: Date.now() };
+      try {
+        if (bcChannel) bcChannel.postMessage({ type: 'state', payload });
+      } catch (e) {}
+      try {
+        if (mqttClient && mqttClient.connected) {
+          mqttClient.publish(STATE_TOPIC, JSON.stringify(payload), { qos: 1, retain: true });
+        }
+      } catch (e) {}
+    }
+
+    function publishFireworks() {
+      const payload = { id: Date.now() + '_' + Math.random().toString(36).slice(2, 6) };
+      lastFireworkId = payload.id;
+      try {
+        if (bcChannel) bcChannel.postMessage({ type: 'fireworks', payload });
+      } catch (e) {}
+      try {
+        if (mqttClient && mqttClient.connected) {
+          mqttClient.publish(FW_TOPIC, JSON.stringify(payload), { qos: 0, retain: false });
+        }
+      } catch (e) {}
+    }
+
+    function publishPresence() {
+      if (isTeacher) return;
+      const payload = { id: clientId, ts: Date.now() };
+      try {
+        if (bcChannel) bcChannel.postMessage({ type: 'presence', payload });
+      } catch (e) {}
+      try {
+        if (mqttClient && mqttClient.connected) {
+          mqttClient.publish(PRESENCE_PREFIX + clientId, JSON.stringify(payload), { qos: 0, retain: true });
+        }
+      } catch (e) {}
+    }
+
+    // 1) Local BroadcastChannel (works offline between tabs too!)
+    try {
+      if ('BroadcastChannel' in window) {
+        bcChannel = new BroadcastChannel(LESSON_TOPIC);
+        bcChannel.onmessage = (ev) => {
+          const msg = ev.data || {};
+          if (msg.type === 'state') handleIncomingState(msg.payload);
+          if (msg.type === 'fireworks') handleIncomingFirework(msg.payload);
+          if (msg.type === 'presence' && isTeacher && msg.payload && msg.payload.id) {
+            onlineStudents.set(msg.payload.id, Date.now());
+            refreshStudentCounter();
+            publishState();
+          }
+          if (msg.type === 'hello' && isTeacher) {
+            publishState();
+          }
+        };
+        if (!isTeacher) {
+          bcChannel.postMessage({ type: 'hello' });
+          publishPresence();
+        }
+      }
+    } catch (e) {}
+
+    // 2) Asynchronous MQTT over WSS with primary + fallback brokers & CDNs
+    const BROKERS = [
+      'wss://broker.emqx.io:8084/mqtt',
+      'wss://broker.hivemq.com:8884/mqtt',
+      'wss://test.mosquitto.org:8081/mqtt'
+    ];
+    let brokerIdx = 0;
+
+    function connectMqttBroker() {
+      try {
+        if (!window.mqtt || typeof window.mqtt.connect !== 'function') return;
+        const url = BROKERS[brokerIdx % BROKERS.length];
+        const opts = {
+          clientId: clientId,
+          clean: true,
+          connectTimeout: 6000,
+          reconnectPeriod: 4000
+        };
+        if (!isTeacher) {
+          opts.will = {
+            topic: PRESENCE_PREFIX + clientId,
+            payload: '',
+            qos: 0,
+            retain: true
+          };
+        }
+
+        mqttClient = window.mqtt.connect(url, opts);
+
+        mqttClient.on('connect', () => {
+          if (isTeacher) {
+            syncDot.className = 'status-dot online';
+            syncText.textContent = 'Онлайн • Клас підключено';
+            mqttClient.subscribe(PRESENCE_PREFIX + '+');
+            publishState();
+          } else {
+            mqttClient.subscribe(STATE_TOPIC);
+            mqttClient.subscribe(FW_TOPIC);
+            publishPresence();
+            updateNavLockUI();
+          }
+        });
+
+        mqttClient.on('message', (topic, message) => {
+          try {
+            const raw = message ? message.toString() : '';
+            if (topic === STATE_TOPIC && raw) {
+              handleIncomingState(JSON.parse(raw));
+            } else if (topic === FW_TOPIC && raw) {
+              handleIncomingFirework(JSON.parse(raw));
+            } else if (topic.startsWith(PRESENCE_PREFIX) && isTeacher) {
+              const sid = topic.slice(PRESENCE_PREFIX.length);
+              if (!raw) {
+                onlineStudents.delete(sid);
+              } else {
+                onlineStudents.set(sid, Date.now());
+              }
+              refreshStudentCounter();
+            }
+          } catch (e) {}
+        });
+
+        mqttClient.on('error', () => {
+          try { mqttClient.end(true); } catch (e) {}
+          brokerIdx++;
+          if (brokerIdx < BROKERS.length * 2) {
+            setTimeout(connectMqttBroker, 1500);
+          }
+        });
+      } catch (e) {}
+    }
+
+    setInterval(() => {
+      if (!isTeacher) publishPresence();
+      else publishState();
+    }, 15000);
+
+    function loadMqttScriptAsync(urls, idx = 0) {
+      if (idx >= urls.length) return;
+      try {
+        const s = document.createElement('script');
+        s.src = urls[idx];
+        s.async = true;
+        s.onload = () => connectMqttBroker();
+        s.onerror = () => loadMqttScriptAsync(urls, idx + 1);
+        document.head.appendChild(s);
+      } catch (e) {}
+    }
+
+    loadMqttScriptAsync([
+      'https://unpkg.com/mqtt/dist/mqtt.min.js',
+      'https://cdn.jsdelivr.net/npm/mqtt/dist/mqtt.min.js'
+    ]);
+
+    /* =====================================================================
+       5. EMBEDDED STANDARD QR CODE GENERATOR ON CANVAS (Zero external libs!)
+       Supports QR Model 2, Versions 1..9, Byte Mode, Reed-Solomon ECC Level L
+       ===================================================================== */
+    const QRCanvas = (() => {
+      // GF(256) log/exp tables with primitive polynomial 0x11D
+      const EXP = new Uint8Array(512);
+      const LOG = new Uint8Array(256);
+      let x = 1;
+      for (let i = 0; i < 255; i++) {
+        EXP[i] = x;
+        LOG[x] = i;
+        x <<= 1;
+        if (x & 0x100) x ^= 0x11d;
+      }
+      for (let i = 255; i < 512; i++) EXP[i] = EXP[i - 255];
+
+      function gfMul(a, b) {
+        if (a === 0 || b === 0) return 0;
+        return EXP[LOG[a] + LOG[b]];
+      }
+
+      function rsGeneratorPoly(degree) {
+        let poly = [1];
+        for (let i = 0; i < degree; i++) {
+          const next = new Array(poly.length + 1).fill(0);
+          const root = EXP[i];
+          for (let j = 0; j < poly.length; j++) {
+            next[j] ^= poly[j];
+            next[j + 1] ^= gfMul(poly[j], root);
+          }
+          poly = next;
+        }
+        return poly;
+      }
+
+      function rsRemainder(dataBytes, eccLen) {
+        const gen = rsGeneratorPoly(eccLen);
+        const res = new Uint8Array(dataBytes.length + eccLen);
+        res.set(dataBytes);
+        for (let i = 0; i < dataBytes.length; i++) {
+          const coef = res[i];
+          if (coef !== 0) {
+            for (let j = 1; j < gen.length; j++) {
+              res[i + j] ^= gfMul(gen[j], coef);
+            }
+          }
+        }
+        return res.slice(dataBytes.length);
+      }
+
+      // Versions 1..9 Level L specs: [version, totalDataCodewords, eccPerBlock, numBlocks, alignCoords]
+      const VERSIONS = [
+        null,
+        [1, 19, 7, 1, []],
+        [2, 34, 10, 1, [6, 18]],
+        [3, 55, 15, 1, [6, 22]],
+        [4, 80, 20, 1, [6, 26]],
+        [5, 108, 26, 1, [6, 30]],
+        [6, 136, 18, 2, [6, 34]],
+        [7, 156, 20, 2, [6, 22, 38]],
+        [8, 194, 24, 2, [6, 24, 42]],
+        [9, 232, 30, 2, [6, 26, 46]]
+      ];
+
+      function encodeBytes(text) {
+        try {
+          return new TextEncoder().encode(text);
+        } catch (e) {
+          const arr = [];
+          for (let i = 0; i < text.length; i++) arr.push(text.charCodeAt(i) & 0xff);
+          return new Uint8Array(arr);
+        }
+      }
+
+      function draw(canvas, text) {
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const bytes = encodeBytes(text);
+        let spec = null;
+        for (let v = 1; v < VERSIONS.length; v++) {
+          // Byte mode overhead: 4 bits mode + 8 bits length + 4 bits terminator = 2 bytes
+          if (bytes.length + 2 <= VERSIONS[v][1]) {
+            spec = VERSIONS[v];
+            break;
+          }
+        }
+        if (!spec) spec = VERSIONS[9];
+
+        const [ver, totalData, eccPerBlock, numBlocks, align] = spec;
+        const size = ver * 4 + 17;
+
+        // Build bit stream (Mode 0100 = Byte)
+        const bits = [];
+        const pushBits = (val, len) => {
+          for (let i = len - 1; i >= 0; i--) bits.push((val >>> i) & 1);
+        };
+        pushBits(0b0100, 4);
+        const maxPayload = totalData - 2;
+        const payload = bytes.slice(0, maxPayload);
+        pushBits(payload.length, 8);
+        for (let b of payload) pushBits(b, 8);
+        pushBits(0, Math.min(4, totalData * 8 - bits.length));
+        while (bits.length % 8 !== 0) bits.push(0);
+
+        const dataCodewords = new Uint8Array(totalData);
+        for (let i = 0; i < bits.length / 8; i++) {
+          let byteVal = 0;
+          for (let j = 0; j < 8; j++) byteVal = (byteVal << 1) | bits[i * 8 + j];
+          dataCodewords[i] = byteVal;
+        }
+        const pads = [0xec, 0x11];
+        for (let i = bits.length / 8, p = 0; i < totalData; i++, p++) {
+          dataCodewords[i] = pads[p % 2];
+        }
+
+        // Split into blocks & compute Reed-Solomon ECC
+        const blockLen = Math.floor(totalData / numBlocks);
+        const dataBlocks = [];
+        const eccBlocks = [];
+        for (let b = 0; b < numBlocks; b++) {
+          const slice = dataCodewords.slice(b * blockLen, (b + 1) * blockLen);
+          dataBlocks.push(slice);
+          eccBlocks.push(rsRemainder(slice, eccPerBlock));
+        }
+
+        // Interleave data & ECC codewords
+        const finalCodewords = [];
+        for (let i = 0; i < blockLen; i++) {
+          for (let b = 0; b < numBlocks; b++) finalCodewords.push(dataBlocks[b][i]);
+        }
+        for (let i = 0; i < eccPerBlock; i++) {
+          for (let b = 0; b < numBlocks; b++) finalCodewords.push(eccBlocks[b][i]);
+        }
+
+        // Create matrix (-1 = empty, 0 = white, 1 = black) & reserved map
+        const mat = Array.from({ length: size }, () => new Int8Array(size).fill(-1));
+        const res = Array.from({ length: size }, () => new Uint8Array(size));
+
+        function setMod(r, c, val, isReserved = true) {
+          if (r >= 0 && r < size && c >= 0 && c < size) {
+            mat[r][c] = val ? 1 : 0;
+            if (isReserved) res[r][c] = 1;
+          }
+        }
+
+        function placeFinder(r0, c0) {
+          for (let r = -1; r <= 7; r++) {
+            for (let c = -1; c <= 7; c++) {
+              const inOuter = r >= 0 && r <= 6 && c >= 0 && c <= 6;
+              const isBorder = r === 0 || r === 6 || c === 0 || c === 6;
+              const isCenter = r >= 2 && r <= 4 && c >= 2 && c <= 4;
+              setMod(r0 + r, c0 + c, inOuter && (isBorder || isCenter), true);
+            }
+          }
+        }
+
+        placeFinder(0, 0);
+        placeFinder(0, size - 7);
+        placeFinder(size - 7, 0);
+
+        // Alignment patterns
+        for (let r of align) {
+          for (let c of align) {
+            if (res[r][c]) continue;
+            for (let dr = -2; dr <= 2; dr++) {
+              for (let dc = -2; dc <= 2; dc++) {
+                const dark = Math.max(Math.abs(dr), Math.abs(dc)) !== 1;
+                setMod(r + dr, c + dc, dark, true);
+              }
+            }
+          }
+        }
+
+        // Timing patterns
+        for (let i = 8; i < size - 8; i++) {
+          if (!res[6][i]) setMod(6, i, i % 2 === 0, true);
+          if (!res[i][6]) setMod(i, 6, i % 2 === 0, true);
+        }
+
+        // Dark module & reserve format info areas
+        setMod(size - 8, 8, 1, true);
+        for (let i = 0; i < 9; i++) {
+          if (i !== 6) { res[8][i] = 1; res[i][8] = 1; }
+        }
+        for (let i = 0; i < 8; i++) {
+          res[8][size - 1 - i] = 1;
+          res[size - 1 - i][8] = 1;
+        }
+        if (ver >= 7) {
+          for (let i = 0; i < 6; i++) {
+            for (let j = 0; j < 3; j++) {
+              res[size - 11 + j][i] = 1;
+              res[i][size - 11 + j] = 1;
+            }
+          }
+        }
+
+        // Place data bits in zig-zag with Mask 0: (r + c) % 2 === 0
+        const allBits = [];
+        for (let cw of finalCodewords) {
+          for (let b = 7; b >= 0; b--) allBits.push((cw >>> b) & 1);
+        }
+
+        let bitIdx = 0;
+        let up = true;
+        for (let col = size - 1; col > 0; col -= 2) {
+          if (col === 6) col--;
+          for (let step = 0; step < size; step++) {
+            const r = up ? size - 1 - step : step;
+            for (let dx = 0; dx < 2; dx++) {
+              const c = col - dx;
+              if (!res[r][c]) {
+                const rawBit = bitIdx < allBits.length ? allBits[bitIdx++] : 0;
+                const masked = ((r + c) % 2 === 0) ? (rawBit ^ 1) : rawBit;
+                mat[r][c] = masked;
+              }
+            }
+          }
+          up = !up;
+        }
+
+        // Format Info for Level L (01) + Mask 0 (000) = 0x77C4 (111011111000100)
+        const fmt = 0x77c4;
+        for (let i = 0; i < 6; i++) setMod(8, i, (fmt >>> (14 - i)) & 1, true);
+        setMod(8, 7, (fmt >>> 8) & 1, true);
+        setMod(8, 8, (fmt >>> 7) & 1, true);
+        setMod(7, 8, (fmt >>> 6) & 1, true);
+        for (let i = 0; i < 6; i++) setMod(5 - i, 8, (fmt >>> (5 - i)) & 1, true);
+
+        for (let i = 0; i < 8; i++) setMod(8, size - 1 - i, (fmt >>> i) & 1, true);
+        for (let i = 0; i < 7; i++) setMod(size - 7 + i, 8, (fmt >>> (14 - i)) & 1, true);
+
+        // Version Info for Ver >= 7
+        const VER_BITS = { 7: 0x07c94, 8: 0x085bc, 9: 0x09a99 };
+        if (ver >= 7 && VER_BITS[ver]) {
+          const vb = VER_BITS[ver];
+          for (let i = 0; i < 18; i++) {
+            const bit = (vb >>> i) & 1;
+            const r = Math.floor(i / 3);
+            const c = size - 11 + (i % 3);
+            setMod(r, c, bit, true);
+            setMod(c, r, bit, true);
+          }
+        }
+
+        // Render onto Canvas with quiet zone
+        const quiet = 3;
+        const totalCells = size + quiet * 2;
+        const pxSize = canvas.width;
+        const cell = pxSize / totalCells;
+
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, pxSize, pxSize);
+        ctx.fillStyle = '#1e1b4b';
+        for (let r = 0; r < size; r++) {
+          for (let c = 0; c < size; c++) {
+            if (mat[r][c] === 1) {
+              ctx.fillRect(
+                Math.floor((c + quiet) * cell),
+                Math.floor((r + quiet) * cell),
+                Math.ceil(cell),
+                Math.ceil(cell)
+              );
+            }
+          }
+        }
+      }
+
+      return { draw };
+    })();
+
+    // Teacher Share Modal handlers
+    const shareModal = document.getElementById('shareModal');
+    document.getElementById('btnOpenShare').addEventListener('click', () => {
+      SoundFX.click();
+      const studentUrl = getShareUrl();
+      document.getElementById('studentUrlText').textContent = studentUrl;
+      document.getElementById('copyFeedback').textContent = '';
+      QRCanvas.draw(document.getElementById('qrCanvas'), studentUrl);
+      shareModal.classList.add('open');
+    });
+
+    function closeShareModal() {
+      SoundFX.click();
+      shareModal.classList.remove('open');
+    }
+
+    function copyStudentUrl() {
+      const url = getShareUrl();
+      const fb = document.getElementById('copyFeedback');
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(() => {
+            SoundFX.success();
+            fb.textContent = '✅ Посилання скопійовано у буфер обміну!';
+          }).catch(() => fallbackCopy(url, fb));
+          return;
+        }
+      } catch (e) {}
+      fallbackCopy(url, fb);
+    }
+
+    function fallbackCopy(text, fb) {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        SoundFX.success();
+        fb.textContent = '✅ Посилання скопійовано!';
+      } catch (e) {
+        fb.textContent = 'Виділіть посилання вище та натисніть Ctrl+C';
+      }
+    }
+
+
+    /* =====================================================================
+       6. СПІЛЬНІ ІНТЕРАКТИВНІ ВІДЖЕТИ (для всіх уроків)
+       ===================================================================== */
+    const $id = (id) => document.getElementById(id);
+    function shuffleArr(arr) {
+      const copy = arr.slice();
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    // --- Чек-лист готовності ---
+    function toggleMission(el) {
+      el.classList.toggle('done');
+      SoundFX.click();
+      const box = el.closest('.mission-box');
+      const total = box.querySelectorAll('.mission-item').length;
+      const done = box.querySelectorAll('.mission-item.done').length;
+      const st = box.querySelector('.mission-status');
+      if (done === total) {
+        SoundFX.success();
+        st.innerHTML = '🎉 Усі готові! Тисни «Далі ➡»!';
+        st.style.color = '#059669';
+      } else {
+        st.textContent = `Виконано: ${done} з ${total}`;
+        st.style.color = '#4f46e5';
+      }
+    }
+
+    // --- Картки, що перевертаються ---
+    function flipCard(card) {
+      card.classList.toggle('flipped');
+      SoundFX.click();
+    }
+
+    // --- Плитка з поясненням "Чому?" ---
+    function openTile(tile) {
+      if (tile.classList.contains('open')) return;
+      tile.classList.add('open');
+      SoundFX.success();
+    }
+
+    // --- Кнопка-відповідь (data-answer) ---
+    function reveal(btn) {
+      if (btn.classList.contains('revealed')) return;
+      btn.classList.add('revealed');
+      btn.innerHTML = btn.dataset.answer;
+      SoundFX.success();
+    }
+
+    // --- Покрокове розкриття (.step всередині контейнера) ---
+    function revealStep(btn, containerId) {
+      const next = document.querySelector(`#${containerId} .step:not(.shown)`);
+      if (next) { next.classList.add('shown'); SoundFX.pop(); }
+      if (!document.querySelector(`#${containerId} .step:not(.shown)`)) {
+        btn.disabled = true;
+        btn.textContent = '✅ Усе розкрито!';
+      }
+    }
+
+    // --- Вікторина з одним правильним варіантом ---
+    function makeQuiz(id, questions, opts = {}) {
+      const root = $id(id);
+      root.classList.add('quiz-box');
+      let i = 0, score = 0;
+      function render() {
+        if (i >= questions.length) {
+          root.innerHTML = `<div class="quiz-done"><div style="font-size:3.5rem;">🏆</div>
+            <div>Молодці! З першої спроби: <b>${score} з ${questions.length}</b></div>
+            <button class="btn btn-secondary">🔄 Пройти ще раз</button></div>`;
+          root.querySelector('button').onclick = () => { i = 0; score = 0; SoundFX.click(); render(); };
+          launchFireworksBurst(false);
+          return;
+        }
+        const q = questions[i];
+        let firstTry = true, locked = false;
+        root.innerHTML = `
+          <span class="feedback-pill" style="background:#e0e7ff;color:#3730a3;">${opts.label || 'Питання'} ${i + 1} з ${questions.length}</span>
+          ${q.emoji ? `<div class="quiz-emoji">${q.emoji}</div>` : ''}
+          <div class="quiz-q">${q.q}</div>
+          <div class="quiz-opts"></div>
+          <div class="quiz-fb"></div>`;
+        const box = root.querySelector('.quiz-opts');
+        const fb = root.querySelector('.quiz-fb');
+        const options = opts.options || q.options;
+        options.forEach((o, k) => {
+          const b = document.createElement('button');
+          b.className = 'opt-btn' + (opts.big ? ' big' : '');
+          b.innerHTML = o;
+          b.onclick = () => {
+            if (locked) return;
+            if (k === q.correct) {
+              locked = true;
+              b.classList.add('correct');
+              if (firstTry) score++;
+              SoundFX.success();
+              fb.className = 'quiz-fb ok';
+              fb.innerHTML = '✅ ' + (q.explain || 'Правильно!') + '<br>';
+              const nx = document.createElement('button');
+              nx.className = 'btn btn-primary';
+              nx.textContent = i + 1 < questions.length ? 'Наступне ➡' : 'Результат 🏆';
+              nx.onclick = () => { i++; SoundFX.click(); render(); };
+              fb.appendChild(nx);
+            } else {
+              firstTry = false;
+              b.classList.add('wrong');
+              b.disabled = true;
+              SoundFX.error();
+              fb.className = 'quiz-fb bad';
+              fb.innerHTML = '🤔 ' + (q.hint || 'Подумай ще раз!');
+            }
+          };
+          box.appendChild(b);
+        });
+      }
+      render();
+    }
+
+    // --- Сортування по кошиках: натисни картку, потім кошик ---
+    function makeSorter(id, items, buckets) {
+      const root = $id(id);
+      let active = null, placed = 0;
+      root.innerHTML = `<div class="sort-pool"></div>
+        <div class="sort-buckets" style="grid-template-columns:repeat(${buckets.length},1fr);margin-top:12px;"></div>
+        <div class="sort-status" style="margin-top:10px;"><span class="st"></span><button class="btn btn-sm btn-secondary">🔄 Спочатку</button></div>`;
+      const pool = root.querySelector('.sort-pool');
+      const bw = root.querySelector('.sort-buckets');
+      const st = root.querySelector('.st');
+      root.querySelector('.sort-status button').onclick = () => { SoundFX.click(); makeSorter(id, items, buckets); };
+      const upd = () => { st.textContent = `Розкладено: ${placed} з ${items.length}`; };
+      shuffleArr(items).forEach(it => {
+        const b = document.createElement('button');
+        b.className = 'word-chip';
+        b.innerHTML = it.t;
+        b.dataset.b = it.b;
+        b.onclick = (e) => {
+          e.stopPropagation();
+          if (b.classList.contains('placed')) return;
+          SoundFX.click();
+          pool.querySelectorAll('.word-chip').forEach(c => c.classList.remove('picked'));
+          b.classList.add('picked');
+          active = b;
+        };
+        pool.appendChild(b);
+      });
+      buckets.forEach(bk => {
+        const d = document.createElement('div');
+        d.className = 'sort-bucket2';
+        d.style.background = bk.bg;
+        d.style.borderColor = bk.border;
+        d.innerHTML = `<div class="bucket-title" style="color:${bk.color}">${bk.label}</div><div class="bucket-items"></div>`;
+        d.onclick = () => {
+          if (!active) { st.textContent = '👆 Спочатку натисни на картку зверху!'; return; }
+          if (active.dataset.b === bk.id) {
+            SoundFX.success();
+            active.classList.remove('picked');
+            active.classList.add('placed');
+            d.querySelector('.bucket-items').appendChild(active);
+            active = null;
+            placed++;
+            upd();
+            if (placed === items.length) {
+              st.textContent = '🎉 Усе розкладено правильно!';
+              launchFireworksBurst(false);
+            }
+          } else {
+            SoundFX.error();
+            const a = active;
+            a.classList.add('shake');
+            setTimeout(() => a.classList.remove('shake'), 420);
+          }
+        };
+        bw.appendChild(d);
+      });
+      upd();
+    }
+
+    // --- Сцена: знайди об'єкти / порушення ---
+    function makeScene(id, spots, opts = {}) {
+      const root = $id(id);
+      const fb = $id(opts.fb);
+      const counter = $id(opts.counter);
+      const need = spots.filter(s => s.target !== false).length;
+      let found = 0;
+      root.querySelectorAll('.hotspot').forEach(h => h.remove());
+      const upd = () => { if (counter) counter.textContent = `${opts.counterText || 'Знайдено'}: ${found} / ${need}`; };
+      spots.forEach(s => {
+        const b = document.createElement('button');
+        b.className = 'hotspot';
+        b.style.left = s.x + '%';
+        b.style.top = s.y + '%';
+        if (s.size) b.style.fontSize = s.size;
+        b.innerHTML = s.e;
+        b.onclick = () => {
+          if (fb) fb.innerHTML = s.msg || '';
+          if (s.target === false) { SoundFX.click(); b.classList.add('good'); return; }
+          if (b.dataset.done) return;
+          b.dataset.done = 1;
+          b.classList.add(opts.mode === 'good' ? 'good' : opts.mode === 'remove' ? 'removed' : 'found');
+          if (s.label) b.insertAdjacentHTML('beforeend', `<span class="lbl">${s.label}</span>`);
+          found++;
+          SoundFX.success();
+          upd();
+          if (found === need) {
+            launchFireworksBurst(false);
+            if (opts.onDone) opts.onDone();
+          }
+        };
+        root.appendChild(b);
+      });
+      upd();
+    }
+
+    // --- Загадка-слово з полями для літер ---
+    function buildRiddle(containerId, word, onSolved) {
+      const box = $id(containerId);
+      box.innerHTML = '';
+      const letters = word.split('');
+      const inputs = [];
+      let solved = false;
+      letters.forEach((ch, idx) => {
+        const inp = document.createElement('input');
+        inp.className = 'letter-input';
+        inp.maxLength = 1;
+        inp.addEventListener('input', () => {
+          const val = (inp.value || '').trim().toUpperCase();
+          if (val === ch) {
+            inp.classList.remove('bad');
+            inp.classList.add('ok');
+            SoundFX.click();
+            if (inputs[idx + 1]) inputs[idx + 1].focus();
+            if (!solved && inputs.every((el, i) => (el.value || '').trim().toUpperCase() === letters[i])) {
+              solved = true;
+              SoundFX.success();
+              if (onSolved) onSolved();
+            }
+          } else if (val) {
+            inp.classList.add('bad');
+            SoundFX.error();
+          } else {
+            inp.classList.remove('bad', 'ok');
+          }
+        });
+        inp.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && !inp.value && inputs[idx - 1]) inputs[idx - 1].focus();
+        });
+        inputs.push(inp);
+        box.appendChild(inp);
+      });
+      return {
+        showAnswer() {
+          inputs.forEach((el, i) => { el.value = letters[i]; el.classList.remove('bad'); el.classList.add('ok'); });
+          if (!solved) { solved = true; SoundFX.success(); if (onSolved) onSolved(); }
+        }
+      };
+    }
+
+    // --- Фізкультхвилинка: таймер ---
+    let timerTotal = 60, timerSec = 60, timerInterval = null, timerOnTick = null;
+    function updateTimerUI() {
+      $id('timerText').textContent = timerSec;
+      $id('timerCircle').style.setProperty('--deg', Math.round((timerSec / timerTotal) * 360) + 'deg');
+    }
+    function startBreakTimer() {
+      if (timerInterval) return;
+      SoundFX.click();
+      timerInterval = setInterval(() => {
+        if (timerSec > 0) {
+          timerSec--;
+          updateTimerUI();
+          if (timerOnTick) timerOnTick(timerSec);
+          if (timerSec <= 3 && timerSec > 0) SoundFX.tick();
+        } else {
+          pauseBreakTimer();
+          SoundFX.success();
+          launchFireworksBurst(false);
+        }
+      }, 1000);
+    }
+    function pauseBreakTimer() {
+      if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+    }
+    function resetBreakTimer() {
+      pauseBreakTimer();
+      timerSec = timerTotal;
+      updateTimerUI();
+      SoundFX.click();
+    }
+
+    // --- Вкладки на слайді (кнопки з data-tab) ---
+    function showTab(btn, groupId, tabId) {
+      SoundFX.click();
+      btn.parentElement.querySelectorAll('[data-tabbtn]').forEach(b => b.className = 'btn btn-sm btn-secondary');
+      btn.className = 'btn btn-sm btn-primary';
+      document.querySelectorAll(`#${groupId} [data-tab]`).forEach(t => t.style.display = t.dataset.tab === tabId ? '' : 'none');
+    }
+
+    // --- Малювалка ---
+    let dCtx = null, drawing = false, brushColor = '#4f46e5', drawCanvas = null;
+    function initDraw(canvasId, templateFn) {
+      drawCanvas = $id(canvasId);
+      if (!drawCanvas) return;
+      dCtx = drawCanvas.getContext('2d');
+      clearDrawCanvas(true);
+      if (templateFn) templateFn(dCtx, drawCanvas);
+      const pos = (e) => {
+        const r = drawCanvas.getBoundingClientRect();
+        return { x: (e.clientX - r.left) * drawCanvas.width / r.width, y: (e.clientY - r.top) * drawCanvas.height / r.height };
+      };
+      drawCanvas.addEventListener('pointerdown', (e) => { drawing = true; const p = pos(e); dCtx.beginPath(); dCtx.moveTo(p.x, p.y); });
+      drawCanvas.addEventListener('pointermove', (e) => {
+        if (!drawing) return;
+        const p = pos(e);
+        dCtx.lineTo(p.x, p.y);
+        dCtx.strokeStyle = brushColor;
+        dCtx.lineWidth = 6;
+        dCtx.lineCap = 'round';
+        dCtx.lineJoin = 'round';
+        dCtx.stroke();
+      });
+      window.addEventListener('pointerup', () => { drawing = false; });
+    }
+    function setBrushColor(col, dot) {
+      brushColor = col;
+      SoundFX.click();
+      document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+      if (dot) dot.classList.add('active');
+    }
+    function stampSticker(text) {
+      if (!dCtx) return;
+      SoundFX.pop();
+      dCtx.save();
+      dCtx.font = '900 40px Nunito, "Segoe UI Emoji", "Apple Color Emoji", sans-serif';
+      dCtx.fillStyle = brushColor;
+      dCtx.fillText(text, 30 + Math.random() * (drawCanvas.width - 110), 50 + Math.random() * (drawCanvas.height - 70));
+      dCtx.restore();
+    }
+    function clearDrawCanvas(silent) {
+      if (!dCtx) return;
+      if (!silent) SoundFX.click();
+      dCtx.fillStyle = '#ffffff';
+      dCtx.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
+    }
+    function downloadDrawing(name) {
+      SoundFX.success();
+      try {
+        const a = document.createElement('a');
+        a.download = (name || 'malyunok') + '.png';
+        a.href = drawCanvas.toDataURL('image/png');
+        a.click();
+      } catch (e) {}
+    }
+
+    // --- Рефлексія ---
+    function pickReflection(btn, label) {
+      SoundFX.success();
+      btn.parentElement.querySelectorAll('.btn').forEach(b => b.classList.remove('btn-success'));
+      btn.classList.add('btn-success');
+      $id('reflectionReply').textContent = `Дякуємо! «${label}» 🌟 Ти чудово попрацював(-ла) на уроці!`;
+      launchFireworksBurst(false);
+    }
+
+    // --- Розстав кроки по порядку: натискай кроки в правильній послідовності ---
+    function makeOrder(id, steps, opts = {}) {
+      const root = $id(id);
+      let next = 0;
+      root.innerHTML = `<div class="order-list"></div><div class="sort-pool order-pool" style="margin-top:12px;"></div>
+        <div class="sort-status" style="margin-top:10px;"><span class="st"></span><button class="btn btn-sm btn-secondary">🔄 Спочатку</button></div>`;
+      const list = root.querySelector('.order-list');
+      const pool = root.querySelector('.order-pool');
+      const st = root.querySelector('.st');
+      root.querySelector('.sort-status button').onclick = () => { SoundFX.click(); makeOrder(id, steps, opts); };
+      const upd = () => { st.textContent = next < steps.length ? `Який крок №${next + 1}? Натисни на нього!` : '🎉 Усе по порядку!'; };
+      steps.forEach((t, i) => {
+        const slot = document.createElement('div');
+        slot.className = 'order-slot';
+        slot.innerHTML = `<span class="order-num">${i + 1}</span><span class="order-text">…</span>`;
+        list.appendChild(slot);
+      });
+      shuffleArr(steps.map((t, i) => ({ t, i }))).forEach(it => {
+        const b = document.createElement('button');
+        b.className = 'word-chip';
+        b.innerHTML = it.t;
+        b.onclick = () => {
+          if (it.i === next) {
+            SoundFX.success();
+            const slot = list.children[next];
+            slot.classList.add('filled');
+            slot.querySelector('.order-text').innerHTML = it.t;
+            b.remove();
+            next++;
+            upd();
+            if (next === steps.length) { launchFireworksBurst(false); if (opts.onDone) opts.onDone(); }
+          } else {
+            SoundFX.error();
+            b.classList.add('shake');
+            setTimeout(() => b.classList.remove('shake'), 420);
+          }
+        };
+        pool.appendChild(b);
+      });
+      upd();
+    }
+
+
+    // ===== Урок 8 =====
+    function countOpen(gridId, pillId) {
+      const g = $id(gridId);
+      const n = g.querySelectorAll('.tile.open').length;
+      const t = g.querySelectorAll('.tile').length;
+      $id(pillId).textContent = `Відкрито: ${n} / ${t}`;
+      if (n === t) launchFireworksBurst(false);
+    }
+
+    makeQuiz('warmQuiz', [
+      { emoji: '🔤', q: 'Яке головне слово для інформатики?', options: ['💻 Комп’ютер', '🌍 Інформація', '🛡️ Безпека'], correct: 1, explain: 'Інформатика вчить працювати з інформацією!' },
+      { emoji: '🪑', q: 'Яке місце в кабінеті інформатики можна зайняти?', options: ['👫 Поруч із другом', '👩‍🏫 Те, яке вкаже вчитель', '🪟 Біля вікна'], correct: 1 },
+      { emoji: '🤔', q: 'Як НЕ можна поводитися в комп’ютерному класі?', options: ['🚶 Заходити спокійно', '🥪 Покласти бутерброд на клавіатуру', '🚫 Не бігати'], correct: 1, explain: 'Їжі біля комп’ютера не місце!' }
+    ], { label: 'Питання' });
+
+    makeQuiz('profQuiz', shuffleArr([
+      { emoji: '🩻💻', q: 'Я дивлюся на комп’ютері знімки й перевіряю, чи здорова людина.', options: ['👨‍🍳 Кухар', '👩‍⚕️ Лікар', '✈️ Пілот'], correct: 1 },
+      { emoji: '🛒💻', q: 'Мій комп’ютер рахує, скільки коштують покупки.', options: ['🧑‍💼 Касир', '👩‍🚒 Пожежник', '🎨 Художник'], correct: 0 },
+      { emoji: '💇💻', q: 'Я показую на комп’ютері, якою буде нова зачіска.', options: ['💇 Перукар', '👷 Будівельник', '📚 Бібліотекар'], correct: 0 },
+      { emoji: '⌨️🎮', q: 'Я пишу програми та комп’ютерні ігри.', options: ['🧑‍🌾 Фермер', '👨‍🏫 Учитель', '🧑‍💻 Програміст'], correct: 2 },
+      { emoji: '🎬✏️', q: 'Я малюю на комп’ютері героїв мультфільмів.', options: ['🎨 Аніматор', '👩‍⚕️ Лікар', '🧑‍💼 Касир'], correct: 0 },
+      { emoji: '🌾🛸', q: 'Мені допомагає дрон із комп’ютером доглядати за полем.', options: ['🚒 Пожежник', '🧑‍🌾 Фермер', '💇 Перукар'], correct: 1 }
+    ]), { label: 'Загадка', big: true });
+
+    makeSorter('useSorter', [
+      { t: '📖 Урок онлайн', b: 'learn' }, { t: '🔤 Вчу англійську в застосунку', b: 'learn' }, { t: '🧮 Розв’язую задачі', b: 'learn' },
+      { t: '🏦 Рахую гроші в банку', b: 'work' }, { t: '✈️ Керую літаком', b: 'work' }, { t: '🏗️ Креслю будинок', b: 'work' },
+      { t: '🎬 Дивлюся мультфільм', b: 'rest' }, { t: '🎮 Граю в гру', b: 'rest' }, { t: '🎵 Слухаю музику', b: 'rest' }
+    ], [
+      { id: 'learn', label: '📖 Навчається', bg: '#eff6ff', border: '#60a5fa', color: '#1d4ed8' },
+      { id: 'work', label: '🛠️ Працює', bg: '#fff7ed', border: '#fb923c', color: '#c2410c' },
+      { id: 'rest', label: '🎮 Відпочиває', bg: '#f0fdf4', border: '#4ade80', color: '#15803d' }
+    ]);
+
+    makeScene('homeScene', [
+      { e: '💡', x: 50, y: 12, msg: '💡 Світло вмикається саме, коли заходиш, або за командою голосом!', label: 'світло' },
+      { e: '🤖', x: 22, y: 82, msg: '🤖 Робот-пилосос сам прибирає підлогу.', label: 'пилосос' },
+      { e: '🔊', x: 66, y: 50, msg: '🔊 Розумна колонка вмикає музику й відповідає на запитання.', label: 'колонка' },
+      { e: '🔒', x: 90, y: 60, msg: '🔒 Двері можна відчинити телефоном.', label: 'замок' },
+      { e: '🌡️', x: 30, y: 36, msg: '🌡️ Комп’ютер підтримує в домі тепло.', label: 'тепло' },
+      { e: '🪴', x: 80, y: 84, msg: '🪴 Квіти поливаються самі!', label: 'полив' }
+    ], { fb: 'homeFb', counter: 'homeCount', mode: 'good',
+         onDone: () => { $id('homeFb').innerHTML = '🏆 Ось який він — розумний дім! Усім керує комп’ютер.'; } });
+
+    // Числа по порядку
+    let numNext = 1, numStart = 0;
+    function startNumbers() {
+      const arena = $id('numArena');
+      arena.querySelectorAll('.num-target').forEach(n => n.remove());
+      $id('numIntro').style.display = 'none';
+      numNext = 1;
+      numStart = Date.now();
+      $id('numScore').textContent = 'Наступне: 1';
+      SoundFX.click();
+      const placed = [];
+      for (let n = 1; n <= 10; n++) {
+        let x, y, tries = 0;
+        do { x = 8 + Math.random() * 84; y = 12 + Math.random() * 76; tries++; }
+        while (tries < 60 && placed.some(p => Math.abs(p[0] - x) < 11 && Math.abs(p[1] - y) < 20));
+        placed.push([x, y]);
+        const b = document.createElement('button');
+        b.className = 'click-target num-target';
+        b.style.cssText = `left:${x}%;top:${y}%;width:76px;height:76px;font-family:inherit;font-size:2rem;font-weight:900;color:#fff;`;
+        b.textContent = n;
+        b.onclick = () => {
+          if (n === numNext) {
+            const r = b.getBoundingClientRect();
+            createExplosion(r.left + r.width / 2, r.top + r.height / 2, 18, false);
+            SoundFX.pop();
+            b.remove();
+            numNext++;
+            if (numNext > 10) {
+              const intro = $id('numIntro');
+              intro.style.display = 'flex';
+              intro.innerHTML = `<div style="font-size:3.5rem;">🏆</div>Молодець! Усі числа за ${Math.round((Date.now() - numStart) / 1000)} сек.`;
+              $id('numScore').textContent = '🎉 Готово!';
+              SoundFX.success();
+              launchFireworksBurst(false);
+            } else {
+              $id('numScore').textContent = `Наступне: ${numNext}`;
+            }
+          } else {
+            SoundFX.error();
+            b.style.background = 'radial-gradient(circle at 35% 35%, #fda4af, #e11d48)';
+            setTimeout(() => { b.style.background = ''; }, 450);
+          }
+        };
+        arena.appendChild(b);
+      }
+    }
+
+    initDraw('drawCanvas', (ctx) => {
+      ctx.fillStyle = '#c7d2fe';
+      ctx.font = '800 18px Nunito, sans-serif';
+      ctx.fillText('Ким я хочу стати? 🖍️', 20, 30);
+    });
+
+    renderSlide(1, true);
+
+  </script>
+</body>
+</html>
