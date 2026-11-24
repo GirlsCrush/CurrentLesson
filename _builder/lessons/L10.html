@@ -1,0 +1,451 @@
+<!--META
+{
+  "title": "Урок 10 • Увімкнення та вимкнення комп’ютера та інших пристроїв (2 клас НУШ)",
+  "pill": "НУШ • 2 КЛАС",
+  "brand": "Урок 10: Увімкнення та вимкнення комп’ютера",
+  "emojis": ["⏻", "💡", "🖥️", "🗄️", "📱", "🐧", "🪟", "🤖", "⏳", "✅"],
+  "topic": "nush2-urok10-uvimknennya",
+  "out": "2-klas/urok-10/index.html"
+}
+-->
+<!--SLIDES-->
+      <!-- SLIDE 1 -->
+      <section class="slide active" data-slide="1">
+        <div class="slide-header">
+          <span class="slide-tag">⏻ Урок 10 • Готуємо комп’ютер до роботи</span>
+          <span class="slide-tag" style="background:#fef3c7;color:#92400e;">💡 Натискай на падаючі смайлики!</span>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="hero-grid">
+            <div>
+              <div style="font-size:3.2rem;line-height:1;">⏻ 🖥️ 📱</div>
+              <h1 class="hero-title">Увімкнення та вимкнення комп’ютера</h1>
+              <p class="slide-subtitle" style="font-size:1.25rem;margin-bottom:14px;">
+                Щоб комп’ютер працював довго й надійно, його треба правильно вмикати й вимикати. Навчимося!
+              </p>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <span class="feedback-pill" style="background:#e0e7ff;color:#3730a3;">🖥️ Симулятор комп’ютера</span>
+                <span class="feedback-pill" style="background:#d1fae5;color:#065f46;">🔢 Розстав по порядку</span>
+                <span class="feedback-pill" style="background:#ffe4e6;color:#9f1239;">📱 Кнопка смартфона</span>
+              </div>
+            </div>
+            <div class="mission-box">
+              <div style="font-weight:900;font-size:1.2rem;color:#312e81;">🎯 Готові до роботи?</div>
+              <p style="font-size:0.95rem;color:#475569;margin-top:2px;">Натисни на кожен пункт:</p>
+              <div class="mission-item" onclick="toggleMission(this)"><span>🧼</span><span>Руки чисті й сухі</span></div>
+              <div class="mission-item" onclick="toggleMission(this)"><span>🪑</span><span>Сиджу рівно</span></div>
+              <div class="mission-item" onclick="toggleMission(this)"><span>🤫</span><span>Уважно слухаю вчителя</span></div>
+              <div class="mission-status" style="margin-top:10px;font-weight:800;font-size:0.95rem;color:#4f46e5;">Виконано: 0 з 3</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Знайди пару -->
+      <section class="slide" data-slide="2">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🔤 Розминка</span>
+            <h2 class="slide-title">Гра «Знайди потрібне слово»</h2>
+            <p class="slide-subtitle">Яке слово пасує до першого?</p>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div id="pairQuiz"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Робоче місце -->
+      <section class="slide" data-slide="3">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🧹 Готуємо робоче місце</span>
+            <h2 class="slide-title">Прибери все зайве з робочого місця!</h2>
+            <p class="slide-subtitle">На столі мають бути лише речі, потрібні для роботи. Натискай на зайве — воно зникне.</p>
+          </div>
+          <span class="feedback-pill" id="deskCount" style="background:#d1fae5;color:#065f46;">Прибрано: 0 / 5</span>
+        </div>
+        <div class="slide-body">
+          <div class="scene" id="deskScene" style="background:linear-gradient(#e0f2fe 0 60%, #fde68a 60%);">
+            <div style="position:absolute;left:6%;right:6%;top:58%;height:16px;background:#a16207;border-radius:8px;"></div>
+          </div>
+          <div class="scene-fb" id="deskFb">👆 Що тут зайве?</div>
+          <div class="def-box" data-step="1">🧍 Сиди прямо, не напружуючись, на відстані <b>витягнутої руки</b> від монітора.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Кнопка живлення -->
+      <section class="slide" data-slide="4">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">⏻ Кнопка живлення</span>
+            <h2 class="slide-title">Як виглядає кнопка вмикання?</h2>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div style="display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;">
+            <div style="width:170px;height:170px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#e2e8f0,#94a3b8);border:8px solid #fff;box-shadow:0 12px 28px rgba(15,23,42,.25);display:flex;align-items:center;justify-content:center;font-size:6rem;color:#1e293b;margin:0 auto;">⏻</div>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div class="def-box" style="text-align:left;">Для вмикання призначена кнопка <b>Power</b> (живлення). Її значок — коло з рисочкою ⏻</div>
+              <div class="grid g2" data-step="1">
+                <div class="tile"><div class="em">🖥️</div><div class="ttl">Кнопка на <b>моніторі</b></div></div>
+                <div class="tile"><div class="em">🗄️</div><div class="ttl">Кнопка на <b>системному блоці</b></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Симулятор -->
+      <section class="slide" data-slide="5">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🖥️ Симулятор</span>
+            <h2 class="slide-title">Увімкни й правильно вимкни комп’ютер!</h2>
+          </div>
+          <span class="feedback-pill" id="simCount" style="background:#e0e7ff;color:#3730a3;">Виконано: 0 / 4</span>
+        </div>
+        <div class="slide-body">
+          <div style="display:grid;grid-template-columns:1.4fr 0.6fr;gap:16px;align-items:stretch;">
+            <div style="display:flex;align-items:flex-end;justify-content:center;gap:18px;background:#f8fafc;border:3px solid #c7d2fe;border-radius:22px;padding:14px;">
+              <!-- Системний блок -->
+              <div style="width:110px;height:230px;background:linear-gradient(#475569,#1e293b);border-radius:12px;display:flex;flex-direction:column;align-items:center;padding-top:20px;gap:10px;flex-shrink:0;">
+                <button id="pcBtn" onclick="pcPower()" title="Кнопка живлення системного блока" style="width:64px;height:64px;border-radius:50%;border:4px solid #cbd5e1;background:#334155;color:#fff;font-size:2rem;cursor:pointer;box-shadow:0 5px 0 #0f172a;">⏻</button>
+                <div id="pcLed" style="width:14px;height:14px;border-radius:50%;background:#64748b;"></div>
+                <div style="color:#94a3b8;font-size:.75rem;font-weight:800;text-align:center;">Системний<br>блок</div>
+              </div>
+              <!-- Монітор -->
+              <div style="flex:1;max-width:520px;display:flex;flex-direction:column;align-items:center;">
+                <div style="width:100%;background:#1e293b;border-radius:14px;padding:10px 10px 6px;">
+                  <div id="screen" onclick="screenClick(event)" style="height:clamp(170px,27vh,250px);border-radius:8px;background:#000;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:1.2rem;text-align:center;"></div>
+                  <div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;padding-top:6px;">
+                    <div id="monLed" style="width:10px;height:10px;border-radius:50%;background:#64748b;"></div>
+                    <button id="monBtn" onclick="monPower()" title="Кнопка живлення монітора" style="width:46px;height:46px;border-radius:50%;border:3px solid #cbd5e1;background:#334155;color:#fff;font-size:1.4rem;cursor:pointer;box-shadow:0 4px 0 #0f172a;">⏻</button>
+                  </div>
+                </div>
+                <div style="width:60px;height:22px;background:#334155;"></div>
+                <div style="width:200px;height:10px;background:#334155;border-radius:6px;"></div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div class="mission-item sim-task" id="task1"><span>1️⃣</span><span>Увімкни монітор</span></div>
+              <div class="mission-item sim-task" id="task2"><span>2️⃣</span><span>Увімкни системний блок</span></div>
+              <div class="mission-item sim-task" id="task3"><span>3️⃣</span><span>Дочекайся Робочого столу</span></div>
+              <div class="mission-item sim-task" id="task4"><span>4️⃣</span><span>Вимкни через «Пуск»</span></div>
+              <div id="simFb" class="quiz-fb" style="font-size:1rem;"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: По порядку — вмикання -->
+      <section class="slide" data-slide="6">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🔢 Розстав по порядку</span>
+            <h2 class="slide-title">🟢 Як ми вмикаємо комп’ютер?</h2>
+            <p class="slide-subtitle">Натискай кроки по черзі: що спочатку, а що потім?</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div id="orderOn"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6b: По порядку — вимикання -->
+      <section class="slide" data-slide="6b">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🔢 Розстав по порядку</span>
+            <h2 class="slide-title">🔴 Як ми вимикаємо комп’ютер?</h2>
+            <p class="slide-subtitle">Натискай кроки по черзі: що спочатку, а що потім?</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div id="orderOff"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: ОС -->
+      <section class="slide" data-slide="7">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🧩 Головна програма</span>
+            <h2 class="slide-title">Хто керує комп’ютером?</h2>
+            <p class="slide-subtitle">Після завантаження комп’ютер працює під керівництвом спеціальної програми — операційної системи.</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="grid g4">
+            <div class="tile"><div class="em">🪟</div><div class="ttl">Windows</div></div>
+            <div class="tile"><div class="em">🐧</div><div class="ttl">Linux</div></div>
+            <div class="tile"><div class="em">🤖</div><div class="ttl">Android</div></div>
+            <div class="tile"><div class="em">🍎</div><div class="ttl">macOS</div></div>
+          </div>
+          <div class="tile" data-step="1" style="flex-direction:row;gap:14px;"><div class="em">❓</div><div class="ttl" style="font-size:1.25rem;">Яка з них стоїть на твоєму комп’ютері? А на телефоні?</div></div>
+          <div class="tile" data-step="2" style="flex-direction:row;gap:14px;background:#fef3c7;border-color:#fcd34d;"><div class="em">🐧</div><div class="big-text" style="text-align:left;"><b>Скарбничка:</b> пінгвін Tux — талісман Linux. Його намалював програміст Ларрі Юїнг у 1996 році.</div></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: Смартфон -->
+      <section class="slide" data-slide="8">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">📱 Смартфон і планшет</span>
+            <h2 class="slide-title">Як увімкнути й вимкнути смартфон?</h2>
+            <p class="slide-subtitle">Увімкнути — натиснути кнопку живлення. Вимкнути — <b>утримувати</b> її кілька секунд. Спробуй!</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div style="display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;">
+            <div style="position:relative;width:170px;height:300px;margin:0 auto;">
+              <div id="phoneScreen" style="position:absolute;inset:0;border-radius:28px;border:10px solid #1e293b;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;color:#fff;font-weight:900;text-align:center;font-size:1rem;transition:background .3s;"></div>
+              <button id="phoneBtn" title="Кнопка живлення" style="position:absolute;right:-24px;top:80px;width:24px;height:70px;border-radius:0 10px 10px 0;border:3px solid #f59e0b;background:#fbbf24;cursor:pointer;box-shadow:3px 0 0 #b45309;"></button>
+              <div style="position:absolute;right:-110px;top:92px;font-weight:900;color:#d97706;font-size:.95rem;">⬅ кнопка</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div id="phoneFb" class="def-box" style="text-align:left;">👉 Натисни жовту кнопку збоку телефона.</div>
+              <div class="grid g4" data-step="1">
+                <div class="tile"><div class="em">👆</div><div class="ttl">Дотик</div></div>
+                <div class="tile"><div class="em">👆👆</div><div class="ttl">Подвійний дотик</div></div>
+                <div class="tile"><div class="em">👉</div><div class="ttl">Гортання</div></div>
+                <div class="tile"><div class="em">🤏</div><div class="ttl">Збільшення двома пальцями</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: Фізкультхвилинка -->
+      <section class="slide" data-slide="9">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🤸 Фізкультхвилинка</span>
+            <h2 class="slide-title">Хто здоровим хоче буть!</h2>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="break-grid">
+            <div style="text-align:center;background:#f8fafc;border:2.5px solid #c7d2fe;border-radius:24px;padding:18px;">
+              <div class="timer-circle" id="timerCircle" style="--deg: 360deg;"><div class="timer-inner"><span id="timerText">60</span><span style="font-size:0.75rem;color:#64748b;font-weight:800;">СЕКУНД</span></div></div>
+              <div style="display:flex;gap:8px;justify-content:center;margin-top:14px;">
+                <button class="btn btn-success btn-sm" onclick="startBreakTimer()">▶ Старт</button>
+                <button class="btn btn-accent btn-sm" onclick="pauseBreakTimer()">⏸ Пауза</button>
+                <button class="btn btn-secondary btn-sm" onclick="resetBreakTimer()">🔄 Скинути</button>
+              </div>
+            </div>
+            <div style="background:linear-gradient(135deg,#eef2ff,#fff7ed);border:2.5px solid #818cf8;border-radius:24px;padding:16px;text-align:center;">
+              <div class="poem" style="border:none;font-size:1.18rem;line-height:1.5;">
+                Хто здоровим хоче буть, про зарядку не забудь! 💪<br>
+                Руки вгору, руки вниз, 🙌 на сусіда подивись! 👀<br>
+                Руки вгору, руки в боки 🙆 і зроби чотири кроки! 🚶<br>
+                Дерева високі-високі, 🌳 травичка низенька-низенька 🌱<br>
+                Вітер дерева колише, гойдає, то вниз пригинає 🌬️<br>
+                Птахи з дерев відлітають, 🐦 а учні тихенько на місця сідають 🪑
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: Підсумки -->
+      <section class="slide" data-slide="10">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🏁 Підсумки уроку</span>
+            <h2 class="slide-title">Міркуємо, даємо відповідь</h2>
+          </div>
+          <button class="btn btn-accent" onclick="launchFireworksBurst(true)">🎆 Салют!</button>
+        </div>
+        <div class="slide-body">
+          <div class="grid g3">
+            <div class="tile"><div class="em">🟢</div><div class="ttl">Як правильно ввімкнути комп’ютер?</div><button class="reveal-btn" data-answer="Монітор → системний блок → чекаємо Робочий стіл" onclick="reveal(this)">Перевірити</button></div>
+            <div class="tile" data-step="1"><div class="em">🔴</div><div class="ttl">Як правильно вимкнути?</div><button class="reveal-btn" data-answer="Закрити програми → Пуск → Живлення → Завершити роботу" onclick="reveal(this)">Перевірити</button></div>
+            <div class="tile" data-step="2" style="background:#fef3c7;border-color:#fcd34d;"><div class="em">😴</div><div class="ttl">Цікавинка: є програма «Йди спати» — вона сама вимикає комп’ютер у потрібний час!</div></div>
+          </div>
+          <div data-step="3" style="background:#f1f5f9;border-radius:16px;padding:11px 14px;">
+            <div style="font-weight:900;font-size:1rem;margin-bottom:6px;">🌟 Як тобі урок?</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🚀 Супер!')">🚀 Супер!</button>
+              <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '😊 Цікаво!')">😊 Цікаво!</button>
+              <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🤔 Треба повторити')">🤔 Повторю</button>
+            </div>
+            <div id="reflectionReply" style="margin-top:6px;font-weight:800;font-size:0.9rem;color:#059669;"></div>
+          </div>
+          <div class="t-only teacher-note">Практична робота: «Встанови годинник» (перетягування стрілок). Досліди з дітьми, скільки секунд комп’ютер завантажується. Додатково: <a href="http://learningapps.org/watch?v=puncjg3k5" target="_blank" rel="noopener">LearningApps — Кросворд про пристрої</a>. У папці уроку є розмальовки пристроїв.</div>
+        </div>
+      </section>
+<!--SCRIPT-->
+    // ===== Урок 10 =====
+    makeQuiz('pairQuiz', [
+      { q: 'Системний …', options: ['🗄️ блок', '🖨️ принтер', '🐭 миша'], correct: 0 },
+      { q: 'Кольоровий …', options: ['⌨️ клавіша', '🖨️ принтер', '📏 курсор'], correct: 1 },
+      { q: 'Комп’ютерна …', options: ['🖱️ миша', '🗄️ блок', '🖥️ монітор'], correct: 0 },
+      { q: 'Персональний …', options: ['🍎 яблуко', '💻 комп’ютер', '🌧️ дощ'], correct: 1 },
+      { q: 'Вказівник …', options: ['🖱️ миші', '🌳 дерева', '🍲 супу'], correct: 0 }
+    ], { label: 'Слово', big: true });
+
+    makeScene('deskScene', [
+      { e: '🍕', x: 22, y: 50, msg: '🧹 Їжу прибираємо — їсти за комп’ютером не можна!' },
+      { e: '🧸', x: 84, y: 46, msg: '🧹 Іграшці не місце на робочому столі.' },
+      { e: '🥤', x: 70, y: 48, msg: '🧹 Напій може розлитися на клавіатуру!' },
+      { e: '🎒', x: 10, y: 84, msg: '🧹 Рюкзак ставимо на місце, щоб не заважав.' },
+      { e: '⚽', x: 58, y: 86, msg: '🧹 М’ячу місце на спортмайданчику!' },
+      { e: '🖥️', x: 44, y: 32, size: '4rem', target: false, msg: '✅ Монітор потрібен для роботи — залишаємо.' },
+      { e: '⌨️', x: 42, y: 52, target: false, msg: '✅ Клавіатура потрібна — залишаємо.' },
+      { e: '🖱️', x: 56, y: 52, target: false, msg: '✅ Миша потрібна — залишаємо.' }
+    ], { fb: 'deskFb', counter: 'deskCount', counterText: 'Прибрано', mode: 'remove',
+         onDone: () => { $id('deskFb').innerHTML = '🏆 Робоче місце готове! Можна вмикати комп’ютер.'; } });
+
+    // ---- Симулятор комп'ютера ----
+    let monOn = false, pcOn = false, booting = false, sim = { done: new Set() };
+    const DESKTOP_HTML = `
+      <div style="position:absolute;inset:0;background:linear-gradient(135deg,#0ea5e9,#6366f1);"></div>
+      <div style="position:absolute;left:12px;top:10px;display:flex;flex-direction:column;gap:8px;font-size:1.8rem;">🖥️<span>🗑️</span><span>📁</span></div>
+      <div id="startMenu" style="display:none;position:absolute;left:6px;bottom:38px;background:#fff;color:#1e293b;border-radius:10px;padding:6px;box-shadow:0 8px 20px rgba(0,0,0,.3);font-size:1rem;text-align:left;"></div>
+      <div style="position:absolute;left:0;right:0;bottom:0;height:34px;background:rgba(15,23,42,.85);display:flex;align-items:center;padding:0 6px;">
+        <button onclick="openStart(event)" style="height:28px;padding:0 12px;border-radius:8px;border:none;background:#3b82f6;color:#fff;font-weight:900;font-family:inherit;cursor:pointer;font-size:.95rem;">⊞ Пуск</button>
+      </div>`;
+    function simDone(n, msg) {
+      if (!sim.done.has(n)) {
+        sim.done.add(n);
+        $id('task' + n).classList.add('done');
+        $id('simCount').textContent = `Виконано: ${sim.done.size} / 4`;
+        if (sim.done.size === 4) launchFireworksBurst(false);
+      }
+      simMsg(msg, true);
+    }
+    function simMsg(msg, ok) {
+      const fb = $id('simFb');
+      fb.className = 'quiz-fb ' + (ok ? 'ok' : 'bad');
+      fb.innerHTML = msg;
+    }
+    function renderScreen() {
+      const sc = $id('screen');
+      $id('monLed').style.background = monOn ? '#22c55e' : '#64748b';
+      $id('pcLed').style.background = pcOn ? (booting ? '#f59e0b' : '#22c55e') : '#64748b';
+      if (!monOn) { sc.style.background = '#000'; sc.innerHTML = ''; return; }
+      if (!pcOn) { sc.style.background = '#0f172a'; sc.innerHTML = '<span style="color:#94a3b8;">Немає сигналу 💤</span>'; return; }
+      if (booting) {
+        sc.style.background = '#0f172a';
+        sc.innerHTML = '<div>⏳ Завантаження…<div style="width:200px;height:10px;background:#334155;border-radius:6px;margin:10px auto 0;overflow:hidden;"><div id="bootBar" style="width:0;height:100%;background:#22c55e;transition:width 4s linear;"></div></div></div>';
+        requestAnimationFrame(() => requestAnimationFrame(() => { const b = $id('bootBar'); if (b) b.style.width = '100%'; }));
+        return;
+      }
+      sc.innerHTML = DESKTOP_HTML;
+    }
+    function monPower() {
+      monOn = !monOn;
+      SoundFX.click();
+      renderScreen();
+      if (monOn) simDone(1, '✅ Монітор увімкнено — світиться зелений індикатор!');
+      else simMsg(pcOn ? 'Монітор вимкнено, а комп’ютер ще працює.' : 'Монітор вимкнено.', true);
+    }
+    function pcPower() {
+      if (!pcOn) {
+        if (!monOn) { SoundFX.error(); simMsg('🤔 Спочатку переконайся, що <b>монітор</b> увімкнений!'); return; }
+        pcOn = true;
+        booting = true;
+        SoundFX.click();
+        renderScreen();
+        simDone(2, '✅ Системний блок увімкнено. Чекаємо… нічого не натискаємо!');
+        setTimeout(() => {
+          if (!pcOn) return;
+          booting = false;
+          renderScreen();
+          SoundFX.success();
+          simDone(3, '✅ З’явився Робочий стіл! Комп’ютер готовий до роботи.');
+        }, 4200);
+      } else {
+        SoundFX.error();
+        simMsg(booting ? '⛔ Не натискай нічого, поки комп’ютер завантажується!' : '⛔ Так вимикати не можна! Натисни <b>⊞ Пуск → Живлення → Завершити роботу</b>.');
+      }
+    }
+    function screenClick(e) {
+      if (booting) { SoundFX.error(); simMsg('⛔ Зачекай! Під час завантаження нічого не натискаємо.'); }
+      const m = $id('startMenu');
+      if (m && m.style.display === 'block' && !m.contains(e.target)) m.style.display = 'none';
+    }
+    function openStart(e) {
+      e.stopPropagation();
+      SoundFX.click();
+      const m = $id('startMenu');
+      m.style.display = 'block';
+      m.innerHTML = `<div style="padding:6px 10px;font-weight:800;color:#64748b;">📝 Блокнот</div><div style="padding:6px 10px;font-weight:800;color:#64748b;">🎨 Paint</div>
+        <button onclick="openPowerMenu(event)" style="display:block;width:100%;text-align:left;padding:8px 10px;border:2px solid #3b82f6;border-radius:8px;background:#eff6ff;font-family:inherit;font-weight:900;cursor:pointer;font-size:1rem;">⏻ Живлення ▸</button>`;
+      simMsg('👉 Тепер обери <b>⏻ Живлення</b>.', true);
+    }
+    function openPowerMenu(e) {
+      e.stopPropagation();
+      SoundFX.click();
+      const m = $id('startMenu');
+      m.innerHTML = `<div style="padding:6px 10px;font-weight:800;color:#64748b;">🌙 Сплячий режим</div>
+        <button onclick="shutDown(event)" style="display:block;width:100%;text-align:left;padding:8px 10px;border:2px solid #ef4444;border-radius:8px;background:#fef2f2;font-family:inherit;font-weight:900;cursor:pointer;font-size:1rem;">⏻ Завершити роботу</button>
+        <div style="padding:6px 10px;font-weight:800;color:#64748b;">🔄 Перезавантажити</div>`;
+    }
+    function shutDown(e) {
+      e.stopPropagation();
+      SoundFX.click();
+      const sc = $id('screen');
+      sc.style.background = '#1e3a8a';
+      sc.innerHTML = '⏳ Завершення роботи…';
+      setTimeout(() => {
+        pcOn = false;
+        renderScreen();
+        simDone(4, '✅ Комп’ютер вимкнено правильно! Тепер можна вимкнути монітор.');
+      }, 2000);
+    }
+    renderScreen();
+
+    makeOrder('orderOn', ['🖥️ Перевір, чи увімкнений монітор', '🗄️ Натисни кнопку на системному блоці', '⏳ Дочекайся Робочого столу']);
+    makeOrder('orderOff', ['🪟 Закрий усі програми', '⊞ Натисни «Пуск»', '⏻ Живлення → Завершити роботу']);
+
+    // ---- Смартфон ----
+    let phoneOn = false, holdTimer = null, holdStart = 0;
+    function renderPhone(msg) {
+      const s = $id('phoneScreen');
+      if (phoneOn) {
+        s.style.background = 'linear-gradient(160deg,#22d3ee,#6366f1)';
+        s.innerHTML = '<div style="font-size:2.2rem;">🕐</div><div>12:45</div><div style="font-size:1.6rem;">📞 📷 🎵</div>';
+      } else {
+        s.style.background = '#000';
+        s.innerHTML = '';
+      }
+      if (msg) $id('phoneFb').innerHTML = msg;
+    }
+    const phoneBtn = $id('phoneBtn');
+    phoneBtn.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      holdStart = Date.now();
+      if (!phoneOn) return;
+      let left = 5;
+      $id('phoneFb').innerHTML = `✋ Тримай… ${left}`;
+      holdTimer = setInterval(() => {
+        left--;
+        if (left > 0) { $id('phoneFb').innerHTML = `✋ Тримай… ${left}`; SoundFX.tick(); }
+        else {
+          clearInterval(holdTimer); holdTimer = null;
+          phoneOn = false;
+          SoundFX.success();
+          renderPhone('✅ Телефон вимкнено! Його вимикають, <b>утримуючи</b> кнопку живлення.');
+          launchFireworksBurst(false);
+        }
+      }, 1000);
+    });
+    const phoneUp = () => {
+      const held = Date.now() - holdStart;
+      if (holdTimer) {
+        clearInterval(holdTimer); holdTimer = null;
+        renderPhone('🤔 Щоб вимкнути, кнопку треба <b>тримати</b> довше — 5 секунд!');
+        return;
+      }
+      if (!phoneOn && holdStart && held < 4000) {
+        phoneOn = true;
+        SoundFX.pop();
+        renderPhone('✅ Телефон увімкнено! А тепер спробуй вимкнути — <b>утримуй</b> кнопку.');
+      }
+      holdStart = 0;
+    };
+    phoneBtn.addEventListener('pointerup', phoneUp);
+    phoneBtn.addEventListener('pointerleave', () => { if (holdTimer) phoneUp(); });
+    renderPhone();

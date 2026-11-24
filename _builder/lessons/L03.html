@@ -1,0 +1,456 @@
+<!--META
+{
+  "title": "Урок 3 • Об’єкти навколишнього світу та їх властивості (2 клас НУШ)",
+  "pill": "НУШ • 2 КЛАС",
+  "brand": "Урок 3: Об’єкти та їх властивості",
+  "emojis": ["🌳", "🍎", "🐱", "💻", "☀️", "🏠", "⚽", "🌈", "📏", "🎨"],
+  "topic": "nush2-urok3-obiekty",
+  "out": "2-klas/urok-03/index.html"
+}
+-->
+<!--SLIDES-->
+      <!-- SLIDE 1 -->
+      <section class="slide active" data-slide="1">
+        <div class="slide-header">
+          <span class="slide-tag">🔎 Урок 3 • Об’єкти навколишнього світу</span>
+          <span class="slide-tag" style="background:#fef3c7;color:#92400e;">💡 Натискай на падаючі смайлики!</span>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="hero-grid">
+            <div>
+              <div style="font-size:3.2rem;line-height:1;">🌳 🐱 💻 🌈</div>
+              <h1 class="hero-title">Об’єкти навколишнього світу та їх властивості</h1>
+              <p class="slide-subtitle" style="font-size:1.25rem;margin-bottom:14px;">
+                Усе, що нас оточує, — це об’єкти! Сьогодні ми навчимося їх розрізняти, описувати й упізнавати за властивостями.
+              </p>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <span class="feedback-pill" style="background:#e0e7ff;color:#3730a3;">🧺 Сортування</span>
+                <span class="feedback-pill" style="background:#d1fae5;color:#065f46;">🔎 Опиши об’єкт</span>
+                <span class="feedback-pill" style="background:#ffe4e6;color:#9f1239;">🧩 Хто зайвий?</span>
+              </div>
+            </div>
+            <div class="mission-box">
+              <div style="font-weight:900;font-size:1.2rem;color:#312e81;">🎯 Наша мандрівка сьогодні:</div>
+              <p style="font-size:0.95rem;color:#475569;margin-top:2px;">Натисни на кожен пункт:</p>
+              <div class="mission-item" onclick="toggleMission(this)"><span>🧺</span><span>Розкладу об’єкти по групах</span></div>
+              <div class="mission-item" onclick="toggleMission(this)"><span>🎨</span><span>Опишу колір, форму, розмір</span></div>
+              <div class="mission-item" onclick="toggleMission(this)"><span>🕵️</span><span>Вгадаю об’єкт за описом</span></div>
+              <div class="mission-status" style="margin-top:10px;font-weight:800;font-size:0.95rem;color:#4f46e5;">Виконано: 0 з 3</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: ТБ -->
+      <section class="slide" data-slide="2">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🛡️ Правила безпеки</span>
+            <h2 class="slide-title">Чому вчитель не дозволив працювати?</h2>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="tile" style="padding:24px;">
+            <div style="font-size:5rem;line-height:1;">🧒🧢🧤🧣</div>
+            <div class="big-text" style="max-width:820px;">На вулиці прохолодно, і Інформаша прийшла на урок інформатики <b>у шапці та рукавичках</b>. Учитель не дозволив їй працювати за комп’ютером. Чому?</div>
+            <button class="reveal-btn" style="font-size:1.15rem;" data-answer="✅ У верхньому одязі незручно й небезпечно працювати, а в комп’ютерному класі його вдягати не можна. Спочатку треба роздягнутися!" onclick="reveal(this)">❓ Перевірити відповідь</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Що таке об'єкт -->
+      <section class="slide" data-slide="3">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🧠 Відкриваємо нове</span>
+            <h2 class="slide-title">Що таке об’єкт?</h2>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="def-box">📌 <b>Об’єкт</b> — це частина навколишнього світу, про яку можна говорити як про одне ціле.</div>
+          <div data-step="1" style="font-weight:900;font-size:1.1rem;text-align:center;">🧺 Об’єктами є предмети, живі істоти та явища природи. Розклади картки: натисни на картку, а потім на кошик!</div>
+          <div data-step="1" id="sort3"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Природні і штучні -->
+      <section class="slide" data-slide="4">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🌿 / 🏭 Хто створив?</span>
+            <h2 class="slide-title">Природні та штучні об’єкти</h2>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="grid g2">
+            <div class="tile" style="flex-direction:row;gap:12px;background:#f0fdf4;border-color:#86efac;"><div class="em">🌳</div><div class="big-text" style="text-align:left;"><b>Природні</b> об’єкти створила сама природа: люди, рослини, тварини, моря, гори, сонце й зорі.</div></div>
+            <div data-step="1" class="tile" style="flex-direction:row;gap:12px;background:#eff6ff;border-color:#93c5fd;"><div class="em">🏗️</div><div class="big-text" style="text-align:left;"><b>Штучні</b> об’єкти створили люди: книжки, будинки, комп’ютер, комп’ютерна миша.</div></div>
+          </div>
+          <div data-step="2" id="sort4"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Об'єкти в класі -->
+      <section class="slide" data-slide="5">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🏫 Шукаємо навколо</span>
+            <h2 class="slide-title">Які об’єкти є в нашому класі?</h2>
+            <p class="slide-subtitle">Натискай на об’єкти в кімнаті й називай їх уголос!</p>
+          </div>
+          <span class="feedback-pill" id="roomCount" style="background:#d1fae5;color:#065f46;">Знайдено: 0 / 9</span>
+        </div>
+        <div class="slide-body">
+          <div class="scene" id="roomScene" style="background:linear-gradient(#e0f2fe 0 62%, #fcd9b6 62%);">
+            <div style="position:absolute;left:30%;right:30%;top:8%;height:34%;background:#14532d;border:8px solid #a16207;border-radius:8px;"></div>
+          </div>
+          <div class="scene-fb" id="roomFb">👆 Натисни на дошку, комп’ютер, вікно…</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: Властивості -->
+      <section class="slide" data-slide="6">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🎨 Властивості</span>
+            <h2 class="slide-title">Кожний об’єкт має свої властивості</h2>
+            <p class="slide-subtitle">Переверни картки — подивись, якими можуть бути значення властивостей!</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="flip-grid">
+            <div class="flip-card" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:3.4rem;">🎨</div><div style="font-weight:900;font-size:1.3rem;">Колір</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.15rem;">🔴 червоний<br>🟢 зелений<br>🟡 жовтий…</div>
+            </div></div>
+            <div class="flip-card" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:3.4rem;">🔷</div><div style="font-weight:900;font-size:1.3rem;">Форма</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.15rem;">⚪ кругла<br>🔺 трикутна<br>⬛ квадратна…</div>
+            </div></div>
+            <div class="flip-card" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:3.4rem;">📏</div><div style="font-weight:900;font-size:1.3rem;">Розмір</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.15rem;">🐘 великий<br>🐭 маленький<br>🦒 високий…</div>
+            </div></div>
+            <div class="flip-card" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:3.4rem;">⚖️</div><div style="font-weight:900;font-size:1.3rem;">Маса</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.15rem;">🪶 легкий<br>🪨 важкий<br>або в кілограмах: 30 кг</div>
+            </div></div>
+          </div>
+          <div data-step="1" class="def-box">📌 Кожна <b>властивість</b> об’єкта має своє <b>значення</b>. Наприклад: властивість — <b>колір</b>, значення — <b>червоний</b>.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: Опиши об'єкт -->
+      <section class="slide" data-slide="7">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🔎 Практикум</span>
+            <h2 class="slide-title">Опиши об’єкт за зразком</h2>
+            <p class="slide-subtitle">Обери правильне значення для кожної властивості.</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span class="feedback-pill" id="descNum" style="background:#e0e7ff;color:#3730a3;"></span>
+            <button class="btn btn-sm btn-primary" onclick="nextDescObj()">Інший об’єкт ➡</button>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div style="display:grid;grid-template-columns:0.8fr 1.2fr;gap:18px;align-items:center;">
+            <div class="tile" style="background:#fef3c7;border-color:#fcd34d;">
+              <div style="font-weight:900;color:#92400e;">📋 Зразок</div>
+              <div class="em">🍒</div>
+              <table class="props">
+                <tr><th>Властивість</th><th>Значення</th></tr>
+                <tr><td>Ім’я</td><td>Горобина</td></tr>
+                <tr><td>Колір</td><td>Червоний</td></tr>
+                <tr><td>Розмір</td><td>Маленький</td></tr>
+                <tr><td>Форма</td><td>Кругла</td></tr>
+              </table>
+            </div>
+            <div class="tile" id="descCard">
+              <div class="em" id="descEmoji"></div>
+              <table class="props" id="descTable"></table>
+              <div class="quiz-fb" id="descFb"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: Україна -->
+      <section class="slide" data-slide="8">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🇺🇦 Великий об’єкт</span>
+            <h2 class="slide-title">Навіть країна — це об’єкт!</h2>
+            <p class="slide-subtitle">Які властивості має наша Україна? Натискай на значення, щоб відкрити.</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div style="display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center;">
+            <div style="font-size:7rem;line-height:1;text-align:center;">🇺🇦</div>
+            <table class="props">
+              <tr><th>Властивість</th><th>Значення</th></tr>
+              <tr><td>🏷️ Ім’я</td><td><button class="reveal-btn" data-answer="Україна" onclick="reveal(this)">❓</button></td></tr>
+              <tr><td>🏛️ Столиця</td><td><button class="reveal-btn" data-answer="Київ" onclick="reveal(this)">❓</button></td></tr>
+              <tr><td>🎉 День Незалежності</td><td><button class="reveal-btn" data-answer="24 серпня (з 1991 року)" onclick="reveal(this)">❓</button></td></tr>
+              <tr><td>🎨 Кольори прапора</td><td><button class="reveal-btn" data-answer="💙 Синій і 💛 жовтий" onclick="reveal(this)">❓</button></td></tr>
+              <tr><td>🌊 Вихід до моря</td><td><button class="reveal-btn" data-answer="Так — Чорне та Азовське моря" onclick="reveal(this)">❓</button></td></tr>
+              <tr><td>📏 Розмір</td><td><button class="reveal-btn" data-answer="Найбільша країна, яка повністю розташована в Європі!" onclick="reveal(this)">❓</button></td></tr>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: Відгадай об'єкт -->
+      <section class="slide" data-slide="9">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🕵️ Загадки</span>
+            <h2 class="slide-title">Відгадай об’єкт за властивостями!</h2>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div id="riddleQuiz"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: Фізкультхвилинка -->
+      <section class="slide" data-slide="10">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🤸 Фізкультхвилинка</span>
+            <h2 class="slide-title">Гра «Природне чи штучне?»</h2>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-sm btn-primary" data-tabbtn onclick="showTab(this,'breakBox3','game')">🎲 Гра</button>
+            <button class="btn btn-sm btn-secondary" data-tabbtn onclick="showTab(this,'breakBox3','poem')">🪆 Буратіно</button>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="break-grid">
+            <div style="text-align:center;background:#f8fafc;border:2.5px solid #c7d2fe;border-radius:24px;padding:18px;">
+              <div class="timer-circle" id="timerCircle" style="--deg: 360deg;"><div class="timer-inner"><span id="timerText">60</span><span style="font-size:0.75rem;color:#64748b;font-weight:800;">СЕКУНД</span></div></div>
+              <div style="display:flex;gap:8px;justify-content:center;margin-top:14px;">
+                <button class="btn btn-success btn-sm" onclick="startBreakTimer()">▶ Старт</button>
+                <button class="btn btn-accent btn-sm" onclick="pauseBreakTimer()">⏸ Пауза</button>
+                <button class="btn btn-secondary btn-sm" onclick="resetBreakTimer()">🔄 Скинути</button>
+              </div>
+            </div>
+            <div id="breakBox3" style="background:linear-gradient(135deg,#eef2ff,#fff7ed);border:2.5px solid #818cf8;border-radius:24px;padding:20px;text-align:center;">
+              <div data-tab="game">
+                <div style="font-weight:900;color:#4f46e5;">🌿 ПРИРОДНИЙ — присідай! 🧎 &nbsp;&nbsp; 🏭 ШТУЧНИЙ — плескай! 👏</div>
+                <div id="moveObj" style="font-size:5rem;line-height:1.2;margin:10px 0;">🌳</div>
+                <div id="moveName" style="font-size:1.6rem;font-weight:900;color:#1e1b4b;">Дерево</div>
+                <button class="btn btn-sm btn-secondary" style="margin-top:8px;" onclick="showMoveAnswer()">👁 Перевірити</button>
+                <button class="btn btn-sm btn-primary" style="margin-top:8px;" onclick="nextMoveObj()">🎲 Далі</button>
+                <div id="moveAns" style="margin-top:8px;font-weight:900;font-size:1.1rem;min-height:1.4em;"></div>
+              </div>
+              <div data-tab="poem" style="display:none;">
+                <div class="poem" style="border:none;">
+                  Буратіно потягнувся, 🙆<br>Раз нагнувся, два нагнувся. 🙇<br>Руки в сторони розвів — 🤸<br>Мабуть, ключик загубив. 🔑<br>А щоб ключик відшукати,<br>Треба нам навшпиньки стати! 🩰
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 11: Групи -->
+      <section class="slide" data-slide="11">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🧺 Групуємо</span>
+            <h2 class="slide-title">За якою властивістю об’єднали об’єкти?</h2>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div id="groupQuiz"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 12: Хто зайвий -->
+      <section class="slide" data-slide="12">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🧩 Хто зайвий?</span>
+            <h2 class="slide-title">Знайди зайвий об’єкт!</h2>
+            <p class="slide-subtitle">Подумай, яка властивість у нього інша. Поясни вголос!</p>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div id="oddQuiz"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 13: Підсумки -->
+      <section class="slide" data-slide="13">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🎨 Творча хвилинка • Підсумки</span>
+            <h2 class="slide-title">Намалюй свій об’єкт!</h2>
+          </div>
+          <button class="btn btn-accent" onclick="launchFireworksBurst(true)">🎆 Салют!</button>
+        </div>
+        <div class="slide-body">
+          <div class="studio-wrap">
+            <div>
+              <canvas id="drawCanvas" class="draw-canvas" width="460" height="260"></canvas>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px;">
+                <button class="color-dot active" style="background:#4f46e5;" onclick="setBrushColor('#4f46e5', this)"></button>
+                <button class="color-dot" style="background:#10b981;" onclick="setBrushColor('#10b981', this)"></button>
+                <button class="color-dot" style="background:#facc15;" onclick="setBrushColor('#facc15', this)"></button>
+                <button class="color-dot" style="background:#f43f5e;" onclick="setBrushColor('#f43f5e', this)"></button>
+                <button class="color-dot" style="background:#1e293b;" onclick="setBrushColor('#1e293b', this)"></button>
+                <button class="btn btn-sm btn-secondary" onclick="clearDrawCanvas()">🗑️</button>
+                <button class="btn btn-sm btn-primary" onclick="downloadDrawing('mii-obiekt')">📥</button>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div class="mission-box" style="padding:12px;">
+                <div style="font-weight:900;font-size:1.05rem;">🎤 Розкажи про свій малюнок:</div>
+                <div class="mission-item" onclick="toggleMission(this)">🏷️ Як називається мій об’єкт?</div>
+                <div class="mission-item" onclick="toggleMission(this)">🌿🏭 Він природний чи штучний?</div>
+                <div class="mission-item" onclick="toggleMission(this)">🎨 Який він: колір, форма, розмір?</div>
+                <div class="mission-status" style="margin-top:6px;font-weight:800;color:#4f46e5;">Виконано: 0 з 3</div>
+              </div>
+              <div style="background:#f1f5f9;border-radius:16px;padding:11px 14px;">
+                <div style="font-weight:900;font-size:1rem;margin-bottom:6px;">🌟 Як тобі урок?</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                  <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🚀 Супер!')">🚀 Супер!</button>
+                  <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '😊 Цікаво!')">😊 Цікаво!</button>
+                  <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🤔 Треба повторити')">🤔 Повторю</button>
+                </div>
+                <div id="reflectionReply" style="margin-top:6px;font-weight:800;font-size:0.9rem;color:#059669;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="t-only teacher-note">Робота за комп’ютером: GCompris — «Знайди фрагменти малюнка й перетягни їх на місце». Додатково: <a href="https://www.matific.com/ua/uk/guests/episodes/IdentifyingQuadrilateralsPolygons" target="_blank" rel="noopener">Matific — Розпізнавання многокутників</a>. Відео-фізкультхвилинка «Дружний клас» — у папці уроку.</div>
+        </div>
+      </section>
+<!--SCRIPT-->
+    // ===== Урок 3: власна логіка =====
+
+    // Слайд 3: предмети / істоти / явища
+    makeSorter('sort3', [
+      { t: '📚 Книжка', b: 'thing' }, { t: '✏️ Олівець', b: 'thing' }, { t: '🪑 Стілець', b: 'thing' },
+      { t: '🐱 Кіт', b: 'alive' }, { t: '🌻 Соняшник', b: 'alive' }, { t: '🧒 Дитина', b: 'alive' },
+      { t: '🌧️ Дощ', b: 'nature' }, { t: '🌈 Веселка', b: 'nature' }, { t: '❄️ Снігопад', b: 'nature' }
+    ], [
+      { id: 'thing', label: '🧸 Предмети', bg: '#eff6ff', border: '#60a5fa', color: '#1d4ed8' },
+      { id: 'alive', label: '🐾 Живі істоти', bg: '#f0fdf4', border: '#4ade80', color: '#15803d' },
+      { id: 'nature', label: '⛅ Явища природи', bg: '#fdf4ff', border: '#e879f9', color: '#a21caf' }
+    ]);
+
+    // Слайд 4: природні / штучні
+    makeSorter('sort4', [
+      { t: '🌳 Дерево', b: 'nat' }, { t: '🐟 Рибка', b: 'nat' }, { t: '⛰️ Гора', b: 'nat' }, { t: '☀️ Сонце', b: 'nat' }, { t: '🌊 Море', b: 'nat' },
+      { t: '📕 Книжка', b: 'art' }, { t: '🏠 Будинок', b: 'art' }, { t: '🖱️ Мишка', b: 'art' }, { t: '💻 Комп’ютер', b: 'art' }, { t: '🚲 Велосипед', b: 'art' }
+    ], [
+      { id: 'nat', label: '🌿 Природні', bg: '#f0fdf4', border: '#4ade80', color: '#15803d' },
+      { id: 'art', label: '🏭 Штучні', bg: '#eff6ff', border: '#60a5fa', color: '#1d4ed8' }
+    ]);
+
+    // Слайд 5: клас
+    makeScene('roomScene', [
+      { e: '📝', x: 50, y: 25, msg: '✅ Дошка — штучний об’єкт.', label: 'дошка' },
+      { e: '🪟', x: 12, y: 24, msg: '✅ Вікно — штучний об’єкт.', label: 'вікно' },
+      { e: '🕐', x: 85, y: 18, msg: '✅ Годинник — штучний об’єкт.', label: 'годинник' },
+      { e: '💻', x: 24, y: 66, msg: '✅ Комп’ютер — штучний об’єкт.', label: 'комп’ютер' },
+      { e: '🪑', x: 40, y: 84, msg: '✅ Стілець — штучний об’єкт.', label: 'стілець' },
+      { e: '👩‍🏫', x: 74, y: 58, msg: '✅ Учителька — природний об’єкт, жива істота!', label: 'учителька' },
+      { e: '🧒', x: 58, y: 80, msg: '✅ Учень — природний об’єкт, жива істота!', label: 'учень' },
+      { e: '🪴', x: 90, y: 74, msg: '✅ Квітка — природний об’єкт, рослина!', label: 'квітка' },
+      { e: '🎒', x: 10, y: 84, msg: '✅ Рюкзак — штучний об’єкт.', label: 'рюкзак' }
+    ], { fb: 'roomFb', counter: 'roomCount', mode: 'good',
+         onDone: () => { $id('roomFb').innerHTML = '🏆 Усі знайдено! А сама класна кімната — теж об’єкт! 🏫'; } });
+
+    // Слайд 7: опиши об'єкт
+    const DESC_OBJECTS = [
+      { e: '🍋', name: 'Лимон', props: [['Колір', 'Жовтий', ['Синій', 'Жовтий', 'Фіолетовий']], ['Форма', 'Овальна', ['Квадратна', 'Трикутна', 'Овальна']], ['Смак', 'Кислий', ['Солодкий', 'Кислий', 'Солоний']]] },
+      { e: '🐘', name: 'Слон', props: [['Колір', 'Сірий', ['Сірий', 'Рожевий', 'Зелений']], ['Розмір', 'Великий', ['Крихітний', 'Великий']], ['Маса', 'Важкий', ['Легкий', 'Важкий']]] },
+      { e: '⚽', name: 'М’яч', props: [['Форма', 'Кругла', ['Кругла', 'Квадратна', 'Трикутна']], ['Розмір', 'Середній', ['Як будинок', 'Середній', 'Як мурашка']], ['Природний чи штучний', 'Штучний', ['Природний', 'Штучний']]] },
+      { e: '🐸', name: 'Жабка', props: [['Колір', 'Зелений', ['Зелений', 'Червоний', 'Білий']], ['Розмір', 'Маленький', ['Маленький', 'Величезний']], ['Природний чи штучний', 'Природний', ['Природний', 'Штучний']]] }
+    ];
+    let descIdx = 0;
+    function renderDescObj() {
+      const o = DESC_OBJECTS[descIdx];
+      $id('descNum').textContent = `Об’єкт ${descIdx + 1} з ${DESC_OBJECTS.length}`;
+      $id('descEmoji').textContent = o.e;
+      $id('descFb').innerHTML = '';
+      $id('descCard').style.borderColor = '';
+      const rows = [`<tr><th>Властивість</th><th>Значення</th></tr><tr><td>Ім’я</td><td>${o.name}</td></tr>`];
+      o.props.forEach((p, k) => {
+        rows.push(`<tr><td>${p[0]}</td><td><select class="pick" data-k="${k}" onchange="checkDesc(this)"><option value="">обери…</option>${p[2].map(v => `<option>${v}</option>`).join('')}</select></td></tr>`);
+      });
+      $id('descTable').innerHTML = rows.join('');
+    }
+    function checkDesc(sel) {
+      const o = DESC_OBJECTS[descIdx];
+      const ok = sel.value === o.props[+sel.dataset.k][1];
+      sel.classList.toggle('ok', ok);
+      sel.classList.toggle('bad', !ok && !!sel.value);
+      if (ok) { SoundFX.success(); sel.disabled = true; } else if (sel.value) SoundFX.error();
+      const all = $id('descTable').querySelectorAll('select');
+      if (Array.from(all).every(s => s.classList.contains('ok'))) {
+        $id('descFb').className = 'quiz-fb ok';
+        $id('descFb').textContent = `🎉 Чудово! Ти описав об’єкт «${o.name}»!`;
+        $id('descCard').style.borderColor = '#10b981';
+        launchFireworksBurst(false);
+      }
+    }
+    function nextDescObj() { descIdx = (descIdx + 1) % DESC_OBJECTS.length; SoundFX.click(); renderDescObj(); }
+    renderDescObj();
+
+    // Слайд 9: загадки
+    makeQuiz('riddleQuiz', [
+      { q: '«Невеличкий та сіренький, має лапки коротенькі.<br>Його пташка налякала — і звірятко іншим стало:<br>в голках м’ячик і — мовчок». Хто це?', options: ['🐭 Мишка', '🦔 Їжачок', '🐰 Зайчик'], correct: 1, explain: 'Їжачок! Властивості: маленький, сірий, колючий.' },
+      { q: '«Невеличкий він на зріст, вушки, вуса, довгий хвіст.<br>А на лапках на м’якеньких в нього кігтики гостренькі». Хто це?', options: ['🐶 Песик', '🐹 Хом’як', '🐱 Кіт'], correct: 2, explain: 'Пухнастий кіт! Він — природний об’єкт, жива істота.' },
+      { emoji: '❓', q: 'Білий, пухнастий, холодний, тане на долоні…', options: ['☁️ Хмаринка', '❄️ Сніг', '🐑 Овечка'], correct: 1, explain: 'Сніг! Хмаринка й овечка не холодні 😉' },
+      { emoji: '❓', q: 'Висока, струнка, білокора…', options: ['🌲 Ялинка', '🌳 Береза', '🌴 Пальма'], correct: 1, explain: 'Береза! У неї біла кора.' },
+      { emoji: '❓', q: 'Сірий, довговухий, полохливий…', options: ['🐰 Зайчик', '🐘 Слон', '🦊 Лисиця'], correct: 0, explain: 'Зайчик! Взимку він навіть стає білим.' }
+    ], { label: 'Загадка' });
+
+    // Слайд 10: гра природне/штучне
+    const MOVE_OBJS = [
+      ['🌳', 'Дерево', true], ['🚗', 'Машина', false], ['🐶', 'Собака', true], ['📱', 'Телефон', false],
+      ['🌻', 'Соняшник', true], ['🏠', 'Будинок', false], ['🐟', 'Рибка', true], ['✏️', 'Олівець', false],
+      ['☀️', 'Сонце', true], ['🚲', 'Велосипед', false], ['🍎', 'Яблуко', true], ['🧸', 'Ведмедик-іграшка', false]
+    ];
+    let moveI = 0;
+    function nextMoveObj() {
+      moveI = (moveI + 1 + Math.floor(Math.random() * (MOVE_OBJS.length - 1))) % MOVE_OBJS.length;
+      const m = MOVE_OBJS[moveI];
+      $id('moveObj').textContent = m[0];
+      $id('moveName').textContent = m[1];
+      $id('moveAns').textContent = '';
+      SoundFX.tick();
+    }
+    function showMoveAnswer() {
+      const m = MOVE_OBJS[moveI];
+      $id('moveAns').innerHTML = m[2] ? '🌿 Природний — присідаємо! 🧎' : '🏭 Штучний — плескаємо! 👏';
+      $id('moveAns').style.color = m[2] ? '#15803d' : '#1d4ed8';
+      SoundFX.pop();
+    }
+    timerOnTick = (s) => { if (s > 0 && s % 6 === 0) nextMoveObj(); };
+
+    // Слайд 11: групи
+    makeQuiz('groupQuiz', [
+      { emoji: '🍋 🌻 🐥 ⭐ 🧀', q: 'За якою властивістю об’єднали ці об’єкти?', options: ['📏 Розмір', '🎨 Колір', '⚖️ Маса'], correct: 1, explain: 'За кольором! Значення властивості — жовтий 💛' },
+      { emoji: '⚽ 🍊 🌕 🍩 🕐', q: 'А ці?', options: ['🔷 Форма', '🎨 Колір', '👅 Смак'], correct: 0, explain: 'За формою! Значення — круглий ⚪' },
+      { emoji: '🐘 🏔️ 🐋 🏢 🚢', q: 'А ці?', options: ['🎨 Колір', '🔷 Форма', '📏 Розмір'], correct: 2, explain: 'За розміром! Значення — великий 🐘' },
+      { emoji: '🍓 🚒 🌹 🍅 ❤️', q: 'Яке значення властивості «колір» у цієї групи?', options: ['💚 Зелений', '❤️ Червоний', '💙 Синій'], correct: 1, explain: 'Червоний! Усі ці об’єкти червоні.' }
+    ], { label: 'Група' });
+
+    // Слайд 12: хто зайвий
+    makeQuiz('oddQuiz', [
+      { q: 'Хто зайвий за кольором?', options: ['🍎', '🍓', '🥒', '🍒'], correct: 2, big: true, explain: 'Огірок зелений, а решта — червоні!' },
+      { q: 'Хто зайвий за формою?', options: ['⚽', '🎲', '🏀', '🌕'], correct: 1, explain: 'Кубик квадратний, а решта — круглі!' },
+      { q: 'Хто зайвий за розміром?', options: ['🐘', '🦒', '🐭', '🐋'], correct: 2, explain: 'Мишка маленька, а решта — великі!' },
+      { q: 'Хто зайвий: природний чи штучний?', options: ['🌳', '🐦', '🚗', '🌸'], correct: 2, explain: 'Машину створили люди — вона штучна!' }
+    ], { label: 'Завдання', big: true });
+
+    // Слайд 13: малювалка
+    initDraw('drawCanvas', (ctx) => {
+      ctx.fillStyle = '#c7d2fe';
+      ctx.font = '800 18px Nunito, sans-serif';
+      ctx.fillText('Намалюй будь-який об’єкт 🖍️', 20, 30);
+    });

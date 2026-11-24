@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Інформатика • Урок</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Nunito', 'Segoe UI', sans-serif; color: #1e293b;
+      background: linear-gradient(135deg, #eef6ff 0%, #f5f3ff 48%, #fff7ed 100%); }
+    .hidden { display: none !important; }
+    .btn { border: none; border-radius: 14px; padding: 9px 16px; font-family: inherit; font-weight: 800; font-size: .95rem; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 7px; transition: transform .14s, box-shadow .14s; text-decoration: none; white-space: nowrap; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: linear-gradient(135deg, #4f46e5, #6366f1); color: #fff; box-shadow: 0 6px 16px rgba(79,70,229,.28); }
+    .btn-secondary { background: #fff; color: #3730a3; border: 2px solid #c7d2fe; }
+    .btn-accent { background: linear-gradient(135deg, #f59e0b, #f97316); color: #fff; }
+    .btn-danger { background: #fff; color: #be123c; border: 2px solid #fda4af; }
+    .btn-success { background: linear-gradient(135deg, #10b981, #059669); color: #fff; box-shadow: 0 6px 16px rgba(16,185,129,.28); }
+    .btn-sm { padding: 6px 11px; font-size: .84rem; border-radius: 11px; }
+    .chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; font-size: .82rem; font-weight: 800;
+      background: #f1f5f9; color: #475569; border: 1.5px solid #e2e8f0; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: #94a3b8; }
+    .dot.on { background: #10b981; box-shadow: 0 0 0 3px rgba(16,185,129,.25); }
+    .dot.live { background: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,.25); animation: pulse 1.4s infinite; }
+    @keyframes pulse { 50% { opacity: .4; } }
+    iframe.lesson-frame { border: 0; width: 100%; height: 100%; display: block; background: transparent; }
+
+    /* ===== Учень ===== */
+    #studentView { position: fixed; inset: 0; }
+    #waitScreen { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; padding: 20px; }
+    #waitScreen .big { font-size: 5rem; animation: float 2.4s ease-in-out infinite; }
+    @keyframes float { 50% { transform: translateY(-14px); } }
+    #waitScreen h1 { font-size: clamp(1.6rem, 3.5vw, 2.6rem); font-weight: 900; color: #312e81; }
+    #waitScreen p { font-size: 1.2rem; font-weight: 700; color: #475569; }
+
+    /* ===== Вчитель: каталог ===== */
+    #catalogView { position: fixed; inset: 0; overflow-y: auto; padding: 16px 20px 30px; }
+    .wrap { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; background: rgba(255,255,255,.9);
+      border: 2px solid rgba(99,102,241,.18); border-radius: 20px; padding: 10px 16px; box-shadow: 0 6px 20px rgba(15,23,42,.06); }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 1.1rem; color: #3730a3; }
+    .pill { background: linear-gradient(135deg, #4f46e5, #0ea5e9); color: #fff; padding: 4px 11px; border-radius: 999px; font-size: .8rem; font-weight: 900; }
+    .now { background: linear-gradient(135deg, #312e81, #4338ca); color: #fff; border-radius: 22px; padding: 16px 20px; display: flex; align-items: center;
+      justify-content: space-between; gap: 14px; flex-wrap: wrap; box-shadow: 0 14px 30px rgba(49,46,129,.25); }
+    .now.idle { background: #fff; color: #475569; border: 2.5px dashed #c7d2fe; box-shadow: none; }
+    .now .lbl { font-size: .85rem; font-weight: 800; opacity: .85; }
+    .now .ttl { font-size: 1.35rem; font-weight: 900; }
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tab { background: #fff; border: 2.5px solid #c7d2fe; border-radius: 16px; padding: 10px 20px; font-family: inherit; font-weight: 900; font-size: 1.05rem;
+      color: #3730a3; cursor: pointer; }
+    .tab.active { background: linear-gradient(135deg, #4f46e5, #0ea5e9); color: #fff; border-color: #4f46e5; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+    .card { background: rgba(255,255,255,.95); border: 2.5px solid #e2e8f0; border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column;
+      gap: 10px; box-shadow: 0 6px 16px rgba(15,23,42,.05); }
+    .card.current { border-color: #ef4444; box-shadow: 0 0 0 4px rgba(239,68,68,.15); }
+    .card .num { font-size: .82rem; font-weight: 900; color: #6366f1; }
+    .card .title { font-size: 1.1rem; font-weight: 900; color: #1e1b4b; line-height: 1.25; flex: 1; }
+    .card .meta { font-size: .8rem; font-weight: 700; color: #64748b; }
+    .card .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .empty { text-align: center; padding: 30px; font-weight: 800; color: #64748b; }
+    .hint { font-size: .85rem; font-weight: 700; color: #64748b; }
+
+    /* ===== Вчитель: керування ===== */
+    #controlView { position: fixed; inset: 0; display: flex; flex-direction: column; }
+    .ctrlbar { flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 5px 10px; background: #1e1b4b; color: #fff; flex-wrap: wrap; }
+    .ctrlbar .ttl { font-weight: 900; font-size: .9rem; flex: 1; min-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ctrlbar .btn-sm { padding: 4px 10px; }
+    #teacherFrameWrap { flex: 1; min-height: 0; }
+
+    /* ===== QR ===== */
+    .modal { position: fixed; inset: 0; background: rgba(15,23,42,.55); backdrop-filter: blur(6px); z-index: 50; display: none; align-items: center;
+      justify-content: center; padding: 16px; }
+    .modal.open { display: flex; }
+    .modal-card { background: #fff; border-radius: 26px; padding: 24px; max-width: 440px; width: 100%; text-align: center; border: 3px solid #c7d2fe; }
+    .url-box { background: #f1f5f9; border: 2px solid #cbd5e1; border-radius: 14px; padding: 10px 12px; font-size: .9rem; font-weight: 800; word-break: break-all;
+      margin: 12px 0; user-select: all; }
+  </style>
+</head>
+<body>
+
+  <!-- ======================= УЧЕНЬ ======================= -->
+  <div id="studentView" class="hidden">
+    <div id="waitScreen">
+      <div class="big">🧑‍🏫</div>
+      <h1>Урок ще не почався</h1>
+      <p>Зачекай трошки — учитель зараз відкриє урок, і він з’явиться тут сам!</p>
+      <span class="chip"><span class="dot" id="sNetDot"></span><span id="sNetText">Підключаємося…</span></span>
+    </div>
+    <iframe id="studentFrame" class="lesson-frame hidden" title="Урок" allow="fullscreen; autoplay"></iframe>
+  </div>
+
+  <!-- ======================= ВЧИТЕЛЬ: каталог ======================= -->
+  <div id="catalogView" class="hidden">
+    <div class="wrap">
+      <div class="topbar">
+        <div class="brand"><span class="pill">ВЧИТЕЛЬ</span> Інформатика • Панель уроків</div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <span class="chip"><span class="dot" id="tNetDot"></span><span id="tNetText">Підключаємося…</span></span>
+          <button class="btn btn-sm btn-secondary" onclick="openQR()">📲 Посилання для учнів</button>
+        </div>
+      </div>
+
+      <div class="now idle" id="nowBox"></div>
+
+      <div class="tabs" id="classTabs"></div>
+      <div class="grid" id="lessonGrid"><div class="empty">Завантажуємо список уроків…</div></div>
+      <div class="hint">💡 «Зробити поточним» — учні на своєму посиланні одразу побачать цей урок. «Переглянути» відкриває урок у новій вкладці лише для вас (на учнів не впливає).</div>
+    </div>
+  </div>
+
+  <!-- ======================= ВЧИТЕЛЬ: керування уроком ======================= -->
+  <div id="controlView" class="hidden">
+    <div class="ctrlbar">
+      <button class="btn btn-sm btn-secondary" onclick="showCatalog()">← Усі уроки</button>
+      <span class="dot live"></span>
+      <span class="ttl" id="ctrlTitle"></span>
+      <span class="chip" style="background:transparent;color:#c7d2fe;border-color:#4338ca;"><span class="dot" id="cNetDot"></span><span id="cNetText"></span></span>
+      <button class="btn btn-sm btn-secondary" onclick="openQR()">📲 QR учням</button>
+      <button class="btn btn-sm btn-danger" onclick="endLesson()">⏹ Завершити урок</button>
+    </div>
+    <div id="teacherFrameWrap"><iframe id="teacherFrame" class="lesson-frame" title="Керування уроком" allow="fullscreen; autoplay"></iframe></div>
+  </div>
+
+  <div class="modal" id="qrModal" onclick="if(event.target===this)closeQR()">
+    <div class="modal-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <h3 style="font-weight:900;color:#1e1b4b;">📲 Посилання для учнів</h3>
+        <button class="btn btn-sm btn-secondary" onclick="closeQR()">✕</button>
+      </div>
+      <p style="font-size:.9rem;color:#475569;font-weight:600;margin-top:6px;">Це посилання завжди однакове: учні відкривають його один раз, а урок змінюється сам, коли ви робите інший урок поточним.</p>
+      <div style="margin:14px auto;padding:12px;border:2px solid #e2e8f0;border-radius:18px;display:inline-block;"><canvas id="qrCanvas" width="210" height="210"></canvas></div>
+      <div class="url-box" id="qrUrl"></div>
+      <button class="btn btn-primary" onclick="copyUrl()">📋 Копіювати</button>
+      <div id="copyFb" style="margin-top:8px;font-weight:800;font-size:.85rem;color:#059669;"></div>
+    </div>
+  </div>
+
+  <script>
+    /* ---------- Роль та адреса ---------- */
+    const params = new URLSearchParams(location.search);
+    const isTeacher = params.get('role') === 'teacher';
+    function rootUrl() {
+      const u = new URL(location.href);
+      u.search = ''; u.hash = '';
+      u.pathname = u.pathname.replace(/index\.html$/i, '');
+      return u.toString();
+    }
+    const ROOT = rootUrl();
+    function fnv(str) {
+      let h = 2166136261;
+      for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+      return (h >>> 0).toString(36);
+    }
+    const TOPIC = 'informatyka_shell_' + fnv(ROOT) + '/current';
+
+    /* ---------- Поточний урок ---------- */
+    // { lesson: '2-klas/urok-01/' | null, title, cls, ts }
+    let current = { lesson: null, title: '', cls: '', ts: 0 };
+    let ownState = false;       // вчитель підтримує стан живим (повторно публікує)
+    let manifest = null;
+    let activeClass = null;
+    let loadedTeacherLesson = null;
+    let loadedStudentLesson = null;
+    let wantControl = isTeacher && location.hash === '#control';
+
+    function applyCurrent(data) {
+      if (!data || typeof data.ts !== 'number' || data.ts < current.ts) return;
+      const changed = data.ts !== current.ts;
+      current = { lesson: data.lesson || null, title: data.title || '', cls: data.cls || '', ts: data.ts };
+      if (isTeacher) ownState = true;
+      if (changed) render();
+    }
+
+    /* ---------- Зв’язок: MQTT (усі брокери одразу) + BroadcastChannel ---------- */
+    const BROKERS = ['wss://broker.emqx.io:8084/mqtt', 'wss://broker.hivemq.com:8884/mqtt', 'wss://test.mosquitto.org:8081/mqtt'];
+    const clients = [];
+    let bc = null;
+    try {
+      bc = new BroadcastChannel(TOPIC);
+      bc.onmessage = (e) => {
+        const m = e.data || {};
+        if (m.type === 'current') applyCurrent(m.payload);
+        if (m.type === 'hello' && isTeacher && ownState) publish();
+      };
+      if (!isTeacher) bc.postMessage({ type: 'hello' });
+    } catch (e) {}
+
+    function publish() {
+      const payload = JSON.stringify(current);
+      try { if (bc) bc.postMessage({ type: 'current', payload: current }); } catch (e) {}
+      clients.forEach(c => { try { if (c.connected) c.publish(TOPIC, payload, { qos: 1, retain: true }); } catch (e) {} });
+    }
+
+    function netStatus() {
+      const n = clients.filter(c => c.connected).length;
+      const txt = n ? `Зв’язок є (${n}/${BROKERS.length})` : 'Немає зв’язку з сервером';
+      ['s', 't', 'c'].forEach(p => {
+        const d = document.getElementById(p + 'NetDot'), t = document.getElementById(p + 'NetText');
+        if (d) d.className = 'dot' + (n ? ' on' : '');
+        if (t) t.textContent = txt;
+      });
+    }
+
+    function connectAll() {
+      if (!window.mqtt) return;
+      BROKERS.forEach(url => {
+        try {
+          const c = window.mqtt.connect(url, {
+            clientId: (isTeacher ? 'tsh_' : 'ssh_') + Math.random().toString(36).slice(2, 10),
+            clean: true, connectTimeout: 8000, reconnectPeriod: 5000
+          });
+          c.on('connect', () => { c.subscribe(TOPIC, { qos: 1 }); if (isTeacher && ownState) publish(); netStatus(); });
+          c.on('message', (t, m) => { try { const s = m.toString(); if (s) applyCurrent(JSON.parse(s)); } catch (e) {} });
+          c.on('close', netStatus);
+          c.on('offline', netStatus);
+          c.on('error', () => {});
+          clients.push(c);
+        } catch (e) {}
+      });
+      netStatus();
+    }
+    (function loadMqtt(urls, i = 0) {
+      if (i >= urls.length) { netStatus(); return; }
+      const s = document.createElement('script');
+      s.src = urls[i];
+      s.async = true;
+      s.onload = connectAll;
+      s.onerror = () => loadMqtt(urls, i + 1);
+      document.head.appendChild(s);
+    })(['https://unpkg.com/mqtt@5/dist/mqtt.min.js', 'https://cdn.jsdelivr.net/npm/mqtt@5/dist/mqtt.min.js']);
+
+    // Вчитель тримає стан «живим» на випадок, якщо сервер його забуде
+    setInterval(() => { if (isTeacher && ownState) publish(); }, 20000);
+
+    /* ---------- Відображення ---------- */
+    function render() {
+      if (isTeacher) renderTeacher(); else renderStudent();
+    }
+
+    function renderStudent() {
+      const frame = document.getElementById('studentFrame');
+      const wait = document.getElementById('waitScreen');
+      if (current.lesson) {
+        if (loadedStudentLesson !== current.lesson) {
+          loadedStudentLesson = current.lesson;
+          frame.src = current.lesson;
+        }
+        frame.classList.remove('hidden');
+        wait.classList.add('hidden');
+        document.title = current.title || 'Урок';
+      } else {
+        loadedStudentLesson = null;
+        frame.src = 'about:blank';
+        frame.classList.add('hidden');
+        wait.classList.remove('hidden');
+        document.title = 'Інформатика • Очікуємо урок';
+      }
+    }
+
+    function findLesson(path) {
+      if (!manifest) return null;
+      for (const c of manifest.classes) for (const l of c.lessons) if (l.path === path) return { cls: c, lesson: l };
+      return null;
+    }
+
+    function renderTeacher() {
+      // блок «Зараз іде»
+      const box = document.getElementById('nowBox');
+      if (current.lesson) {
+        box.className = 'now';
+        box.innerHTML = `<div><div class="lbl"><span class="dot live" style="display:inline-block;margin-right:6px;"></span>ЗАРАЗ У КЛАСІ</div>
+          <div class="ttl">${esc(current.cls)} • ${esc(current.title)}</div></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn btn-success" onclick="openControl()">🎛 Керувати презентацією</button>
+            <button class="btn btn-danger" onclick="endLesson()">⏹ Завершити урок</button>
+          </div>`;
+      } else {
+        box.className = 'now idle';
+        box.innerHTML = `<div><div class="lbl">ЗАРАЗ У КЛАСІ</div><div class="ttl" style="color:#64748b;">Урок не обрано — учні бачать екран очікування</div></div>`;
+      }
+      renderGrid();
+      if (wantControl && current.lesson) openControl();
+      if (!document.getElementById('controlView').classList.contains('hidden')) {
+        if (current.lesson) openControl(); else showCatalog();
+      }
+    }
+
+    function renderTabs() {
+      const tabs = document.getElementById('classTabs');
+      tabs.innerHTML = '';
+      manifest.classes.forEach(c => {
+        const b = document.createElement('button');
+        b.className = 'tab' + (c.id === activeClass ? ' active' : '');
+        b.textContent = `${c.name} (${c.lessons.length})`;
+        b.onclick = () => { activeClass = c.id; try { localStorage.setItem('shell_class', c.id); } catch (e) {} renderTabs(); renderGrid(); };
+        tabs.appendChild(b);
+      });
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById('lessonGrid');
+      if (!manifest) return;
+      const cls = manifest.classes.find(c => c.id === activeClass);
+      if (!cls || !cls.lessons.length) { grid.innerHTML = '<div class="empty">У цьому класі ще немає уроків</div>'; return; }
+      grid.innerHTML = '';
+      cls.lessons.forEach(l => {
+        const isCur = current.lesson === l.path;
+        const d = document.createElement('div');
+        d.className = 'card' + (isCur ? ' current' : '');
+        d.innerHTML = `<div class="num">УРОК ${l.num}${isCur ? ' • <span style="color:#ef4444;">🔴 ЗАРАЗ ІДЕ</span>' : ''}</div>
+          <div class="title">${esc(l.title)}</div>
+          <div class="meta">${l.slides ? `🖼️ Слайдів: ${l.slides}` : ''}</div>
+          <div class="actions"></div>`;
+        const a = d.querySelector('.actions');
+        if (isCur) {
+          a.appendChild(mkBtn('🎛 Керувати', 'btn btn-sm btn-success', () => openControl()));
+          a.appendChild(mkBtn('⏹ Завершити', 'btn btn-sm btn-danger', () => endLesson()));
+        } else {
+          a.appendChild(mkBtn('▶ Зробити поточним', 'btn btn-sm btn-primary', () => makeCurrent(cls, l)));
+        }
+        const pv = document.createElement('a');
+        pv.className = 'btn btn-sm btn-secondary';
+        pv.href = l.path + '?role=teacher&preview=1';
+        pv.target = '_blank';
+        pv.rel = 'noopener';
+        pv.textContent = '👁 Переглянути';
+        if (!isCur) a.appendChild(pv);
+        grid.appendChild(d);
+      });
+    }
+
+    function mkBtn(text, cls, fn) {
+      const b = document.createElement('button');
+      b.className = cls; b.textContent = text; b.onclick = fn;
+      return b;
+    }
+    function esc(s) { return String(s || '').replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch])); }
+
+    /* ---------- Дії вчителя ---------- */
+    function makeCurrent(cls, l) {
+      if (current.lesson && current.lesson !== l.path &&
+          !confirm(`Зараз у класі йде «${current.title}». Перемкнути учнів на «${l.title}»?`)) return;
+      current = { lesson: l.path, title: `Урок ${l.num}: ${l.title}`, cls: cls.name, ts: Date.now() };
+      ownState = true;
+      publish();
+      openControl();
+    }
+
+    function endLesson() {
+      if (!confirm('Завершити урок? Учні побачать екран очікування.')) return;
+      current = { lesson: null, title: '', cls: '', ts: Date.now() };
+      ownState = true;
+      publish();
+      showCatalog();
+    }
+
+    function openControl() {
+      if (!current.lesson) return;
+      wantControl = false;
+      if (loadedTeacherLesson !== current.lesson) {
+        loadedTeacherLesson = current.lesson;
+        document.getElementById('teacherFrame').src = current.lesson + '?role=teacher';
+      }
+      document.getElementById('ctrlTitle').textContent = `${current.cls} • ${current.title}`;
+      document.getElementById('catalogView').classList.add('hidden');
+      document.getElementById('controlView').classList.remove('hidden');
+      document.title = '🎛 ' + current.title;
+      if (location.hash !== '#control') history.replaceState(null, '', '?role=teacher#control');
+    }
+
+    function showCatalog() {
+      document.getElementById('controlView').classList.add('hidden');
+      document.getElementById('catalogView').classList.remove('hidden');
+      document.title = 'Інформатика • Панель уроків';
+      if (!current.lesson) { loadedTeacherLesson = null; document.getElementById('teacherFrame').src = 'about:blank'; }
+      history.replaceState(null, '', '?role=teacher');
+      renderTeacher();
+    }
+
+    /* ---------- QR ---------- */
+/*__QR__*/
+
+    function openQR() {
+      document.getElementById('qrUrl').textContent = ROOT;
+      document.getElementById('copyFb').textContent = '';
+      QRCanvas.draw(document.getElementById('qrCanvas'), ROOT);
+      document.getElementById('qrModal').classList.add('open');
+    }
+    function closeQR() { document.getElementById('qrModal').classList.remove('open'); }
+    function copyUrl() {
+      const fb = document.getElementById('copyFb');
+      (navigator.clipboard ? navigator.clipboard.writeText(ROOT) : Promise.reject())
+        .then(() => fb.textContent = '✅ Скопійовано!')
+        .catch(() => fb.textContent = 'Виділіть посилання й натисніть Ctrl+C');
+    }
+
+    /* ---------- Старт ---------- */
+    if (isTeacher) {
+      document.getElementById('catalogView').classList.remove('hidden');
+      fetch('lessons.json', { cache: 'no-store' })
+        .then(r => r.json())
+        .then(m => {
+          manifest = m;
+          let saved = null;
+          try { saved = localStorage.getItem('shell_class'); } catch (e) {}
+          activeClass = (m.classes.find(c => c.id === saved) || m.classes[0] || {}).id;
+          renderTabs();
+          renderTeacher();
+        })
+        .catch(() => { document.getElementById('lessonGrid').innerHTML = '<div class="empty">⚠️ Не вдалося завантажити lessons.json</div>'; });
+      renderTeacher();
+    } else {
+      document.getElementById('studentView').classList.remove('hidden');
+      // Запасний варіант: ?lesson=2-klas/urok-01/ відкриває конкретний урок без вчителя
+      const direct = params.get('lesson');
+      if (direct && /^[\w\-\/]+\/$/.test(direct)) applyCurrent({ lesson: direct, title: 'Урок', ts: 1 });
+      renderStudent();
+    }
+  </script>
+</body>
+</html>

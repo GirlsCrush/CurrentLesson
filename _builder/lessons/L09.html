@@ -1,0 +1,344 @@
+<!--META
+{
+  "title": "Урок 9 • Комп’ютер та його складові (2 клас НУШ)",
+  "pill": "НУШ • 2 КЛАС",
+  "brand": "Урок 9: Комп’ютер та його складові",
+  "emojis": ["🖥️", "⌨️", "🖱️", "🖨️", "💻", "📱", "🔈", "🧠", "💾", "🗄️"],
+  "topic": "nush2-urok9-skladovi",
+  "out": "2-klas/urok-09/index.html"
+}
+-->
+<!--SLIDES-->
+      <!-- SLIDE 1 -->
+      <section class="slide active" data-slide="1">
+        <div class="slide-header">
+          <span class="slide-tag">🖥️ Урок 9 • Комп’ютер та його складові</span>
+          <span class="slide-tag" style="background:#fef3c7;color:#92400e;">💡 Натискай на падаючі смайлики!</span>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="hero-grid">
+            <div>
+              <div style="font-size:3.2rem;line-height:1;">🖥️ ⌨️ 🖱️ 🖨️</div>
+              <h1 class="hero-title">Комп’ютер та його складові</h1>
+              <p class="slide-subtitle" style="font-size:1.25rem;margin-bottom:14px;">
+                З чого складається комп’ютер? Як інформація потрапляє в нього і як виходить назовні? Розберемося!
+              </p>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <span class="feedback-pill" style="background:#e0e7ff;color:#3730a3;">🔎 Дослідимо комп’ютер</span>
+                <span class="feedback-pill" style="background:#d1fae5;color:#065f46;">🧺 Введення і виведення</span>
+                <span class="feedback-pill" style="background:#ffe4e6;color:#9f1239;">🖱️ Ліва чи права?</span>
+              </div>
+            </div>
+            <div class="mission-box">
+              <div style="font-weight:900;font-size:1.2rem;color:#312e81;">🎯 Що я вже знаю?</div>
+              <p style="font-size:0.95rem;color:#475569;margin-top:2px;">Натисни, якщо знаєш:</p>
+              <div class="mission-item" onclick="toggleMission(this)"><span>🖥️</span><span>Що таке монітор</span></div>
+              <div class="mission-item" onclick="toggleMission(this)"><span>🖱️</span><span>Як тримати мишу</span></div>
+              <div class="mission-item" onclick="toggleMission(this)"><span>💻</span><span>Чим ноутбук відрізняється від ПК</span></div>
+              <div class="mission-status" style="margin-top:10px;font-weight:800;font-size:0.95rem;color:#4f46e5;">Виконано: 0 з 3</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Стаціонарні і портативні -->
+      <section class="slide" data-slide="2">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">💻 Які бувають комп’ютери</span>
+            <h2 class="slide-title">Стаціонарні та портативні</h2>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="grid g2">
+            <div class="tile" style="flex-direction:row;gap:12px;background:#eff6ff;border-color:#93c5fd;"><div class="em">🖥️</div><div class="big-text" style="text-align:left;"><b>Стаціонарний</b> комп’ютер стоїть на столі на одному місці. Його пристрої — окремі частини.</div></div>
+            <div class="tile" data-step="1" style="flex-direction:row;gap:12px;background:#f0fdf4;border-color:#86efac;"><div class="em">💻</div><div class="big-text" style="text-align:left;"><b>Портативний</b> (ноутбук, планшет, смартфон) — усе в одному корпусі. Його легко носити з собою!</div></div>
+          </div>
+          <div data-step="2" id="typeSorter"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Складові -->
+      <section class="slide" data-slide="3">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🔎 Досліджуємо</span>
+            <h2 class="slide-title">З чого складається комп’ютер?</h2>
+            <p class="slide-subtitle">Натисни на кожну частину комп’ютера.</p>
+          </div>
+          <span class="feedback-pill" id="pcCount" style="background:#d1fae5;color:#065f46;">Знайдено: 0 / 6</span>
+        </div>
+        <div class="slide-body">
+          <div class="scene" id="pcScene" style="background:linear-gradient(#e0f2fe 0 62%, #fde68a 62%);">
+            <div style="position:absolute;left:6%;right:6%;top:60%;height:16px;background:#a16207;border-radius:8px;"></div>
+          </div>
+          <div class="scene-fb" id="pcFb">👆 Натисни на монітор, клавіатуру, мишу…</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Загадки -->
+      <section class="slide" data-slide="4">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🧩 Загадки</span>
+            <h2 class="slide-title">Відгадай частину комп’ютера!</h2>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div id="riddleQuiz"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Всередині системного блока -->
+      <section class="slide" data-slide="5">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🗄️ Зазирнемо всередину</span>
+            <h2 class="slide-title">Що ховається в системному блоці?</h2>
+            <p class="slide-subtitle">До системного блока підключають монітор, клавіатуру, мишу. А всередині — найголовніше! Переверни картки.</p>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="grid g2" style="max-width:820px;margin:0 auto;width:100%;">
+            <div class="flip-card" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:4rem;">🧠</div><div style="font-weight:900;font-size:1.4rem;">Процесор</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.2rem;">«Мозок» комп’ютера: <b>опрацьовує</b> інформацію — рахує, порівнює, вирішує.</div>
+            </div></div>
+            <div class="flip-card" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:4rem;">💾</div><div style="font-weight:900;font-size:1.4rem;">Пам’ять</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.2rem;"><b>Зберігає</b> інформацію: малюнки, ігри, мультики й програми.</div>
+            </div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: Введення і виведення -->
+      <section class="slide" data-slide="6">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">↔️ Як інформація подорожує</span>
+            <h2 class="slide-title">Пристрої введення та виведення</h2>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="grid g2">
+            <div class="tile" style="flex-direction:row;gap:12px;padding:10px 14px;background:#eff6ff;border-color:#93c5fd;"><div class="em" style="font-size:2.2rem;">⬅️💻</div><div class="big-text" style="text-align:left;font-size:1.05rem;"><b>Введення</b> — інформація потрапляє В комп’ютер: клавіатура, миша, сканер.</div></div>
+            <div class="tile" data-step="1" style="flex-direction:row;gap:12px;padding:10px 14px;background:#fff7ed;border-color:#fdba74;"><div class="em" style="font-size:2.2rem;">💻➡️</div><div class="big-text" style="text-align:left;font-size:1.05rem;"><b>Виведення</b> — інформація виходить З комп’ютера до нас: монітор, принтер.</div></div>
+          </div>
+          <div data-step="2" id="ioSorter"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: Миша -->
+      <section class="slide" data-slide="7">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🖱️ Тренуємося</span>
+            <h2 class="slide-title">Ліва чи права кнопка?</h2>
+            <p class="slide-subtitle">Долоня лежить на миші. Вказівний палець — на лівій кнопці, середній — на правій.</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span class="feedback-pill" id="lrScore" style="background:#e0e7ff;color:#3730a3;">Правильно: 0 / 8</span>
+            <button class="btn btn-sm btn-primary" onclick="startLR()">▶ Почати</button>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="click-arena" id="lrArena" oncontextmenu="return false;" style="display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;">
+            <div id="lrTask" style="font-size:clamp(1.6rem,3vw,2.4rem);font-weight:900;color:#4f46e5;text-align:center;">Натисни «▶ Почати»</div>
+            <div id="lrTarget" style="width:150px;height:150px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#c7d2fe,#6366f1);border:6px solid #fff;box-shadow:0 10px 24px rgba(79,70,229,.35);display:flex;align-items:center;justify-content:center;font-size:4rem;cursor:pointer;">🖱️</div>
+            <div id="lrFb" class="quiz-fb"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: Фізкультхвилинка -->
+      <section class="slide" data-slide="8">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🤸 Фізкультхвилинка</span>
+            <h2 class="slide-title">Сильний вітер</h2>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-sm btn-primary" data-tabbtn onclick="showTab(this,'breakBox','move')">🌬️ Вітер</button>
+            <button class="btn btn-sm btn-secondary" data-tabbtn onclick="showTab(this,'breakBox','eyes')">👀 Для очей</button>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="break-grid">
+            <div style="text-align:center;background:#f8fafc;border:2.5px solid #c7d2fe;border-radius:24px;padding:18px;">
+              <div class="timer-circle" id="timerCircle" style="--deg: 360deg;"><div class="timer-inner"><span id="timerText">60</span><span style="font-size:0.75rem;color:#64748b;font-weight:800;">СЕКУНД</span></div></div>
+              <div style="display:flex;gap:8px;justify-content:center;margin-top:14px;">
+                <button class="btn btn-success btn-sm" onclick="startBreakTimer()">▶ Старт</button>
+                <button class="btn btn-accent btn-sm" onclick="pauseBreakTimer()">⏸ Пауза</button>
+                <button class="btn btn-secondary btn-sm" onclick="resetBreakTimer()">🔄 Скинути</button>
+              </div>
+            </div>
+            <div id="breakBox" style="background:linear-gradient(135deg,#eef2ff,#fff7ed);border:2.5px solid #818cf8;border-radius:24px;padding:20px;text-align:center;">
+              <div data-tab="move">
+                <div style="font-size:3rem;">🌬️🌳</div>
+                <div class="poem" style="border:none;font-size:1.25rem;">
+                  Сильний вітер до землі гне дерева молоді. 🙇<br>
+                  А вони ростуть, міцніють, вгору тягнуться, радіють. 🙆<br>
+                  Вітер віє нам в лице — захиталось деревце. 🌳<br>
+                  Вітерець все тихше, тихше — деревце все вище, вище! 🙌
+                </div>
+              </div>
+              <div data-tab="eyes" style="display:none;">
+                <div style="font-size:3rem;">👀✨</div>
+                <div class="poem" style="border:none;">
+                  Сядь рівно на стілець 🪑<br>
+                  Заплющ очі… і розплющ! 😌<br>
+                  🔁 Повтори 3–4 рази спокійно
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: Цікавинки -->
+      <section class="slide" data-slide="9">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">💎 Цікавинки</span>
+            <h2 class="slide-title">Чому мишу назвали мишею?</h2>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="grid g2">
+            <div class="tile" style="padding:22px;">
+              <div class="em">📦🛞</div>
+              <div class="big-text">Перша комп’ютерна миша була <b>дерев’яною коробочкою з коліщатками</b>.</div>
+              <button class="reveal-btn" data-answer="🐭 Від неї до комп’ютера тягнувся дріт — зовсім як мишачий хвостик!" onclick="reveal(this)">❓ Чому «миша»?</button>
+            </div>
+            <div class="tile" data-step="1" style="padding:22px;">
+              <div class="em">📱💻📲</div>
+              <div class="big-text">Смартфон, планшет і ноутбук — теж комп’ютери! У них усе в одному корпусі.</div>
+              <button class="reveal-btn" data-answer="👆 Пальцем! Екран сам відчуває дотик." onclick="reveal(this)">❓ Чим замінити мишу на планшеті?</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: Кросворд -->
+      <section class="slide" data-slide="10">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">✏️ Кросворд</span>
+            <h2 class="slide-title">Впиши слово по літерах!</h2>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;gap:8px;">
+          <div class="rebus-card" style="align-items:flex-start;"><div class="ttl" style="font-weight:900;font-size:1.2rem;">1️⃣ 🖥️ Комп’ютерний пристрій з екраном</div><div class="letter-boxes" id="cw1"></div></div>
+          <div class="rebus-card" data-step="1" style="align-items:flex-start;"><div class="ttl" style="font-weight:900;font-size:1.2rem;">2️⃣ ⌨️ Комп’ютерний пристрій з клавішами</div><div class="letter-boxes" id="cw2"></div></div>
+          <div class="rebus-card" data-step="2" style="align-items:flex-start;"><div class="ttl" style="font-weight:900;font-size:1.2rem;">3️⃣ 🐭 Помічник комп’ютера «з хвостиком»</div><div class="letter-boxes" id="cw3"></div></div>
+          <button class="btn btn-sm btn-secondary t-only" style="align-self:center;" onclick="cw.forEach(c => c.showAnswer())">👁 Показати відповіді</button>
+        </div>
+      </section>
+
+      <!-- SLIDE 11: Підсумки -->
+      <section class="slide" data-slide="11">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🏁 Підсумки уроку</span>
+            <h2 class="slide-title">Що ми сьогодні дізналися?</h2>
+          </div>
+          <button class="btn btn-accent" onclick="launchFireworksBurst(true)">🎆 Салют!</button>
+        </div>
+        <div class="slide-body">
+          <div class="grid g3">
+            <div class="tile"><div class="em">🖥️⌨️🖱️🗄️</div><div class="ttl">Назви 4 частини стаціонарного комп’ютера</div><button class="reveal-btn" data-answer="Системний блок, монітор, клавіатура, миша" onclick="reveal(this)">Перевірити</button></div>
+            <div class="tile" data-step="1"><div class="em">⬅️💻</div><div class="ttl">Назви пристрої введення</div><button class="reveal-btn" data-answer="Клавіатура, миша, сканер, мікрофон" onclick="reveal(this)">Перевірити</button></div>
+            <div class="tile" data-step="2"><div class="em">💻➡️</div><div class="ttl">Назви пристрої виведення</div><button class="reveal-btn" data-answer="Монітор, принтер, колонки" onclick="reveal(this)">Перевірити</button></div>
+          </div>
+          <div data-step="3" style="background:#f1f5f9;border-radius:16px;padding:11px 14px;">
+            <div style="font-weight:900;font-size:1rem;margin-bottom:6px;">🌟 Як тобі урок?</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🚀 Супер!')">🚀 Супер!</button>
+              <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '😊 Цікаво!')">😊 Цікаво!</button>
+              <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🤔 Треба повторити')">🤔 Повторю</button>
+            </div>
+            <div id="reflectionReply" style="margin-top:6px;font-weight:800;font-size:0.9rem;color:#059669;"></div>
+          </div>
+          <div class="t-only teacher-note">Практична робота: «Сходинки» (Збери малюнок) або інша вправа з мишею. Додатково: <a href="https://learningapps.org/watch?v=p8kv74cmc18" target="_blank" rel="noopener">LearningApps — Пристрої комп’ютера</a>.</div>
+        </div>
+      </section>
+<!--SCRIPT-->
+    // ===== Урок 9 =====
+    makeSorter('typeSorter', [
+      { t: '🖥️ Комп’ютер у класі', b: 'st' }, { t: '🖥️ Моноблок', b: 'st' },
+      { t: '💻 Ноутбук', b: 'po' }, { t: '📱 Смартфон', b: 'po' }, { t: '📲 Планшет', b: 'po' }
+    ], [
+      { id: 'st', label: '🏠 Стаціонарні', bg: '#eff6ff', border: '#60a5fa', color: '#1d4ed8' },
+      { id: 'po', label: '🎒 Портативні', bg: '#f0fdf4', border: '#4ade80', color: '#15803d' }
+    ]);
+
+    makeScene('pcScene', [
+      { e: '🖥️', x: 48, y: 34, size: '4.2rem', msg: '🖥️ <b>Монітор</b> — показує нам зображення.', label: 'монітор' },
+      { e: '🗄️', x: 16, y: 40, size: '4.2rem', msg: '🗄️ <b>Системний блок</b> — головна частина. До нього підключають усі пристрої.', label: 'системний блок' },
+      { e: '⌨️', x: 46, y: 78, size: '3.6rem', msg: '⌨️ <b>Клавіатура</b> — щоб вводити букви й цифри.', label: 'клавіатура' },
+      { e: '🖱️', x: 66, y: 80, msg: '🖱️ <b>Миша</b> — керує вказівником на екрані.', label: 'миша' },
+      { e: '🔈', x: 72, y: 42, msg: '🔈 <b>Колонки</b> — щоб чути звук.', label: 'колонки' },
+      { e: '🖨️', x: 88, y: 46, size: '3.4rem', msg: '🖨️ <b>Принтер</b> — друкує на папері.', label: 'принтер' }
+    ], { fb: 'pcFb', counter: 'pcCount', mode: 'good',
+         onDone: () => { $id('pcFb').innerHTML = '🏆 Ти знаєш усі частини комп’ютера!'; } });
+
+    makeQuiz('riddleQuiz', [
+      { q: '«Подивись у це вікно. Знаєш, чарівне воно.<br>На вікні немає штор. Що це, діти?»', options: ['🖥️ Монітор', '🖨️ Принтер', '🖱️ Миша'], correct: 0, explain: 'Монітор! На ньому ми бачимо інформацію.' },
+      { q: '«Є багато різних кнопок і струнка статура.<br>Відгадайте, діти, що це?»', options: ['🗄️ Системний блок', '⌨️ Клавіатура', '🔈 Колонки'], correct: 1, explain: 'Клавіатура! Нею вводять інформацію в комп’ютер.' },
+      { q: '«Має хвостик, очі-кнопки, не боїться кішки!<br>Під долонею працює…»', options: ['🖱️ Миша', '📱 Смартфон', '🖥️ Монітор'], correct: 0, explain: 'Миша! Коли рухаєш її, рухається вказівник на екрані.' },
+      { q: '«Що це за поважний загадковий коробок?<br>Лампочкою посміхнувся… Діти, це…»', options: ['🖨️ Принтер', '⌨️ Клавіатура', '🗄️ Системний блок'], correct: 2, explain: 'Системний блок! Усередині — процесор і пам’ять.' }
+    ], { label: 'Загадка', big: true });
+
+    makeSorter('ioSorter', [
+      { t: '⌨️ Клавіатура', b: 'in' }, { t: '🖱️ Миша', b: 'in' }, { t: '📠 Сканер', b: 'in' }, { t: '🎤 Мікрофон', b: 'in' },
+      { t: '🖥️ Монітор', b: 'out' }, { t: '🖨️ Принтер', b: 'out' }, { t: '🔈 Колонки', b: 'out' }, { t: '🎧 Навушники', b: 'out' }
+    ], [
+      { id: 'in', label: '⬅️ Введення', bg: '#eff6ff', border: '#60a5fa', color: '#1d4ed8' },
+      { id: 'out', label: '➡️ Виведення', bg: '#fff7ed', border: '#fb923c', color: '#c2410c' }
+    ]);
+
+    // Ліва / права кнопка
+    let lrNeed = null, lrScore = 0, lrRound = 0;
+    function nextLR() {
+      lrNeed = Math.random() < 0.5 ? 0 : 2;
+      $id('lrTask').innerHTML = lrNeed === 0 ? '👈 Натисни <u>ЛІВОЮ</u> кнопкою' : 'Натисни <u>ПРАВОЮ</u> кнопкою 👉';
+    }
+    function startLR() {
+      lrScore = 0; lrRound = 0;
+      $id('lrScore').textContent = 'Правильно: 0 / 8';
+      $id('lrFb').textContent = '';
+      SoundFX.click();
+      nextLR();
+    }
+    $id('lrTarget').addEventListener('mousedown', (e) => {
+      if (lrNeed === null) return;
+      e.preventDefault();
+      const fb = $id('lrFb');
+      if (e.button === lrNeed) {
+        lrScore++;
+        SoundFX.success();
+        fb.className = 'quiz-fb ok';
+        fb.textContent = e.button === 0 ? '✅ Так! Ліва кнопка — вибирає й натискає.' : '✅ Так! Права кнопка — відкриває меню.';
+      } else {
+        SoundFX.error();
+        fb.className = 'quiz-fb bad';
+        fb.textContent = '🤔 Інша кнопка! Подивись, де вказівний палець.';
+        return;
+      }
+      lrRound++;
+      $id('lrScore').textContent = `Правильно: ${lrScore} / 8`;
+      if (lrRound >= 8) {
+        lrNeed = null;
+        $id('lrTask').innerHTML = '🏆 Молодець! Ти розрізняєш кнопки миші!';
+        launchFireworksBurst(false);
+      } else {
+        nextLR();
+      }
+    });
+
+    const cw = [
+      buildRiddle('cw1', 'МОНІТОР', () => $id('cw1').closest('.rebus-card').classList.add('solved')),
+      buildRiddle('cw2', 'КЛАВІАТУРА', () => $id('cw2').closest('.rebus-card').classList.add('solved')),
+      buildRiddle('cw3', 'МИША', () => $id('cw3').closest('.rebus-card').classList.add('solved'))
+    ];

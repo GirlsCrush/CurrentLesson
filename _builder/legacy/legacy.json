@@ -1,0 +1,29 @@
+[
+  {
+    "src": "4-klas-urok-09.html",
+    "out": "4-klas/urok-09/index.html",
+    "engine": "nush4",
+    "rules": {
+      "2": [".slide-body > div:nth-child(2)", ".slide-body > div:nth-child(3)"],
+      "3": [".slide-body > div:nth-child(2)"],
+      "6": [".pc-sim-grid"],
+      "7": [".device-card:nth-child(3), .device-card:nth-child(4)", ".device-card:nth-child(5), .device-card:nth-child(6)"],
+      "9": [".slide-body > div:nth-child(2)"],
+      "11": [".slide-body > div:nth-child(2)"]
+    }
+  },
+  {
+    "src": "3-klas-urok-08.html",
+    "out": "3-klas/urok-08/index.html",
+    "engine": "nush3",
+    "rules": {
+      "3": [".charade-layout > div:nth-child(2)"],
+      "4": [".charade-layout > div:nth-child(2)"],
+      "5": [".tux-card"],
+      "6": [".obj-card:nth-child(3), .obj-card:nth-child(4)", ".slide-body > div:nth-child(2), .slide-body > div:nth-child(3)"],
+      "10": [".puzzle-card:nth-child(2)"],
+      "11": [".win-workspace"],
+      "12": [".draw-box"]
+    }
+  }
+]

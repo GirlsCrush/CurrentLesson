@@ -1,0 +1,532 @@
+<!--META
+{
+  "title": "Урок 1 • Правила поведінки та безпеки (2 клас НУШ)",
+  "pill": "НУШ • 2 КЛАС",
+  "brand": "Урок 1: Правила поведінки та безпеки",
+  "emojis": ["💻", "🖱️", "⌨️", "🛡️", "⚡", "🧼", "🏫", "📚", "⭐", "🚀"],
+  "topic": "nush2-urok1-bezpeka",
+  "out": "2-klas/urok-01/index.html"
+}
+-->
+<!--SLIDES-->
+      <!-- SLIDE 1 -->
+      <section class="slide active" data-slide="1">
+        <div class="slide-header">
+          <span class="slide-tag">🏫 Урок 1 • Перший раз у комп’ютерному класі</span>
+          <span class="slide-tag" style="background:#fef3c7;color:#92400e;">💡 Натискай на падаючі смайлики!</span>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="hero-grid">
+            <div>
+              <div style="font-size:3.4rem;line-height:1;">💻 🛡️ 🧒</div>
+              <h1 class="hero-title">Правила поведінки та безпеки</h1>
+              <p class="slide-subtitle" style="font-size:1.25rem;margin-bottom:14px;">
+                Вітаємо в комп’ютерному класі! Сьогодні ми дізнаємося, що таке інформатика, і вивчимо правила, щоб комп’ютер був нашим другом, а не небезпекою.
+              </p>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <span class="feedback-pill" style="background:#e0e7ff;color:#3730a3;">🧩 Загадки</span>
+                <span class="feedback-pill" style="background:#d1fae5;color:#065f46;">🕵️ Знайди порушення</span>
+                <span class="feedback-pill" style="background:#ffe4e6;color:#9f1239;">🖱️ Гра з мишею</span>
+              </div>
+            </div>
+            <div class="mission-box">
+              <div style="font-weight:900;font-size:1.2rem;color:#312e81;">🎯 Чи готовий ти до уроку?</div>
+              <p style="font-size:0.95rem;color:#475569;margin-top:2px;">Натисни на кожен пункт:</p>
+              <div class="mission-item" onclick="toggleMission(this)"><span>🤫</span><span>Я тихо зайшов (зайшла) до класу</span></div>
+              <div class="mission-item" onclick="toggleMission(this)"><span>🧼</span><span>У мене чисті руки</span></div>
+              <div class="mission-item" onclick="toggleMission(this)"><span>🪑</span><span>Я сиджу рівно і слухаю</span></div>
+              <div class="mission-status" style="margin-top:10px;font-weight:800;font-size:0.95rem;color:#4f46e5;">Виконано: 0 з 3</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Загадка ЗНАННЯ -->
+      <section class="slide" data-slide="2">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🔤 Розминка</span>
+            <h2 class="slide-title">Що дитина знаходить у школі?</h2>
+            <p class="slide-subtitle">Слухай підказки й натискай на картки — з’являтимуться літери!</p>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;gap:20px;">
+          <div class="grid g6" id="znannyaGrid">
+            <div class="tile click" onclick="openLetter(this)"><div class="letter-tile">З</div><div style="font-weight:700;font-size:.95rem;">1️⃣ Дзвінкий, пара до звука [с]</div></div>
+            <div class="tile click" onclick="openLetter(this)"><div class="letter-tile">Н</div><div style="font-weight:700;font-size:.95rem;">2️⃣ Дзвінкий приголосний у слові «кіНо»</div></div>
+            <div class="tile click" onclick="openLetter(this)"><div class="letter-tile">А</div><div style="font-weight:700;font-size:.95rem;">3️⃣ Голосний у слові «сад»</div></div>
+            <div class="tile click" onclick="openLetter(this)"><div class="letter-tile">Н</div><div style="font-weight:700;font-size:.95rem;">4️⃣ Знову приголосний із «кіно»</div></div>
+            <div class="tile click" onclick="openLetter(this)"><div class="letter-tile">Н</div><div style="font-weight:700;font-size:.95rem;">5️⃣ І ще раз він же!</div></div>
+            <div class="tile click" onclick="openLetter(this)"><div class="letter-tile">Я</div><div style="font-weight:700;font-size:.95rem;">6️⃣ Остання буква в слові «пісня»</div></div>
+          </div>
+          <div class="def-box" id="znannyaMsg" style="opacity:.35;">❓ ❓ ❓ ❓ ❓ ❓</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Інформатика -->
+      <section class="slide" data-slide="3">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🧠 Відкриваємо нове</span>
+            <h2 class="slide-title">Ми живемо у світі інформації</h2>
+            <p class="slide-subtitle">Натисни на кожну картку, щоб перевернути її!</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="flip-grid">
+            <div class="flip-card" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:3.4rem;">🌍</div><div style="font-weight:900;font-size:1.25rem;margin-top:8px;">Інформація</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;margin-top:6px;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.1rem;">Це все, що ми дізнаємося про світ навколо нас: з книжок, мультиків, розповідей.</div>
+            </div></div>
+            <div class="flip-card" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:3.4rem;">🔬</div><div style="font-weight:900;font-size:1.25rem;margin-top:8px;">Інформатика</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;margin-top:6px;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.1rem;">Наука, яка вчить працювати з інформацією за допомогою комп’ютера.</div>
+            </div></div>
+            <div class="flip-card" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:3.4rem;">💻</div><div style="font-weight:900;font-size:1.25rem;margin-top:8px;">Комп’ютер</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;margin-top:6px;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.1rem;">Чудовий пристрій-помічник: допомагає знаходити, зберігати й показувати інформацію.</div>
+            </div></div>
+            <div class="flip-card" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:3.4rem;">🏫</div><div style="font-weight:900;font-size:1.25rem;margin-top:8px;">Комп’ютерний клас</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;margin-top:6px;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.1rem;">Клас, у якому учні вивчають інформатику. Тут діють особливі правила!</div>
+            </div></div>
+          </div>
+          <div data-step="1" class="def-box">📌 <b>Інформатика</b> — це наука, яка вчить працювати з інформацією за допомогою комп’ютера.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Віршики-правила -->
+      <section class="slide" data-slide="4">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">📜 Віршики-правила</span>
+            <h2 class="slide-title">Допиши останній рядок!</h2>
+            <p class="slide-subtitle">Прочитайте віршик разом. Яке правило ховається в кінці? Скажіть уголос, а потім перевірте!</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="grid g3">
+            <div class="tile" style="justify-content:space-between;">
+              <div class="em">🤫</div>
+              <div class="poem" style="font-size:1.12rem;">Як зайшли до класу, діти,<br>Припиняйте гомоніти!<br>Слід усім запам’ятати:</div>
+              <button class="reveal-btn" data-answer="✅ Тут не варто пустувати!" onclick="reveal(this)">❓ Яке правило?</button>
+            </div>
+            <div data-step="1" class="tile" style="justify-content:space-between;">
+              <div class="em">🍔🚫</div>
+              <div class="poem" style="font-size:1.12rem;">В класі вирішили сісти<br>І добряче попоїсти?<br>Слід усім запам’ятати:</div>
+              <button class="reveal-btn" data-answer="✅ На уроках — не жувати!" onclick="reveal(this)">❓ Яке правило?</button>
+            </div>
+            <div data-step="2" class="tile" style="justify-content:space-between;">
+              <div class="em">🧼</div>
+              <div class="poem" style="font-size:1.12rem;">До комп’ютерів ви сіли.<br>А чи руки з милом мили?<br>Слід усім запам’ятати:</div>
+              <button class="reveal-btn" data-answer="✅ Треба чисті руки мати!" onclick="reveal(this)">❓ Яке правило?</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Електрика -->
+      <section class="slide" data-slide="5">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">⚡ Головне правило безпеки</span>
+            <h2 class="slide-title">Комп’ютер живиться від електрики!</h2>
+            <p class="slide-subtitle">Тому з ним треба поводитися обережно. Натисни на правило — дізнаєшся, ЧОМУ так.</p>
+          </div>
+          <span class="feedback-pill" id="elCount" style="background:#d1fae5;color:#065f46;">Відкрито: 0 / 6</span>
+        </div>
+        <div class="slide-body">
+          <div class="grid g3" id="elGrid">
+            <div class="tile click" onclick="openTile(this);countOpen('elGrid','elCount')"><div class="em">🙋‍♂️</div><div class="ttl">Не вмикай комп’ютер без дозволу вчителя</div><div class="tap">Чому? 👆</div><div class="why">Учитель знає, коли все готово і безпечно.</div></div>
+            <div class="tile click" onclick="openTile(this);countOpen('elGrid','elCount')"><div class="em">🔌</div><div class="ttl">Не торкайся дротів і розеток</div><div class="tap">Чому? 👆</div><div class="why">Там електричний струм — він може вдарити!</div></div>
+            <div data-step="1" class="tile click" onclick="openTile(this);countOpen('elGrid','elCount')"><div class="em">⌨️📚</div><div class="ttl">Не клади речі на клавіатуру</div><div class="tap">Чому? 👆</div><div class="why">Клавіші можуть зламатися, а комп’ютер — «збожеволіти»!</div></div>
+            <div data-step="1" class="tile click" onclick="openTile(this);countOpen('elGrid','elCount')"><div class="em">🖥️👆</div><div class="ttl">Не торкайся екрана монітора</div><div class="tap">Чому? 👆</div><div class="why">На екрані лишаються плями, і його легко подряпати.</div></div>
+            <div data-step="2" class="tile click" onclick="openTile(this);countOpen('elGrid','elCount')"><div class="em">🗄️</div><div class="ttl">Не торкайся задньої стінки системного блока</div><div class="tap">Чому? 👆</div><div class="why">Там підключені дроти з електрикою.</div></div>
+            <div data-step="2" class="tile click" onclick="openTile(this);countOpen('elGrid','elCount')"><div class="em">🔧🚫</div><div class="ttl">Не ремонтуй сам — поклич учителя!</div><div class="tap">Чому? 👆</div><div class="why">Щось не працює? Підніми руку — учитель допоможе.</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: Правильна постава -->
+      <section class="slide" data-slide="6">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🪑 Бережемо здоров’я</span>
+            <h2 class="slide-title">Як правильно сидіти за комп’ютером?</h2>
+            <p class="slide-subtitle">Пересувай повзунок і знайди безпечну відстань до екрана!</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div style="background:#f8fafc;border:2.5px solid #c7d2fe;border-radius:24px;padding:16px 20px;">
+            <div style="display:flex;align-items:flex-end;justify-content:center;gap:0;height:110px;">
+              <div style="font-size:4.2rem;line-height:1;">🧒</div>
+              <div id="distGap" style="height:6px;background:repeating-linear-gradient(90deg,#94a3b8 0 10px,transparent 10px 18px);margin:0 8px 30px;transition:width .2s;width:120px;"></div>
+              <div style="font-size:4.2rem;line-height:1;">🖥️</div>
+            </div>
+            <input type="range" id="distRange" min="15" max="80" value="25" oninput="updateDistance()" style="width:100%;accent-color:#4f46e5;height:28px;cursor:pointer;">
+            <div id="distMsg" style="text-align:center;font-weight:900;font-size:1.35rem;margin-top:6px;"></div>
+          </div>
+          <div data-step="1" class="grid g4">
+            <div class="tile"><div class="em">📏</div><div class="ttl">Від очей до екрана — не менше 50 см</div></div>
+            <div class="tile"><div class="em">🧍</div><div class="ttl">Спина рівна, плечі розслаблені</div></div>
+            <div class="tile"><div class="em">🦶</div><div class="ttl">Ноги стоять на підлозі</div></div>
+            <div class="tile"><div class="em">📱⚠️</div><div class="ttl">Смартфон — теж комп’ютер! Будь обережним і з ним</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: Можна / не можна -->
+      <section class="slide" data-slide="7">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🎮 Гра</span>
+            <h2 class="slide-title">Можна чи не можна?</h2>
+            <p class="slide-subtitle">Покажіть руками: 👍 — можна, ✋ — не можна. Потім натисни відповідь!</p>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div id="canQuiz"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: Знайди порушення -->
+      <section class="slide" data-slide="8">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🕵️ Детективи безпеки</span>
+            <h2 class="slide-title">Знайди всі порушення в класі!</h2>
+            <p class="slide-subtitle">Натискай на те, що неправильно. Але обережно — дещо тут зроблено правильно!</p>
+          </div>
+          <span class="feedback-pill" id="sceneCount" style="background:#ffe4e6;color:#9f1239;">Знайдено: 0 / 6</span>
+        </div>
+        <div class="slide-body">
+          <div class="scene" id="classScene" style="background:linear-gradient(#dbeafe 0 58%, #fde68a 58%);">
+            <div style="position:absolute;left:6%;top:8%;font-size:2.6rem;">🪟</div>
+            <div style="position:absolute;left:46%;top:5%;font-size:2.2rem;">🕐</div>
+            <div style="position:absolute;right:5%;top:8%;font-size:2.6rem;">🪟</div>
+            <div style="position:absolute;left:8%;right:8%;top:57%;height:16px;background:#a16207;border-radius:8px;"></div>
+            <div style="position:absolute;left:14%;top:30%;font-size:3.2rem;">🖥️</div>
+            <div style="position:absolute;left:44%;top:30%;font-size:3.2rem;">🖥️</div>
+            <div style="position:absolute;left:74%;top:30%;font-size:3.2rem;">🖥️</div>
+          </div>
+          <div class="scene-fb" id="sceneFb">👆 Натисни на предмет або дитину</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: Цікавинки -->
+      <section class="slide" data-slide="9">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">💎 Скарбничка цікавого</span>
+            <h2 class="slide-title">А чи знаєш ти?</h2>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="grid g2">
+            <div class="tile" style="background:linear-gradient(135deg,#eef2ff,#fff);">
+              <div class="em">📅</div>
+              <div class="ttl" style="font-size:1.4rem;">26 листопада — Всесвітній день інформації</div>
+              <div id="infoDayMsg" class="feedback-pill" style="background:#fef3c7;color:#92400e;font-size:1.05rem;"></div>
+            </div>
+            <div data-step="1" class="tile" style="background:linear-gradient(135deg,#fff1f2,#fff);">
+              <div class="em">📱🔋</div>
+              <div class="ttl" style="font-size:1.25rem;">Смартфон — це кишеньковий комп’ютер</div>
+              <div class="big-text" style="font-size:1.05rem;">Він теж може бути небезпечним: якщо неправильно заряджати або батарея пошкоджена, вона може дуже нагрітися.</div>
+              <button class="reveal-btn" data-answer="✅ Не заряджай під подушкою, не користуйся зламаним зарядним!" onclick="reveal(this)">🛡️ Як бути обережним?</button>
+            </div>
+          </div>
+          <div data-step="2" class="tile">
+            <div class="ttl" style="font-size:1.2rem;">🎬 Мультфільм «Корисні підказки. Електрично-фантастично»</div>
+            <div class="link-row" style="justify-content:center;">
+              <a class="btn btn-accent" href="https://1plus1.video/video/embed/DaUAqU2f" target="_blank" rel="noopener">▶ Дивитися мультик</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: Фізкультхвилинка -->
+      <section class="slide" data-slide="10">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🤸 Фізкультхвилинка та гімнастика для очей</span>
+            <h2 class="slide-title">Відпочиваємо!</h2>
+          </div>
+          <div style="display:flex;gap:8px;" id="breakTabs">
+            <button class="btn btn-sm btn-primary" data-tabbtn onclick="showTab(this,'breakTabs2','move')">🍂 Листочки</button>
+            <button class="btn btn-sm btn-secondary" data-tabbtn onclick="showTab(this,'breakTabs2','eyes')">👀 Для очей</button>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="break-grid">
+            <div style="text-align:center;background:#f8fafc;border:2.5px solid #c7d2fe;border-radius:24px;padding:18px;">
+              <div class="timer-circle" id="timerCircle" style="--deg: 360deg;"><div class="timer-inner"><span id="timerText">60</span><span style="font-size:0.75rem;color:#64748b;font-weight:800;">СЕКУНД</span></div></div>
+              <div style="display:flex;gap:8px;justify-content:center;margin-top:14px;">
+                <button class="btn btn-success btn-sm" onclick="startBreakTimer()">▶ Старт</button>
+                <button class="btn btn-accent btn-sm" onclick="pauseBreakTimer()">⏸ Пауза</button>
+                <button class="btn btn-secondary btn-sm" onclick="resetBreakTimer()">🔄 Скинути</button>
+              </div>
+            </div>
+            <div id="breakTabs2" style="background:linear-gradient(135deg,#eef2ff,#fff7ed);border:2.5px solid #818cf8;border-radius:24px;padding:20px;text-align:center;">
+              <div data-tab="move">
+                <div style="font-size:3rem;">🌳🍂🍁</div>
+                <div class="poem" style="border:none;">
+                  Навколо дерев весело підемо. 🚶<br>
+                  Різні листочки дружно підберемо. 🍂<br>
+                  Відразу вгору піднімемо, 🙌<br>
+                  А потім їх підкинемо — 🍁<br>
+                  Нехай собі летять! 🌬️
+                </div>
+              </div>
+              <div data-tab="eyes" style="display:none;">
+                <div style="font-size:3rem;">👀✨</div>
+                <div class="poem" style="border:none;">
+                  1. Швидко-швидко покліпай очима, як метелик крильцями 🦋<br>
+                  2. Заплющ очі й посидь спокійно<br>
+                  3. Повільно порахуй до 5 😌<br>
+                  🔁 Повтори 4–5 разів!
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 11: Ребуси (трошки) -->
+      <section class="slide" data-slide="11">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🧩 Ребуси</span>
+            <h2 class="slide-title">Розгадай ребус!</h2>
+            <p class="slide-subtitle">Ребус — загадка з малюнків, букв і знаків. Кома <span class="apos">’</span> після малюнка — прибери одну букву в кінці слова.</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+            <div class="rebus-card" style="background:#fef3c7;border-color:#fcd34d;"><div style="font-weight:900;color:#92400e;">Приклад 1</div><div class="rebus">🦔<span class="apos">’</span> = ЇЖА</div><div style="font-weight:700;">ЇЖАК без К = ЇЖА</div></div>
+            <div class="rebus-card" style="background:#fef3c7;border-color:#fcd34d;"><div style="font-weight:900;color:#92400e;">Приклад 2</div><div class="rebus">☀️<span class="apos">’’</span> = СОН</div><div style="font-weight:700;">СОНЦЕ без ЦЕ = СОН</div></div>
+          </div>
+          <div data-step="1" class="grid g3">
+            <div class="rebus-card"><div class="rebus">🐐 + К</div><div class="letter-boxes" id="rb1"></div><button class="btn btn-sm btn-secondary t-only" onclick="rebus[0].showAnswer()">👁 Відповідь</button></div>
+            <div class="rebus-card"><div class="rebus">🐄 + Й</div><div class="letter-boxes" id="rb2"></div><button class="btn btn-sm btn-secondary t-only" onclick="rebus[1].showAnswer()">👁 Відповідь</button></div>
+            <div class="rebus-card"><div class="rebus">✋ + В</div><div class="letter-boxes" id="rb3"></div><button class="btn btn-sm btn-secondary t-only" onclick="rebus[2].showAnswer()">👁 Відповідь</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 12: Гра з мишею -->
+      <section class="slide" data-slide="12">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🖱️ Працюємо за комп’ютером</span>
+            <h2 class="slide-title">Злови синій кружечок!</h2>
+            <p class="slide-subtitle">Наведи вказівник миші на кружечок і клацни лівою кнопкою (швидко натисни й відпусти).</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <span class="feedback-pill" id="clickScore" style="background:#e0e7ff;color:#3730a3;">Спіймано: 0 / 10</span>
+            <button class="btn btn-sm btn-primary" id="btnClick1" onclick="startClickGame(false)">▶ Клацання</button>
+            <button class="btn btn-sm btn-accent" id="btnClick2" onclick="startClickGame(true)">▶▶ Подвійне клацання</button>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="click-arena" id="clickArena">
+            <div id="clickIntro" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;font-weight:900;font-size:1.3rem;color:#6366f1;text-align:center;padding:10px;">
+              <div style="font-size:3.5rem;">🖱️</div>Тримай мишу правильно: долоня лежить на миші, вказівний палець — на лівій кнопці.<br>Натисни «▶ Клацання», щоб почати!
+            </div>
+          </div>
+          <div class="t-only t-flex teacher-note" style="gap:8px;align-items:center;flex-wrap:wrap;">
+            Практична робота (15–20 хв): GCompris — «Як поводитися з комп’ютером», вправи з мишею. Додатково:
+            <a class="btn btn-sm btn-secondary" href="https://learningapps.org/watch?v=poxy16ata16" target="_blank" rel="noopener">LearningApps: Правила поведінки</a>
+            <a class="btn btn-sm btn-secondary" href="http://learningapps.org/watch?v=p29e2gysk" target="_blank" rel="noopener">LearningApps: Техніка безпеки</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 13: Підсумки -->
+      <section class="slide" data-slide="13">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🎤 Гра «Мікрофон» • Підсумки</span>
+            <h2 class="slide-title">Намалюй правило і закінчи речення!</h2>
+          </div>
+          <button class="btn btn-accent" onclick="launchFireworksBurst(true)">🎆 Салют!</button>
+        </div>
+        <div class="slide-body">
+          <div class="studio-wrap">
+            <div>
+              <canvas id="drawCanvas" class="draw-canvas" width="460" height="260"></canvas>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px;">
+                <button class="color-dot active" style="background:#4f46e5;" onclick="setBrushColor('#4f46e5', this)"></button>
+                <button class="color-dot" style="background:#10b981;" onclick="setBrushColor('#10b981', this)"></button>
+                <button class="color-dot" style="background:#f59e0b;" onclick="setBrushColor('#f59e0b', this)"></button>
+                <button class="color-dot" style="background:#f43f5e;" onclick="setBrushColor('#f43f5e', this)"></button>
+                <button class="color-dot" style="background:#1e293b;" onclick="setBrushColor('#1e293b', this)"></button>
+                <button class="btn btn-sm btn-secondary" onclick="stampSticker('⛔')">+ ⛔</button>
+                <button class="btn btn-sm btn-secondary" onclick="stampSticker('✅')">+ ✅</button>
+                <button class="btn btn-sm btn-secondary" onclick="stampSticker('💻')">+ 💻</button>
+                <button class="btn btn-sm btn-secondary" onclick="clearDrawCanvas()">🗑️</button>
+                <button class="btn btn-sm btn-primary" onclick="downloadDrawing('pravylo-bezpeky')">📥</button>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div class="mission-box" style="padding:12px;">
+                <div style="font-weight:900;font-size:1.1rem;">🎤 Закінчи речення:</div>
+                <div class="mission-item" onclick="toggleMission(this)">🧠 Я тепер знаю…</div>
+                <div class="mission-item" onclick="toggleMission(this)">🖐️ Я тепер умію…</div>
+                <div class="mission-item" onclick="toggleMission(this)">⭐ Я буду пам’ятати…</div>
+                <div class="mission-status" style="margin-top:6px;font-weight:800;color:#4f46e5;">Виконано: 0 з 3</div>
+              </div>
+              <div style="background:#f1f5f9;border-radius:16px;padding:11px 14px;">
+                <div style="font-weight:900;font-size:1rem;margin-bottom:6px;">🌟 Як тобі урок?</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                  <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🚀 Супер! Усе зрозуміло!')">🚀 Супер!</button>
+                  <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '😊 Цікаво!')">😊 Цікаво!</button>
+                  <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🤔 Треба повторити')">🤔 Повторю</button>
+                </div>
+                <div id="reflectionReply" style="margin-top:6px;font-weight:800;font-size:0.9rem;color:#059669;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+<!--SCRIPT-->
+    // ===== Урок 1: власна логіка =====
+
+    // Слайд 2: літери ЗНАННЯ
+    function openLetter(tile) {
+      const lt = tile.querySelector('.letter-tile');
+      if (lt.classList.contains('on')) return;
+      lt.classList.add('on');
+      SoundFX.pop();
+      const all = document.querySelectorAll('#znannyaGrid .letter-tile');
+      const word = Array.from(all).map(l => l.classList.contains('on') ? l.textContent : '❓').join(' ');
+      const msg = $id('znannyaMsg');
+      msg.textContent = word;
+      msg.style.opacity = 1;
+      if (!word.includes('❓')) {
+        msg.innerHTML = '🎉 ЗНАННЯ! Рушаймо до країни знань! 🚀';
+        SoundFX.success();
+        launchFireworksBurst(false);
+      }
+    }
+
+    // Слайд 5: лічильник відкритих плиток
+    function countOpen(gridId, pillId) {
+      const g = $id(gridId);
+      const n = g.querySelectorAll('.tile.open').length;
+      const t = g.querySelectorAll('.tile').length;
+      $id(pillId).textContent = `Відкрито: ${n} / ${t}`;
+      if (n === t) launchFireworksBurst(false);
+    }
+
+    // Слайд 6: відстань до екрана
+    let distWasOk = false;
+    function updateDistance() {
+      const v = +$id('distRange').value;
+      $id('distGap').style.width = (v * 5) + 'px';
+      const m = $id('distMsg');
+      if (v < 50) {
+        m.innerHTML = `📏 ${v} см — 😣 Занадто близько! Очі швидко втомляться.`;
+        m.style.color = '#be123c';
+        distWasOk = false;
+      } else {
+        m.innerHTML = `📏 ${v} см — 😊 Чудово! Це безпечна відстань.`;
+        m.style.color = '#059669';
+        if (!distWasOk) SoundFX.success();
+        distWasOk = true;
+      }
+    }
+    updateDistance();
+
+    // Слайд 7: Можна / не можна
+    makeQuiz('canQuiz', shuffleArr([
+      { emoji: '🍪💻', q: 'Їсти печиво за комп’ютером', correct: 1, explain: 'Не можна! Крихти потрапляють у клавіатуру.' },
+      { emoji: '🙋', q: 'Підняти руку, щоб відповісти або запитати', correct: 0, explain: 'Можна і треба! Так ми не заважаємо іншим.' },
+      { emoji: '🏃‍♂️', q: 'Бігати та стрибати в кабінеті інформатики', correct: 1, explain: 'Не можна! Можна зачепити дроти й травмуватися.' },
+      { emoji: '🔌✋', q: 'Торкатися дротів і розеток', correct: 1, explain: 'Не можна! Там електричний струм.' },
+      { emoji: '👩‍🏫', q: 'Уважно виконувати вказівки вчителя', correct: 0, explain: 'Можна і треба!' },
+      { emoji: '✏️🖥️', q: 'Показувати олівцем на екрані монітора', correct: 1, explain: 'Не можна! Екран легко подряпати.' },
+      { emoji: '🚪', q: 'Заходити до кабінету з дозволу вчителя', correct: 0, explain: 'Так, правильно!' },
+      { emoji: '👊⌨️', q: 'Сильно бити по клавішах', correct: 1, explain: 'Не можна! Клавіатура може зламатися.' },
+      { emoji: '🧍📏', q: 'Сидіти рівно, на відстані 50 см від екрана', correct: 0, explain: 'Так! Це береже очі та спину.' },
+      { emoji: '🖱️🔀', q: 'Без дозволу пересувати комп’ютер на столі', correct: 1, explain: 'Не можна! Можна висмикнути дроти.' }
+    ]), { options: ['👍 Можна', '✋ Не можна'], big: true, label: 'Ситуація' });
+
+    // Слайд 8: сцена з порушеннями
+    makeScene('classScene', [
+      { e: '🍔', x: 26, y: 52, msg: '⛔ Не можна їсти за комп’ютером! Крихти псують клавіатуру.', label: 'їжа' },
+      { e: '🧃', x: 57, y: 50, msg: '⛔ Напої біля комп’ютера — небезпечно! Вода й електрика — вороги.', label: 'напій' },
+      { e: '📚', x: 84, y: 52, msg: '⛔ Не клади речі на клавіатуру та пристрої!', label: 'книжки' },
+      { e: '👆', x: 52, y: 26, msg: '⛔ Не торкайся екрана монітора пальцями!', label: 'екран' },
+      { e: '🔌', x: 10, y: 84, msg: '⛔ Не торкайся дротів і розеток!', label: 'розетка' },
+      { e: '🏃', x: 64, y: 84, msg: '⛔ У комп’ютерному класі не можна бігати!', label: 'біганина' },
+      { e: '🙋', x: 36, y: 84, target: false, msg: '👍 Тут усе правильно: дитина піднімає руку, щоб запитати.' },
+      { e: '🧑‍💻', x: 88, y: 84, target: false, msg: '👍 Тут усе правильно: сидить рівно і працює.' }
+    ], { fb: 'sceneFb', counter: 'sceneCount', onDone: () => { $id('sceneFb').innerHTML = '🏆 Усі 6 порушень знайдено! Ви — справжні детективи безпеки!'; } });
+
+    // Слайд 9: скільки днів до Дня інформації
+    (function () {
+      const el = $id('infoDayMsg');
+      const now = new Date();
+      let d = new Date(now.getFullYear(), 10, 26);
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      let days = Math.round((d - today) / 86400000);
+      if (days < 0) { d = new Date(now.getFullYear() + 1, 10, 26); days = Math.round((d - today) / 86400000); }
+      el.textContent = days === 0 ? '🎉 Це сьогодні! Вітаємо!' : `⏳ До свята залишилось днів: ${days}`;
+    })();
+
+    // Слайд 11: ребуси
+    const rebus = [
+      buildRiddle('rb1', 'КОЗАК', () => document.querySelector('#rb1').closest('.rebus-card').classList.add('solved')),
+      buildRiddle('rb2', 'КОРОВАЙ', () => document.querySelector('#rb2').closest('.rebus-card').classList.add('solved')),
+      buildRiddle('rb3', 'РУКАВ', () => document.querySelector('#rb3').closest('.rebus-card').classList.add('solved'))
+    ];
+
+    // Слайд 12: гра з мишею
+    let clickHits = 0, clickDouble = false, clickStart = 0;
+    function startClickGame(dbl) {
+      clickDouble = dbl;
+      clickHits = 0;
+      clickStart = Date.now();
+      SoundFX.click();
+      $id('clickIntro').style.display = 'none';
+      $id('clickScore').textContent = 'Спіймано: 0 / 10';
+      spawnClickTarget();
+    }
+    function spawnClickTarget() {
+      const arena = $id('clickArena');
+      arena.querySelectorAll('.click-target').forEach(t => t.remove());
+      const t = document.createElement('div');
+      t.className = 'click-target';
+      const size = Math.max(46, 84 - clickHits * 3);
+      t.style.width = t.style.height = size + 'px';
+      t.style.left = (8 + Math.random() * 84) + '%';
+      t.style.top = (14 + Math.random() * 72) + '%';
+      if (clickDouble) t.style.background = 'radial-gradient(circle at 35% 35%, #fcd34d, #f59e0b)';
+      t.addEventListener(clickDouble ? 'dblclick' : 'click', (e) => {
+        e.stopPropagation();
+        const r = t.getBoundingClientRect();
+        createExplosion(r.left + r.width / 2, r.top + r.height / 2, 20, false);
+        SoundFX.pop();
+        clickHits++;
+        $id('clickScore').textContent = `Спіймано: ${clickHits} / 10`;
+        if (clickHits >= 10) {
+          t.remove();
+          const sec = Math.round((Date.now() - clickStart) / 1000);
+          const intro = $id('clickIntro');
+          intro.style.display = 'flex';
+          intro.innerHTML = `<div style="font-size:3.5rem;">🏆</div>Чудово! 10 кружечків за ${sec} сек.<br>${clickDouble ? 'Ти вже вмієш робити подвійне клацання!' : 'А тепер спробуй «▶▶ Подвійне клацання»!'}`;
+          SoundFX.success();
+          launchFireworksBurst(false);
+        } else {
+          spawnClickTarget();
+        }
+      });
+      arena.appendChild(t);
+    }
+
+    // Слайд 13: малювалка
+    initDraw('drawCanvas', (ctx) => {
+      ctx.fillStyle = '#c7d2fe';
+      ctx.font = '800 18px Nunito, sans-serif';
+      ctx.fillText('Намалюй одне правило безпеки 🖍️', 20, 30);
+    });

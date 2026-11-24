@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>__TITLE__</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+/*__CSS__*/
+  </style>
+</head>
+<body>
+  <div class="bg-blob blob-1"></div>
+  <div class="bg-blob blob-2"></div>
+  <div class="bg-blob blob-3"></div>
+
+  <canvas id="emojiBgCanvas"></canvas>
+  <canvas id="fxCanvas"></canvas>
+
+  <div class="app-shell">
+    <header class="top-bar">
+      <div class="brand-badge" id="brandBadge" title="Інформатика • 2 клас НУШ">
+        <span class="brand-pill">__PILL__</span>
+        <span>__BRAND__</span>
+      </div>
+
+      <div class="teacher-bar" id="teacherBar">
+        <span class="t-counter" id="studentCounter">👨‍🎓 Учнів онлайн: 0</span>
+        <button class="btn btn-sm btn-primary" id="btnFollowToggle" title="Перемкнути керування слайдами для класу">🔒 Вести клас за собою</button>
+        <button class="btn btn-sm btn-accent" id="btnClassFireworks" title="Запустити салют на екранах усіх учнів">🎆 Салют класу</button>
+        <button class="btn btn-sm btn-secondary" id="btnOpenShare" title="Показати посилання та QR-код для учнів">📲 QR-код учням</button>
+      </div>
+
+      <div class="top-controls">
+        <div class="status-chip" id="syncStatusChip">
+          <span class="status-dot" id="syncDot"></span>
+          <span id="syncText">Готово до роботи</span>
+        </div>
+        <button class="btn btn-sm btn-secondary" id="btnSoundToggle" aria-label="Увімкнути або вимкнути звук">🔊 Звук</button>
+      </div>
+    </header>
+
+    <main class="slides-stage" id="slidesStage">
+<!--__SLIDES__-->
+    </main>
+
+    <footer class="bottom-nav">
+      <button class="btn btn-secondary" id="btnPrev" onclick="changeSlide(-1)">⬅ Назад</button>
+      <div style="display:flex;align-items:center;gap:12px;flex:1;justify-content:center;">
+        <span style="font-weight:900;font-size:0.95rem;color:var(--primary-dark);" id="slideIndicator">Слайд 1 / __NSLIDES__</span>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+      <button class="btn btn-primary" id="btnNext" onclick="changeSlide(1)">Далі ➡</button>
+    </footer>
+  </div>
+
+  <div class="modal-backdrop" id="shareModal">
+    <div class="modal-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <h3 style="font-weight:900;font-size:1.2rem;color:#1e1b4b;">📲 Посилання для учнів</h3>
+        <button class="btn btn-sm btn-secondary" onclick="closeShareModal()">✕</button>
+      </div>
+      <p style="font-size:0.88rem;color:#475569;font-weight:600;">Учні відкривають учнівську версію і підключаються до вашого екрана автоматично!</p>
+      <div style="margin:14px auto;padding:12px;background:#fff;border:2px solid #e2e8f0;border-radius:18px;display:inline-block;">
+        <canvas id="qrCanvas" width="210" height="210"></canvas>
+      </div>
+      <div class="url-box" id="studentUrlText"></div>
+      <div style="display:flex;gap:10px;justify-content:center;">
+        <button class="btn btn-primary" id="btnCopyUrl" onclick="copyStudentUrl()">📋 Копіювати посилання</button>
+        <button class="btn btn-secondary" onclick="closeShareModal()">Закрити</button>
+      </div>
+      <div id="copyFeedback" style="margin-top:8px;font-weight:800;font-size:0.85rem;color:#059669;"></div>
+    </div>
+  </div>
+
+  <script>
+/*__JS__*/
+  </script>
+</body>
+</html>

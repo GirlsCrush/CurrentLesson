@@ -1,0 +1,37 @@
+
+    /* =====================================================================
+       ВЕЛИКІ Й ПОМІТНІ КНОПКИ ДЛЯ УЧНІВ (латка для старих уроків)
+       ===================================================================== */
+    .step-hidden { visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
+    .step-in { animation: stepIn .55s cubic-bezier(.22, 1, .36, 1); }
+    @keyframes stepIn { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: none; } }
+
+    /* рушій 4 класу */
+    .slide .btn { min-height: 50px; padding: 11px 20px; font-size: 1.08rem; }
+    .slide .btn-sm { min-height: 46px; padding: 9px 16px; font-size: 1.02rem; }
+    .slide .btn-secondary { border: 3px solid #818cf8; box-shadow: 0 5px 0 #c7d2fe; }
+    .slide .btn-primary { box-shadow: 0 5px 0 #3730a3; }
+    .slide .btn-accent { box-shadow: 0 5px 0 #c2410c; }
+    .slide .btn-success { box-shadow: 0 5px 0 #047857; }
+    .slide .btn:active:not(:disabled) { transform: translateY(4px); box-shadow: none; }
+    .word-chip { min-height: 54px; font-size: 1.15rem; border: 3px solid #818cf8; box-shadow: 0 5px 0 #c7d2fe; }
+    .word-chip:disabled { box-shadow: none; }
+    .mission-item { font-size: 1.1rem; padding: 13px 16px; border: 3px solid #a5b4fc; box-shadow: 0 4px 0 #e0e7ff; }
+    .pair-card { min-height: 56px; font-size: 1.08rem; border: 3px solid #818cf8; box-shadow: 0 5px 0 #c7d2fe; }
+    .pair-card.matched { box-shadow: none; }
+    .era-btn { font-size: 1rem; padding: 13px 8px; border: 3px solid #818cf8; box-shadow: 0 5px 0 #c7d2fe; }
+    .drive-tile { border: 3px solid #818cf8; box-shadow: 0 5px 0 #c7d2fe; }
+    .artifact-card select { min-height: 48px; font-size: 1rem; }
+    .flip-front { border: 3px solid #818cf8 !important; box-shadow: 0 6px 0 #c7d2fe; }
+    .color-dot { width: 42px; height: 42px; }
+    .letter-input { width: 48px; height: 54px; font-size: 1.4rem; }
+
+    /* рушій 3 класу */
+    .slide .btn-action { min-height: 52px; padding: 12px 24px; font-size: 1.1rem; box-shadow: 0 5px 0 rgba(30, 41, 59, .25); }
+    .slide .btn-action:active { transform: translateY(4px); box-shadow: none; }
+    .quiz-option { padding: 13px 16px; font-size: 1.08rem; border: 3px solid #93c5fd; box-shadow: 0 4px 0 #dbeafe; }
+    .num-input { height: 54px; font-size: 1.35rem; border-width: 3px; }
+    .syllable-input { height: 60px; font-size: 1.6rem; }
+    .swatch { width: 40px; height: 40px; }
+    .os-tab { padding: 12px 20px; font-size: 1.05rem; border: 3px solid #93c5fd; box-shadow: 0 4px 0 #dbeafe; }
+    .nav-btn { min-height: 50px; font-size: 1.05rem; }

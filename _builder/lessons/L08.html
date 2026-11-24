@@ -1,0 +1,377 @@
+<!--META
+{
+  "title": "Урок 8 • Світ сучасних професій (2 клас НУШ)",
+  "pill": "НУШ • 2 КЛАС",
+  "brand": "Урок 8: Світ сучасних професій",
+  "emojis": ["👩‍⚕️", "👨‍🏫", "🧑‍💻", "🏦", "🏥", "🚇", "💻", "🏠", "🤖", "🎨"],
+  "topic": "nush2-urok8-profesii",
+  "out": "2-klas/urok-08/index.html"
+}
+-->
+<!--SLIDES-->
+      <!-- SLIDE 1 -->
+      <section class="slide active" data-slide="1">
+        <div class="slide-header">
+          <span class="slide-tag">👷 Урок 8 • Світ сучасних професій</span>
+          <span class="slide-tag" style="background:#fef3c7;color:#92400e;">💡 Натискай на падаючі смайлики!</span>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="hero-grid">
+            <div>
+              <div style="font-size:3.2rem;line-height:1;">👩‍⚕️ 🧑‍💻 👨‍🏫 💻</div>
+              <h1 class="hero-title">Світ сучасних професій</h1>
+              <p class="slide-subtitle" style="font-size:1.25rem;margin-bottom:14px;">
+                Комп’ютер — помічник людей багатьох професій. Сьогодні дізнаємося, кому і як він допомагає!
+              </p>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <span class="feedback-pill" style="background:#e0e7ff;color:#3730a3;">🕵️ Гра «Хто я?»</span>
+                <span class="feedback-pill" style="background:#d1fae5;color:#065f46;">🏠 Розумний дім</span>
+                <span class="feedback-pill" style="background:#ffe4e6;color:#9f1239;">🔢 Числа по порядку</span>
+              </div>
+            </div>
+            <div class="mission-box">
+              <div style="font-weight:900;font-size:1.2rem;color:#312e81;">🎯 Розкажи про себе:</div>
+              <p style="font-size:0.95rem;color:#475569;margin-top:2px;">Натисни на пункт, якщо це про тебе:</p>
+              <div class="mission-item" onclick="toggleMission(this)"><span>🎬</span><span>Я дивлюся мультики на комп’ютері</span></div>
+              <div class="mission-item" onclick="toggleMission(this)"><span>🧳</span><span>Я брав(-ла) планшет у подорож</span></div>
+              <div class="mission-item" onclick="toggleMission(this)"><span>👪</span><span>У моїй родині працюють з комп’ютером</span></div>
+              <div class="mission-status" style="margin-top:10px;font-weight:800;font-size:0.95rem;color:#4f46e5;">Виконано: 0 з 3</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Згадаймо -->
+      <section class="slide" data-slide="2">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🧠 Розминка</span>
+            <h2 class="slide-title">Що ми вже знаємо?</h2>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div id="warmQuiz"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Комп'ютер допомагає -->
+      <section class="slide" data-slide="3">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">💼 Відкриваємо нове</span>
+            <h2 class="slide-title">Кому допомагає комп’ютер?</h2>
+            <p class="slide-subtitle">Люди різних професій мають свої інструменти. А тепер їм допомагає ще й комп’ютер! Переверни картки.</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="flip-grid">
+            <div class="flip-card" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:3.4rem;">👩‍⚕️</div><div style="font-weight:900;font-size:1.3rem;">Лікар</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.1rem;">Комп’ютер допомагає стежити за здоров’ям людей і роздивлятися знімки.</div>
+            </div></div>
+            <div class="flip-card" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:3.4rem;">👨‍🏫</div><div style="font-weight:900;font-size:1.3rem;">Учитель</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.1rem;">Показує на уроках презентації, відео та ігри — як ось ця!</div>
+            </div></div>
+            <div class="flip-card" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:3.4rem;">📚</div><div style="font-weight:900;font-size:1.3rem;">Бібліотекар</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.1rem;">Швидко знаходить потрібну книжку серед тисяч інших.</div>
+            </div></div>
+            <div class="flip-card" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:3.4rem;">🧑‍🔬</div><div style="font-weight:900;font-size:1.3rem;">Учень-дослідник</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.1rem;">З комп’ютером учні проводять досліди й дізнаються нове.</div>
+            </div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Де працюють комп'ютери -->
+      <section class="slide" data-slide="4">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🏙️ Мандруємо містом</span>
+            <h2 class="slide-title">Де працюють комп’ютери?</h2>
+            <p class="slide-subtitle">Натисни на місце — дізнаєшся, що там робить комп’ютер.</p>
+          </div>
+          <span class="feedback-pill" id="placeCount" style="background:#d1fae5;color:#065f46;">Відкрито: 0 / 6</span>
+        </div>
+        <div class="slide-body">
+          <div class="grid g3" id="placeGrid">
+            <div class="tile click" onclick="openTile(this);countOpen('placeGrid','placeCount')"><div class="em">🛒</div><div class="ttl">Супермаркет</div><div class="tap">Як? 👆</div><div class="why">Каса-комп’ютер рахує ціну покупок.</div></div>
+            <div class="tile click" onclick="openTile(this);countOpen('placeGrid','placeCount')"><div class="em">🏦</div><div class="ttl">Банк</div><div class="tap">Як? 👆</div><div class="why">Рахує гроші та береже їх у безпеці.</div></div>
+            <div class="tile click" data-step="1" onclick="openTile(this);countOpen('placeGrid','placeCount')"><div class="em">🏥</div><div class="ttl">Лікарня</div><div class="tap">Як? 👆</div><div class="why">Допомагає лікарям лікувати людей.</div></div>
+            <div class="tile click" data-step="1" onclick="openTile(this);countOpen('placeGrid','placeCount')"><div class="em">🏫</div><div class="ttl">Школа</div><div class="tap">Як? 👆</div><div class="why">Допомагає вчитися — як на нашому уроці!</div></div>
+            <div class="tile click" data-step="2" onclick="openTile(this);countOpen('placeGrid','placeCount')"><div class="em">🚉</div><div class="ttl">Вокзал</div><div class="tap">Як? 👆</div><div class="why">Продає квитки й показує розклад потягів.</div></div>
+            <div class="tile click" data-step="2" onclick="openTile(this);countOpen('placeGrid','placeCount')"><div class="em">🚇</div><div class="ttl">Метро</div><div class="tap">Як? 👆</div><div class="why">Керує поїздами, щоб вони їздили вчасно.</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Хто я? -->
+      <section class="slide" data-slide="5">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🕵️ Гра</span>
+            <h2 class="slide-title">Хто я? Вгадай професію!</h2>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div id="profQuiz"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: Навчаюсь / працюю / відпочиваю -->
+      <section class="slide" data-slide="6">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🧺 Сортування</span>
+            <h2 class="slide-title">Комп’ютер допомагає, коли людина…</h2>
+            <p class="slide-subtitle">Натисни на картку, а потім на кошик.</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div id="useSorter"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: Твоя родина -->
+      <section class="slide" data-slide="7">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">👪 Поговорімо</span>
+            <h2 class="slide-title">А як комп’ютер допомагає вам?</h2>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="grid g3">
+            <div class="tile" style="padding:22px;"><div class="em">👩‍👧</div><div class="ttl" style="font-size:1.3rem;">Ким працюють твої рідні? Чи потрібен їм комп’ютер?</div></div>
+            <div class="tile" data-step="1" style="padding:22px;"><div class="em">🧒💻</div><div class="ttl" style="font-size:1.3rem;">Як ти використовуєш комп’ютер чи планшет?</div></div>
+            <div class="tile" data-step="2" style="padding:22px;"><div class="em">🌟</div><div class="ttl" style="font-size:1.3rem;">Ким ти хочеш стати? Як тобі допоможе комп’ютер?</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: Фізкультхвилинка -->
+      <section class="slide" data-slide="8">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🤸 Фізкультхвилинка</span>
+            <h2 class="slide-title">Ой ходили журавлі!</h2>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-sm btn-primary" data-tabbtn onclick="showTab(this,'breakBox','move')">🕊️ Журавлі</button>
+            <button class="btn btn-sm btn-secondary" data-tabbtn onclick="showTab(this,'breakBox','eyes')">👀 Для очей</button>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="break-grid">
+            <div style="text-align:center;background:#f8fafc;border:2.5px solid #c7d2fe;border-radius:24px;padding:18px;">
+              <div class="timer-circle" id="timerCircle" style="--deg: 360deg;"><div class="timer-inner"><span id="timerText">60</span><span style="font-size:0.75rem;color:#64748b;font-weight:800;">СЕКУНД</span></div></div>
+              <div style="display:flex;gap:8px;justify-content:center;margin-top:14px;">
+                <button class="btn btn-success btn-sm" onclick="startBreakTimer()">▶ Старт</button>
+                <button class="btn btn-accent btn-sm" onclick="pauseBreakTimer()">⏸ Пауза</button>
+                <button class="btn btn-secondary btn-sm" onclick="resetBreakTimer()">🔄 Скинути</button>
+              </div>
+            </div>
+            <div id="breakBox" style="background:linear-gradient(135deg,#eef2ff,#fff7ed);border:2.5px solid #818cf8;border-radius:24px;padding:20px;text-align:center;">
+              <div data-tab="move">
+                <div style="font-size:3rem;">🕊️🌾</div>
+                <div class="poem" style="border:none;">
+                  Ой ходили журавлі 🚶<br>
+                  То великі, 🙆 то малі. 🧎<br>
+                  Сіли собі на ріллі, 🪑<br>
+                  Та й співають: тра-ла-лі! 🎶
+                </div>
+              </div>
+              <div data-tab="eyes" style="display:none;">
+                <div style="font-size:3rem;">👀✨</div>
+                <div class="poem" style="border:none;">
+                  1. Міцно заплющ очі 😌<br>
+                  2. Порахуй до трьох<br>
+                  3. Розплющ і подивись удалечінь 🌄<br>
+                  4. Порахуй до п’яти<br>
+                  🔁 Повтори 4–5 разів!
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: Розумний дім -->
+      <section class="slide" data-slide="9">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">💎 Скарбничка цікавого</span>
+            <h2 class="slide-title">Що таке «розумний дім»?</h2>
+            <p class="slide-subtitle">Це будинок, яким керує комп’ютер. Натискай на речі в будинку!</p>
+          </div>
+          <span class="feedback-pill" id="homeCount" style="background:#d1fae5;color:#065f46;">Знайдено: 0 / 6</span>
+        </div>
+        <div class="slide-body">
+          <div class="scene" id="homeScene" style="background:linear-gradient(#ede9fe 0 66%, #fcd9b6 66%);">
+            <div style="position:absolute;left:8%;top:10%;font-size:2.8rem;">🪟</div>
+            <div style="position:absolute;left:40%;top:44%;font-size:3.4rem;">🛋️</div>
+            <div style="position:absolute;right:8%;top:10%;font-size:2.8rem;">🖼️</div>
+          </div>
+          <div class="scene-fb" id="homeFb">👆 Натисни на лампу, робота, колонку…</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: Числа по порядку -->
+      <section class="slide" data-slide="10">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🖱️ Працюємо мишею</span>
+            <h2 class="slide-title">Натискай на числа по порядку: 1, 2, 3…</h2>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span class="feedback-pill" id="numScore" style="background:#e0e7ff;color:#3730a3;">Наступне: 1</span>
+            <button class="btn btn-sm btn-primary" onclick="startNumbers()">▶ Почати</button>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="click-arena" id="numArena">
+            <div id="numIntro" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;font-weight:900;font-size:1.3rem;color:#6366f1;text-align:center;padding:10px;">
+              <div style="font-size:3.5rem;">🔢</div>Натисни «▶ Почати» і клацай на числа від 1 до 10 по черзі!
+            </div>
+          </div>
+          <div class="t-only teacher-note">Робота за комп’ютером: «Знайди значок і запусти програму». Додатково: <a href="http://learningapps.org/watch?v=p4qqk7mcn" target="_blank" rel="noopener">LearningApps — Професії та комп’ютер</a>.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 11: Підсумки -->
+      <section class="slide" data-slide="11">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🎨 Ким я стану? • Підсумки</span>
+            <h2 class="slide-title">Намалюй себе в майбутній професії!</h2>
+          </div>
+          <button class="btn btn-accent" onclick="launchFireworksBurst(true)">🎆 Салют!</button>
+        </div>
+        <div class="slide-body">
+          <div class="studio-wrap">
+            <div>
+              <canvas id="drawCanvas" class="draw-canvas" width="460" height="260"></canvas>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px;">
+                <button class="color-dot active" style="background:#4f46e5;" onclick="setBrushColor('#4f46e5', this)"></button>
+                <button class="color-dot" style="background:#10b981;" onclick="setBrushColor('#10b981', this)"></button>
+                <button class="color-dot" style="background:#f59e0b;" onclick="setBrushColor('#f59e0b', this)"></button>
+                <button class="color-dot" style="background:#f43f5e;" onclick="setBrushColor('#f43f5e', this)"></button>
+                <button class="btn btn-sm btn-secondary" onclick="stampSticker('💻')">+ 💻</button>
+                <button class="btn btn-sm btn-secondary" onclick="clearDrawCanvas()">🗑️</button>
+                <button class="btn btn-sm btn-primary" onclick="downloadDrawing('moya-profesiya')">📥</button>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div class="tile"><div class="em">💻</div><div class="ttl">Комп’ютер допомагає людині, коли вона…</div><button class="reveal-btn" data-answer="📖 навчається, 🛠️ працює, 🎮 відпочиває" onclick="reveal(this)">Перевірити</button></div>
+              <div style="background:#f1f5f9;border-radius:16px;padding:11px 14px;">
+                <div style="font-weight:900;font-size:1rem;margin-bottom:6px;">🌟 Як тобі урок?</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                  <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🚀 Супер!')">🚀 Супер!</button>
+                  <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '😊 Цікаво!')">😊 Цікаво!</button>
+                  <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🤔 Треба повторити')">🤔 Повторю</button>
+                </div>
+                <div id="reflectionReply" style="margin-top:6px;font-weight:800;font-size:0.9rem;color:#059669;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+<!--SCRIPT-->
+    // ===== Урок 8 =====
+    function countOpen(gridId, pillId) {
+      const g = $id(gridId);
+      const n = g.querySelectorAll('.tile.open').length;
+      const t = g.querySelectorAll('.tile').length;
+      $id(pillId).textContent = `Відкрито: ${n} / ${t}`;
+      if (n === t) launchFireworksBurst(false);
+    }
+
+    makeQuiz('warmQuiz', [
+      { emoji: '🔤', q: 'Яке головне слово для інформатики?', options: ['💻 Комп’ютер', '🌍 Інформація', '🛡️ Безпека'], correct: 1, explain: 'Інформатика вчить працювати з інформацією!' },
+      { emoji: '🪑', q: 'Яке місце в кабінеті інформатики можна зайняти?', options: ['👫 Поруч із другом', '👩‍🏫 Те, яке вкаже вчитель', '🪟 Біля вікна'], correct: 1 },
+      { emoji: '🤔', q: 'Як НЕ можна поводитися в комп’ютерному класі?', options: ['🚶 Заходити спокійно', '🥪 Покласти бутерброд на клавіатуру', '🚫 Не бігати'], correct: 1, explain: 'Їжі біля комп’ютера не місце!' }
+    ], { label: 'Питання' });
+
+    makeQuiz('profQuiz', shuffleArr([
+      { emoji: '🩻💻', q: 'Я дивлюся на комп’ютері знімки й перевіряю, чи здорова людина.', options: ['👨‍🍳 Кухар', '👩‍⚕️ Лікар', '✈️ Пілот'], correct: 1 },
+      { emoji: '🛒💻', q: 'Мій комп’ютер рахує, скільки коштують покупки.', options: ['🧑‍💼 Касир', '👩‍🚒 Пожежник', '🎨 Художник'], correct: 0 },
+      { emoji: '💇💻', q: 'Я показую на комп’ютері, якою буде нова зачіска.', options: ['💇 Перукар', '👷 Будівельник', '📚 Бібліотекар'], correct: 0 },
+      { emoji: '⌨️🎮', q: 'Я пишу програми та комп’ютерні ігри.', options: ['🧑‍🌾 Фермер', '👨‍🏫 Учитель', '🧑‍💻 Програміст'], correct: 2 },
+      { emoji: '🎬✏️', q: 'Я малюю на комп’ютері героїв мультфільмів.', options: ['🎨 Аніматор', '👩‍⚕️ Лікар', '🧑‍💼 Касир'], correct: 0 },
+      { emoji: '🌾🛸', q: 'Мені допомагає дрон із комп’ютером доглядати за полем.', options: ['🚒 Пожежник', '🧑‍🌾 Фермер', '💇 Перукар'], correct: 1 }
+    ]), { label: 'Загадка', big: true });
+
+    makeSorter('useSorter', [
+      { t: '📖 Урок онлайн', b: 'learn' }, { t: '🔤 Вчу англійську в застосунку', b: 'learn' }, { t: '🧮 Розв’язую задачі', b: 'learn' },
+      { t: '🏦 Рахую гроші в банку', b: 'work' }, { t: '✈️ Керую літаком', b: 'work' }, { t: '🏗️ Креслю будинок', b: 'work' },
+      { t: '🎬 Дивлюся мультфільм', b: 'rest' }, { t: '🎮 Граю в гру', b: 'rest' }, { t: '🎵 Слухаю музику', b: 'rest' }
+    ], [
+      { id: 'learn', label: '📖 Навчається', bg: '#eff6ff', border: '#60a5fa', color: '#1d4ed8' },
+      { id: 'work', label: '🛠️ Працює', bg: '#fff7ed', border: '#fb923c', color: '#c2410c' },
+      { id: 'rest', label: '🎮 Відпочиває', bg: '#f0fdf4', border: '#4ade80', color: '#15803d' }
+    ]);
+
+    makeScene('homeScene', [
+      { e: '💡', x: 50, y: 12, msg: '💡 Світло вмикається саме, коли заходиш, або за командою голосом!', label: 'світло' },
+      { e: '🤖', x: 22, y: 82, msg: '🤖 Робот-пилосос сам прибирає підлогу.', label: 'пилосос' },
+      { e: '🔊', x: 66, y: 50, msg: '🔊 Розумна колонка вмикає музику й відповідає на запитання.', label: 'колонка' },
+      { e: '🔒', x: 90, y: 60, msg: '🔒 Двері можна відчинити телефоном.', label: 'замок' },
+      { e: '🌡️', x: 30, y: 36, msg: '🌡️ Комп’ютер підтримує в домі тепло.', label: 'тепло' },
+      { e: '🪴', x: 80, y: 84, msg: '🪴 Квіти поливаються самі!', label: 'полив' }
+    ], { fb: 'homeFb', counter: 'homeCount', mode: 'good',
+         onDone: () => { $id('homeFb').innerHTML = '🏆 Ось який він — розумний дім! Усім керує комп’ютер.'; } });
+
+    // Числа по порядку
+    let numNext = 1, numStart = 0;
+    function startNumbers() {
+      const arena = $id('numArena');
+      arena.querySelectorAll('.num-target').forEach(n => n.remove());
+      $id('numIntro').style.display = 'none';
+      numNext = 1;
+      numStart = Date.now();
+      $id('numScore').textContent = 'Наступне: 1';
+      SoundFX.click();
+      const placed = [];
+      for (let n = 1; n <= 10; n++) {
+        let x, y, tries = 0;
+        do { x = 8 + Math.random() * 84; y = 12 + Math.random() * 76; tries++; }
+        while (tries < 60 && placed.some(p => Math.abs(p[0] - x) < 11 && Math.abs(p[1] - y) < 20));
+        placed.push([x, y]);
+        const b = document.createElement('button');
+        b.className = 'click-target num-target';
+        b.style.cssText = `left:${x}%;top:${y}%;width:76px;height:76px;font-family:inherit;font-size:2rem;font-weight:900;color:#fff;`;
+        b.textContent = n;
+        b.onclick = () => {
+          if (n === numNext) {
+            const r = b.getBoundingClientRect();
+            createExplosion(r.left + r.width / 2, r.top + r.height / 2, 18, false);
+            SoundFX.pop();
+            b.remove();
+            numNext++;
+            if (numNext > 10) {
+              const intro = $id('numIntro');
+              intro.style.display = 'flex';
+              intro.innerHTML = `<div style="font-size:3.5rem;">🏆</div>Молодець! Усі числа за ${Math.round((Date.now() - numStart) / 1000)} сек.`;
+              $id('numScore').textContent = '🎉 Готово!';
+              SoundFX.success();
+              launchFireworksBurst(false);
+            } else {
+              $id('numScore').textContent = `Наступне: ${numNext}`;
+            }
+          } else {
+            SoundFX.error();
+            b.style.background = 'radial-gradient(circle at 35% 35%, #fda4af, #e11d48)';
+            setTimeout(() => { b.style.background = ''; }, 450);
+          }
+        };
+        arena.appendChild(b);
+      }
+    }
+
+    initDraw('drawCanvas', (ctx) => {
+      ctx.fillStyle = '#c7d2fe';
+      ctx.font = '800 18px Nunito, sans-serif';
+      ctx.fillText('Ким я хочу стати? 🖍️', 20, 30);
+    });

@@ -1,0 +1,463 @@
+<!--META
+{
+  "title": "Урок 11 • Робочий стіл комп’ютера (2 клас НУШ)",
+  "pill": "НУШ • 2 КЛАС",
+  "brand": "Урок 11: Робочий стіл комп’ютера",
+  "emojis": ["🖥️", "🗑️", "📁", "📄", "🖱️", "⊞", "🧮", "📝", "⭐", "🪟"],
+  "topic": "nush2-urok11-robochyi-stil",
+  "out": "2-klas/urok-11/index.html"
+}
+-->
+<!--SLIDES-->
+      <!-- SLIDE 1 -->
+      <section class="slide active" data-slide="1">
+        <div class="slide-header">
+          <span class="slide-tag">🖥️ Урок 11 • Робочий стіл комп’ютера</span>
+          <span class="slide-tag" style="background:#fef3c7;color:#92400e;">💡 Натискай на падаючі смайлики!</span>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="hero-grid">
+            <div>
+              <div style="font-size:3.2rem;line-height:1;">🖥️ 📁 🗑️ 🖱️</div>
+              <h1 class="hero-title">Робочий стіл комп’ютера</h1>
+              <p class="slide-subtitle" style="font-size:1.25rem;margin-bottom:14px;">
+                Після ввімкнення на екрані з’являється Робочий стіл. Що на ньому лежить і як із ним працювати? Дослідимо!
+              </p>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <span class="feedback-pill" style="background:#e0e7ff;color:#3730a3;">✋ Перетягуємо значки</span>
+                <span class="feedback-pill" style="background:#d1fae5;color:#065f46;">🗑️ Кошик</span>
+                <span class="feedback-pill" style="background:#ffe4e6;color:#9f1239;">🪟 Вікна</span>
+              </div>
+            </div>
+            <div class="mission-box">
+              <div style="font-weight:900;font-size:1.2rem;color:#312e81;">🎯 Пригадаймо:</div>
+              <p style="font-size:0.95rem;color:#475569;margin-top:2px;">Натисни, якщо знаєш відповідь:</p>
+              <div class="mission-item" onclick="toggleMission(this)"><span>⏻</span><span>Яка кнопка вмикає комп’ютер?</span></div>
+              <div class="mission-item" onclick="toggleMission(this)"><span>⏳</span><span>Як зрозуміти, що комп’ютер готовий?</span></div>
+              <div class="mission-item" onclick="toggleMission(this)"><span>🗄️</span><span>Що таке системний блок?</span></div>
+              <div class="mission-status" style="margin-top:10px;font-weight:800;font-size:0.95rem;color:#4f46e5;">Виконано: 0 з 3</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Кросворд -->
+      <section class="slide" data-slide="2">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">✏️ Розминка</span>
+            <h2 class="slide-title">Впиши слово по літерах!</h2>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="rebus-card" style="align-items:flex-start;"><div class="ttl" style="font-weight:900;font-size:1.25rem;">1️⃣ 🗄️ У комп’ютері його називають «системний» …</div><div class="letter-boxes" id="cw1"></div></div>
+          <div class="rebus-card" data-step="1" style="align-items:flex-start;"><div class="ttl" style="font-weight:900;font-size:1.25rem;">2️⃣ 🐭 Схожа на сіру тваринку з хвостиком</div><div class="letter-boxes" id="cw2"></div></div>
+          <button class="btn btn-sm btn-secondary t-only" style="align-self:center;" onclick="cw.forEach(c => c.showAnswer())">👁 Показати відповіді</button>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Твій робочий стіл -->
+      <section class="slide" data-slide="3">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">📚 Порівнюємо</span>
+            <h2 class="slide-title">Що лежить на робочому столі учня?</h2>
+            <p class="slide-subtitle">Натискай на предмети на парті.</p>
+          </div>
+          <span class="feedback-pill" id="deskCount" style="background:#d1fae5;color:#065f46;">Знайдено: 0 / 6</span>
+        </div>
+        <div class="slide-body">
+          <div class="scene" id="studentDesk" style="background:linear-gradient(135deg,#fde68a,#fbbf24);border-color:#d97706;height:clamp(220px,34vh,300px);"></div>
+          <div class="scene-fb" id="deskFb">👆 Що є на парті?</div>
+          <div class="def-box" data-step="1">💡 Комп’ютер теж має свій <b>Робочий стіл</b>! На ньому лежать об’єкти — <b>значки</b> (невеличкі малюнки).</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Симулятор Робочого стола -->
+      <section class="slide" data-slide="4">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">✋ Працюємо мишею</span>
+            <h2 class="slide-title">Перетягни значки, як тобі подобається!</h2>
+            <p class="slide-subtitle">Наведи вказівник на значок, натисни ліву кнопку і, не відпускаючи, пересунь. А непотрібний файл перетягни в 🗑️ Кошик!</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="desk-sim" id="deskSim">
+            <div class="desk-taskbar"><button>⊞</button></div>
+          </div>
+          <div class="scene-fb" id="deskSimFb">👆 Клацни на значок — дізнаєшся, що це. Перетягни — пересунеш.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Види значків -->
+      <section class="slide" data-slide="5">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🧺 Сортування</span>
+            <h2 class="slide-title">Які бувають значки?</h2>
+            <p class="slide-subtitle">На Робочому столі є значки програм, папок і документів. Розклади їх!</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div id="iconSorter"></div>
+          <div class="def-box" data-step="1">🙋 Які значки будуть на Робочому столі — вирішує сам <b>користувач</b>.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: Цей ПК і Кошик -->
+      <section class="slide" data-slide="6">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">⭐ Особливі значки</span>
+            <h2 class="slide-title">«Цей ПК» і «Кошик»</h2>
+            <p class="slide-subtitle">Переверни картки!</p>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="grid g2" style="max-width:820px;margin:0 auto;width:100%;">
+            <div class="flip-card" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:4rem;">🖥️</div><div style="font-weight:900;font-size:1.4rem;">Цей ПК</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.2rem;">Відкриває доступ до <b>всього</b>, що зберігається в комп’ютері.</div>
+            </div></div>
+            <div class="flip-card" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:4rem;">🗑️</div><div style="font-weight:900;font-size:1.4rem;">Кошик</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.2rem;">Сюди переміщують об’єкти, які <b>вже не потрібні</b>.</div>
+            </div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: Панель завдань -->
+      <section class="slide" data-slide="7">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">📊 Внизу екрана</span>
+            <h2 class="slide-title">Панель завдань</h2>
+            <p class="slide-subtitle">Вона допомагає керувати комп’ютером. Натисни на кожну кнопку панелі!</p>
+          </div>
+          <span class="feedback-pill" id="tbCount" style="background:#d1fae5;color:#065f46;">Досліджено: 0 / 6</span>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="desk-sim" style="height:clamp(160px,24vh,220px);">
+            <div class="desk-taskbar" id="taskbarDemo" style="height:60px;justify-content:space-between;">
+              <div style="display:flex;gap:8px;">
+                <button data-info="⊞ <b>Пуск</b> — тут усі програми, а ще звідси правильно вимикають комп’ютер.">⊞ Пуск</button>
+                <button data-info="📁🌐 <b>Швидкий доступ</b> — значки програм, щоб швидко їх запускати.">📁 🌐 🎨</button>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button data-info="🔤 <b>Мова</b> — показує, якою мовою друкуємо: УКР чи ENG.">УКР</button>
+                <button data-info="🔊 <b>Звук</b> — робить звук гучніше або тихіше.">🔊</button>
+                <button data-info="🕐 <b>Дата і час</b> — котра година і яке сьогодні число.">🕐 12:45</button>
+                <button data-info="🗕 <b>Згорнути все</b> — ховає всі вікна й показує Робочий стіл.">▕</button>
+              </div>
+            </div>
+          </div>
+          <div class="def-box" id="tbInfo">👆 Натисни кнопку на панелі завдань</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: Вказівник -->
+      <section class="slide" data-slide="8">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🖱️ Вказівник миші</span>
+            <h2 class="slide-title">Збери зірочки вказівником!</h2>
+            <p class="slide-subtitle">Рухай мишу по столу — стрілочка на екрані повторює рухи. Просто наведи її на зірочку, клацати не треба!</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span class="feedback-pill" id="starScore" style="background:#fef3c7;color:#92400e;">Зібрано: 0 / 10</span>
+            <button class="btn btn-sm btn-primary" onclick="startStars()">▶ Почати</button>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="click-arena" id="starArena" style="background:linear-gradient(#1e1b4b,#312e81);">
+            <div id="starIntro" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;font-weight:900;font-size:1.3rem;color:#fde68a;text-align:center;padding:10px;">
+              <div style="font-size:3.5rem;">⭐</div>Натисни «▶ Почати»
+            </div>
+          </div>
+          <div class="def-box" data-step="1">⚠️ Якщо підняти мишу й рухати в повітрі — вказівник <b>не рухатиметься</b>. Миша має ковзати по столу!</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: Фізкультхвилинка -->
+      <section class="slide" data-slide="9">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🤸 Фізкультхвилинка</span>
+            <h2 class="slide-title">Сонце спить, небо спить…</h2>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="break-grid">
+            <div style="text-align:center;background:#f8fafc;border:2.5px solid #c7d2fe;border-radius:24px;padding:18px;">
+              <div class="timer-circle" id="timerCircle" style="--deg: 360deg;"><div class="timer-inner"><span id="timerText">60</span><span style="font-size:0.75rem;color:#64748b;font-weight:800;">СЕКУНД</span></div></div>
+              <div style="display:flex;gap:8px;justify-content:center;margin-top:14px;">
+                <button class="btn btn-success btn-sm" onclick="startBreakTimer()">▶ Старт</button>
+                <button class="btn btn-accent btn-sm" onclick="pauseBreakTimer()">⏸ Пауза</button>
+                <button class="btn btn-secondary btn-sm" onclick="resetBreakTimer()">🔄 Скинути</button>
+              </div>
+            </div>
+            <div style="background:linear-gradient(135deg,#eef2ff,#fff7ed);border:2.5px solid #818cf8;border-radius:24px;padding:16px;text-align:center;">
+              <div class="poem" style="border:none;font-size:1.15rem;line-height:1.5;">
+                Треба дружно всім нам встати, фізкультпаузу почати! 🧍<br>
+                Сонце спить, небо спить, 🙈 навіть вітер не шумить. 🧎<br>
+                Рано-вранці сонце встало, ☀️🙌 всім промінчиком махало! 👋<br>
+                Хмарка сонечко закрила, ☁️ слізки срібні зронила. 🙈<br>
+                Ми ті слізки пошукаємо, у травичці позбираємо! 🧎💧
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: Вікна -->
+      <section class="slide" data-slide="10">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🪟 Практикум</span>
+            <h2 class="slide-title">Відкрий, згорни, віднови й закрий вікно!</h2>
+          </div>
+          <span class="feedback-pill" id="winCount" style="background:#e0e7ff;color:#3730a3;">Виконано: 0 / 4</span>
+        </div>
+        <div class="slide-body">
+          <div style="display:grid;grid-template-columns:1.4fr .6fr;gap:14px;">
+            <div class="desk-sim" id="winSim">
+              <div class="desk-icon2" style="left:14px;top:12px;cursor:pointer;" ondblclick="openWin('🧮 Калькулятор','2 + 3 = 5')" onclick="winHint()"><span class="ic">🧮</span>Калькулятор</div>
+              <div class="desk-icon2" style="left:14px;top:110px;cursor:pointer;" ondblclick="openWin('📝 Блокнот','Привіт! 👋')" onclick="winHint()"><span class="ic">📝</span>Блокнот</div>
+              <div class="desk-taskbar" id="winTaskbar"><button>⊞</button></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div class="mission-item sim-task" id="wt1"><span>1️⃣</span><span>Відкрий програму: <b>двічі</b> клацни значок</span></div>
+              <div class="mission-item sim-task" id="wt2"><span>2️⃣</span><span>Згорни вікно кнопкою <b>—</b></span></div>
+              <div class="mission-item sim-task" id="wt3"><span>3️⃣</span><span>Віднови: натисни на панелі завдань</span></div>
+              <div class="mission-item sim-task" id="wt4"><span>4️⃣</span><span>Закрий вікно кнопкою <b>✕</b></span></div>
+              <div class="quiz-fb" id="winFb" style="font-size:1rem;"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 11: Підсумки -->
+      <section class="slide" data-slide="11">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🏁 Підсумки уроку</span>
+            <h2 class="slide-title">Міркуємо, даємо відповідь</h2>
+          </div>
+          <button class="btn btn-accent" onclick="launchFireworksBurst(true)">🎆 Салют!</button>
+        </div>
+        <div class="slide-body">
+          <div class="grid g3">
+            <div class="tile"><div class="em">🖥️</div><div class="ttl">Що таке Робочий стіл комп’ютера?</div><button class="reveal-btn" data-answer="Зображення на екрані після завантаження, де лежать значки" onclick="reveal(this)">Перевірити</button></div>
+            <div class="tile" data-step="1"><div class="em">📚🖥️</div><div class="ttl">Чим він схожий на твій робочий стіл?</div><button class="reveal-btn" data-answer="На обох лежать потрібні для роботи речі!" onclick="reveal(this)">Перевірити</button></div>
+            <div class="tile" data-step="2" style="background:#fef3c7;border-color:#fcd34d;"><div class="em">👀</div><div class="ttl">Цікавинка: є комп’ютери, якими керують <b>поглядом</b>! Подивився на Кошик — і вказівник уже там!</div></div>
+          </div>
+          <div data-step="3" style="background:#f1f5f9;border-radius:16px;padding:11px 14px;">
+            <div style="font-weight:900;font-size:1rem;margin-bottom:6px;">🌟 Як тобі урок?</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🚀 Супер!')">🚀 Супер!</button>
+              <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '😊 Цікаво!')">😊 Цікаво!</button>
+              <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🤔 Треба повторити')">🤔 Повторю</button>
+            </div>
+            <div id="reflectionReply" style="margin-top:6px;font-weight:800;font-size:0.9rem;color:#059669;"></div>
+          </div>
+          <div class="t-only teacher-note">Практична робота за справжнім комп’ютером: запустити Блокнот (значок на Робочому столі / Пуск), закрити; запустити Калькулятор, перемістити вікно, згорнути, відновити, закрити; правильно вимкнути комп’ютер.</div>
+        </div>
+      </section>
+<!--SCRIPT-->
+    // ===== Урок 11 =====
+    const cw = [
+      buildRiddle('cw1', 'БЛОК', () => $id('cw1').closest('.rebus-card').classList.add('solved')),
+      buildRiddle('cw2', 'МИША', () => $id('cw2').closest('.rebus-card').classList.add('solved'))
+    ];
+
+    makeScene('studentDesk', [
+      { e: '📕', x: 16, y: 40, msg: '📕 Підручник', label: 'підручник' },
+      { e: '📓', x: 34, y: 62, msg: '📓 Зошит', label: 'зошит' },
+      { e: '✏️', x: 52, y: 34, msg: '✏️ Олівець', label: 'олівець' },
+      { e: '📏', x: 66, y: 66, msg: '📏 Лінійка', label: 'лінійка' },
+      { e: '🖍️', x: 82, y: 38, msg: '🖍️ Фломастери', label: 'фломастери' },
+      { e: '🗂️', x: 88, y: 74, msg: '🗂️ Папка', label: 'папка' }
+    ], { fb: 'deskFb', counter: 'deskCount', mode: 'good',
+         onDone: () => { $id('deskFb').innerHTML = '🏆 На парті лежать речі, потрібні для навчання!'; } });
+
+    // ---- Симулятор Робочого стола з перетягуванням ----
+    const DESK_ICONS = [
+      { ic: '🖥️', name: 'Цей ПК', x: 3, y: 4, info: '🖥️ <b>Цей ПК</b> — відкриває все, що є в комп’ютері.' },
+      { ic: '🗑️', name: 'Кошик', x: 3, y: 46, info: '🗑️ <b>Кошик</b> — сюди перетягують непотрібні об’єкти.', bin: true },
+      { ic: '📁', name: 'Мої малюнки', x: 22, y: 4, info: '📁 Це <b>папка</b> — у ній зберігаються малюнки.' },
+      { ic: '🎨', name: 'Paint', x: 22, y: 46, info: '🎨 Це значок <b>програми</b> для малювання.' },
+      { ic: '📄', name: 'Казка', x: 41, y: 4, info: '📄 Це <b>документ</b> — у ньому записана казка.' },
+      { ic: '🧾', name: 'Зайвий файл', x: 60, y: 30, info: '🧾 Цей файл не потрібен. Перетягни його в 🗑️ Кошик!', junk: true }
+    ];
+    function buildDeskSim() {
+      const sim = $id('deskSim');
+      const fb = $id('deskSimFb');
+      DESK_ICONS.forEach(d => {
+        const el = document.createElement('div');
+        el.className = 'desk-icon2';
+        el.style.left = d.x + '%';
+        el.style.top = d.y + '%';
+        el.innerHTML = `<span class="ic">${d.ic}</span>${d.name}`;
+        if (d.bin) el.id = 'binIcon';
+        let start = null, moved = false, ox = 0, oy = 0;
+        el.addEventListener('pointerdown', (e) => {
+          e.preventDefault();
+          el.setPointerCapture(e.pointerId);
+          const r = el.getBoundingClientRect();
+          start = { x: e.clientX, y: e.clientY };
+          ox = e.clientX - r.left; oy = e.clientY - r.top;
+          moved = false;
+        });
+        el.addEventListener('pointermove', (e) => {
+          if (!start) return;
+          if (!moved && Math.hypot(e.clientX - start.x, e.clientY - start.y) < 6) return;
+          moved = true;
+          el.classList.add('dragging');
+          const s = sim.getBoundingClientRect();
+          const x = Math.max(0, Math.min(s.width - el.offsetWidth, e.clientX - s.left - ox));
+          const y = Math.max(0, Math.min(s.height - 44 - el.offsetHeight, e.clientY - s.top - oy));
+          el.style.left = (x / s.width * 100) + '%';
+          el.style.top = (y / s.height * 100) + '%';
+        });
+        el.addEventListener('pointerup', (e) => {
+          if (!start) return;
+          start = null;
+          el.classList.remove('dragging');
+          if (!moved) { SoundFX.click(); fb.innerHTML = d.info; return; }
+          const bin = $id('binIcon').getBoundingClientRect();
+          const r = el.getBoundingClientRect();
+          const overBin = !(r.right < bin.left || r.left > bin.right || r.bottom < bin.top || r.top > bin.bottom);
+          if (overBin && d.junk) {
+            el.remove();
+            SoundFX.success();
+            fb.innerHTML = '🎉 Чудово! Непотрібний файл тепер у Кошику.';
+            launchFireworksBurst(false);
+          } else if (overBin && !d.bin) {
+            SoundFX.error();
+            fb.innerHTML = '🤔 Цей значок нам ще потрібен! Викинь лише <b>зайвий файл</b>.';
+          } else {
+            SoundFX.pop();
+            fb.innerHTML = '✋ Ти пересунув(-ла) значок! Так користувач сам упорядковує Робочий стіл.';
+          }
+        });
+        sim.appendChild(el);
+      });
+    }
+    buildDeskSim();
+
+    makeSorter('iconSorter', [
+      { t: '🎨 Paint', b: 'prog' }, { t: '🧮 Калькулятор', b: 'prog' }, { t: '🌐 Браузер', b: 'prog' },
+      { t: '📁 Мої малюнки', b: 'fold' }, { t: '📁 Музика', b: 'fold' }, { t: '📁 Ігри', b: 'fold' },
+      { t: '📄 Казка.docx', b: 'doc' }, { t: '🖼️ Котик.png', b: 'doc' }, { t: '📄 Вірш.txt', b: 'doc' }
+    ], [
+      { id: 'prog', label: '⚙️ Програми', bg: '#eff6ff', border: '#60a5fa', color: '#1d4ed8' },
+      { id: 'fold', label: '📁 Папки', bg: '#fffbeb', border: '#fbbf24', color: '#b45309' },
+      { id: 'doc', label: '📄 Документи', bg: '#f0fdf4', border: '#4ade80', color: '#15803d' }
+    ]);
+
+    // ---- Панель завдань ----
+    $id('taskbarDemo').querySelectorAll('button').forEach(b => {
+      b.style.height = '46px';
+      b.style.fontSize = '1.15rem';
+      b.onclick = () => {
+        SoundFX.click();
+        b.classList.add('seen');
+        $id('tbInfo').innerHTML = b.dataset.info;
+        const n = $id('taskbarDemo').querySelectorAll('button.seen').length;
+        $id('tbCount').textContent = `Досліджено: ${n} / 6`;
+        if (n === 6) launchFireworksBurst(false);
+      };
+    });
+
+    // ---- Зірочки вказівником ----
+    let starsGot = 0;
+    function spawnStar() {
+      const arena = $id('starArena');
+      const s = document.createElement('div');
+      s.className = 'star-target';
+      s.textContent = '⭐';
+      s.style.left = (8 + Math.random() * 84) + '%';
+      s.style.top = (14 + Math.random() * 72) + '%';
+      s.addEventListener('pointerenter', () => {
+        if (s.dataset.got) return;
+        s.dataset.got = 1;
+        const r = s.getBoundingClientRect();
+        createExplosion(r.left + r.width / 2, r.top + r.height / 2, 18, false);
+        SoundFX.pop();
+        s.remove();
+        starsGot++;
+        $id('starScore').textContent = `Зібрано: ${starsGot} / 10`;
+        if (starsGot >= 10) {
+          const intro = $id('starIntro');
+          intro.style.display = 'flex';
+          intro.innerHTML = '<div style="font-size:3.5rem;">🌟</div>Усі зірочки зібрано! Ти вправно керуєш вказівником!';
+          SoundFX.success();
+          launchFireworksBurst(false);
+        } else {
+          spawnStar();
+        }
+      });
+      arena.appendChild(s);
+    }
+    function startStars() {
+      $id('starArena').querySelectorAll('.star-target').forEach(s => s.remove());
+      $id('starIntro').style.display = 'none';
+      starsGot = 0;
+      $id('starScore').textContent = 'Зібрано: 0 / 10';
+      SoundFX.click();
+      spawnStar();
+    }
+
+    // ---- Вікна ----
+    const winDone = new Set();
+    function winTask(n, msg) {
+      if (!winDone.has(n)) {
+        winDone.add(n);
+        $id('wt' + n).classList.add('done');
+        $id('winCount').textContent = `Виконано: ${winDone.size} / 4`;
+        if (winDone.size === 4) launchFireworksBurst(false);
+      }
+      $id('winFb').className = 'quiz-fb ok';
+      $id('winFb').innerHTML = msg;
+    }
+    function winHint() {
+      if ($id('simWin')) return;
+      $id('winFb').className = 'quiz-fb';
+      $id('winFb').innerHTML = '👆👆 Клацни <b>двічі</b> швидко!';
+    }
+    function openWin(title, body) {
+      if ($id('simWin')) return;
+      SoundFX.pop();
+      const w = document.createElement('div');
+      w.className = 'sim-window';
+      w.id = 'simWin';
+      w.innerHTML = `<div class="bar"><span>${title}</span><button title="Згорнути" onclick="minWin()">—</button><button class="cls" title="Закрити" onclick="closeWin()">✕</button></div><div class="body">${body}</div>`;
+      $id('winSim').appendChild(w);
+      const tb = document.createElement('button');
+      tb.id = 'winTbBtn';
+      tb.textContent = title.split(' ')[0];
+      tb.style.borderColor = '#93c5fd';
+      tb.onclick = restoreWin;
+      $id('winTaskbar').appendChild(tb);
+      winTask(1, '✅ Програму відкрито! Її значок з’явився на панелі завдань.');
+    }
+    function minWin() {
+      SoundFX.click();
+      $id('simWin').style.display = 'none';
+      winTask(2, '✅ Вікно згорнуто! Програма працює — її значок унизу.');
+    }
+    function restoreWin() {
+      const w = $id('simWin');
+      if (!w || w.style.display !== 'none') return;
+      SoundFX.click();
+      w.style.display = '';
+      winTask(3, '✅ Вікно відновлено!');
+    }
+    function closeWin() {
+      SoundFX.click();
+      $id('simWin').remove();
+      $id('winTbBtn').remove();
+      winTask(4, '✅ Вікно закрито — програма завершила роботу.');
+    }
