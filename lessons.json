@@ -57,6 +57,24 @@
           "title": "Робочий стіл комп’ютера",
           "path": "3-klas/urok-08/",
           "slides": 12
+        },
+        {
+          "num": 9,
+          "title": "Файли і папки",
+          "path": "3-klas/urok-09/",
+          "slides": 11
+        },
+        {
+          "num": 10,
+          "title": "Мережа Інтернет",
+          "path": "3-klas/urok-10/",
+          "slides": 11
+        },
+        {
+          "num": 11,
+          "title": "Безпечна робота в Інтернеті",
+          "path": "3-klas/urok-11/",
+          "slides": 11
         }
       ]
     },

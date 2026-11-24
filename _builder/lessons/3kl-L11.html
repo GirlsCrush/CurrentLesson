@@ -1,0 +1,422 @@
+<!--META
+{
+  "title": "Урок 11 • Безпечна робота в Інтернеті (3 клас НУШ)",
+  "pill": "НУШ • 3 КЛАС",
+  "brand": "Урок 11: Безпека в Інтернеті",
+  "emojis": ["🛡️", "🔒", "🦠", "🌐", "💬", "✉️", "🔑", "👨‍👩‍👧", "🚦", "✅"],
+  "topic": "nush3-urok11-bezpeka-internet",
+  "out": "3-klas/urok-11/index.html"
+}
+-->
+<!--SLIDES-->
+      <style>
+        .av-arena { position: relative; height: clamp(230px, 38vh, 320px); border-radius: 24px; border: 4px solid #10b981; overflow: hidden;
+          background: linear-gradient(135deg, #ecfdf5, #e0f2fe); }
+        .av-item { position: absolute; transform: translate(-50%, -50%); width: 84px; height: 84px; border-radius: 50%; border: 4px solid #fff;
+          font-size: 2.8rem; display: flex; align-items: center; justify-content: center; cursor: pointer; animation: popIn .25s ease-out;
+          box-shadow: 0 8px 18px rgba(15,23,42,.25); background: #fff; }
+        .av-item.virus { background: radial-gradient(circle at 35% 35%, #fecaca, #ef4444); }
+        .av-item.file { background: radial-gradient(circle at 35% 35%, #dbeafe, #60a5fa); }
+        .popup-site { background: #fff; border: 4px solid #1e293b; border-radius: 14px; overflow: hidden; }
+        .popup-site .bar { background: #e2e8f0; padding: 8px 14px; font-weight: 800; color: #334155; display: flex; gap: 10px; align-items: center; }
+        .popup-site .bar .u { flex: 1; background: #fff; border-radius: 18px; padding: 6px 14px; }
+        .popup-site .body { padding: 16px; text-align: center; min-height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+        .popup-site .ad { font-size: 1.5rem; font-weight: 900; color: #b91c1c; }
+        .choice-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .memo { background: #fffbeb; border: 3px dashed #f59e0b; border-radius: 20px; padding: 10px 16px; min-height: 120px; }
+        .memo ol { margin: 6px 0 0; padding-left: 26px; font-weight: 900; font-size: 1.05rem; color: #78350f; }
+        .memo li { margin: 4px 0; animation: slidePop .3s; }
+      </style>
+
+      <!-- SLIDE 1 -->
+      <section class="slide active" data-slide="1">
+        <div class="slide-header">
+          <span class="slide-tag">🛡️ Урок 11 • Безпечна робота в Інтернеті</span>
+          <span class="slide-tag" style="background:#fef3c7;color:#92400e;">💡 Натискай на падаючі смайлики!</span>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="hero-grid">
+            <div>
+              <div style="font-size:3.2rem;line-height:1;">🌐 🛡️ 🔒 👨‍👩‍👧</div>
+              <h1 class="hero-title">Безпечна робота в Інтернеті</h1>
+              <p class="slide-subtitle" style="font-size:1.25rem;margin-bottom:14px;">
+                Інтернет допомагає вчитися, спілкуватися й відпочивати. Але в ньому, як і на вулиці, треба знати правила безпеки!
+              </p>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <span class="feedback-pill" style="background:#e0e7ff;color:#3730a3;">💬 Спілкування</span>
+                <span class="feedback-pill" style="background:#fee2e2;color:#991b1b;">🦠 Віруси</span>
+                <span class="feedback-pill" style="background:#d1fae5;color:#065f46;">📜 Мої правила</span>
+              </div>
+            </div>
+            <div class="mission-box">
+              <div style="font-weight:900;font-size:1.2rem;color:#312e81;">🎯 Пригадаймо:</div>
+              <p style="font-size:0.95rem;color:#475569;margin-top:2px;">Натисни, якщо знаєш відповідь:</p>
+              <div class="mission-item" onclick="toggleMission(this)"><span>🌍</span><span>Що таке Інтернет?</span></div>
+              <div class="mission-item" onclick="toggleMission(this)"><span>🧭</span><span>Для чого потрібен браузер?</span></div>
+              <div class="mission-item" onclick="toggleMission(this)"><span>🔗</span><span>Що таке гіперпосилання?</span></div>
+              <div class="mission-status" style="margin-top:10px;font-weight:800;font-size:0.95rem;color:#4f46e5;">Виконано: 0 з 3</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Розминка -->
+      <section class="slide" data-slide="2">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">✏️ Розминка</span>
+            <h2 class="slide-title">Впиши слово по літерах!</h2>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="rebus-card" style="align-items:flex-start;"><div style="font-weight:900;font-size:1.25rem;">1️⃣ 📰 Що нового сталося у світі? Про це розповідають …</div><div class="letter-boxes" id="cw1"></div></div>
+          <div class="rebus-card" data-step="1" style="align-items:flex-start;"><div style="font-weight:900;font-size:1.25rem;">2️⃣ 🧭 Програма для перегляду вебсторінок</div><div class="letter-boxes" id="cw2"></div></div>
+          <button class="btn btn-sm btn-secondary t-only" style="align-self:center;" onclick="cw.forEach(c => c.showAnswer())">👁 Показати відповіді</button>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Електронне спілкування -->
+      <section class="slide" data-slide="3">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">💬 Електронне спілкування</span>
+            <h2 class="slide-title">Як люди спілкуються через Інтернет?</h2>
+            <p class="slide-subtitle">Натискай на картки.</p>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="grid g5">
+            <div class="tile click" onclick="openTile(this)"><div class="em">✉️</div><div class="ttl">Електронна пошта</div><div class="tap">Натисни 👆</div><div class="why">Лист приходить за кілька секунд</div></div>
+            <div class="tile click" onclick="openTile(this)"><div class="em">💬</div><div class="ttl">Месенджери</div><div class="tap">Натисни 👆</div><div class="why">Миттєві повідомлення, наліпки, голосові</div></div>
+            <div class="tile click" onclick="openTile(this)"><div class="em">📹</div><div class="ttl">Відеозв’язок</div><div class="tap">Натисни 👆</div><div class="why">Бачиш і чуєш співрозмовника, онлайн-уроки</div></div>
+            <div class="tile click" data-step="1" onclick="openTile(this)"><div class="em">🗨️</div><div class="ttl">Чати й форуми</div><div class="tap">Натисни 👆</div><div class="why">Обговорення з багатьма людьми одразу</div></div>
+            <div class="tile click" data-step="1" onclick="openTile(this)"><div class="em">👥</div><div class="ttl">Соціальні мережі</div><div class="tap">Натисни 👆</div><div class="why">Сторінки людей, фото, новини (часто з 13 років!)</div></div>
+          </div>
+          <div class="def-box" data-step="2">😊 Спілкуйся <b>чемно й доброзичливо</b> — у мережі по той бік екрана теж жива людина!</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Можна / не можна -->
+      <section class="slide" data-slide="4">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🚦 Правила спілкування</span>
+            <h2 class="slide-title">Можна чи не можна?</h2>
+            <p class="slide-subtitle">Натисни на вчинок, потім — на потрібний кошик.</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div id="ruleSorter"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Ситуації -->
+      <section class="slide" data-slide="5">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🤔 Що ти зробиш?</span>
+            <h2 class="slide-title">Ситуації в Інтернеті</h2>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div id="sitQuiz"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: Віруси і антивірус -->
+      <section class="slide" data-slide="6">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🦠 Комп’ютерні віруси</span>
+            <h2 class="slide-title">Вірус і антивірус</h2>
+            <p class="slide-subtitle">Переверни картки!</p>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="grid g2" style="max-width:860px;margin:0 auto;width:100%;">
+            <div class="flip-card" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:4rem;">🦠</div><div style="font-weight:900;font-size:1.4rem;">Вірус</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.15rem;">Шкідлива програма. Без дозволу <b>псує файли</b> й знищує дані. Може потрапити з Інтернету!</div>
+            </div></div>
+            <div class="flip-card" data-step="1" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:4rem;">🛡️</div><div style="font-weight:900;font-size:1.4rem;">Антивірус</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.15rem;">Програма-охоронець: <b>не пускає</b> віруси, знаходить і знищує їх.</div>
+            </div></div>
+          </div>
+          <div class="def-box" data-step="2">💡 Легше <b>не пустити</b> вірус, ніж потім «лікувати» комп’ютер!</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: Гра Антивірус -->
+      <section class="slide" data-slide="7">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🎮 Гра</span>
+            <h2 class="slide-title">Ти — антивірус! Злови 10 вірусів 🦠</h2>
+            <p class="slide-subtitle">Натискай лише на віруси. Файли 📄🖼️🎵 — не чіпай, це корисні дані!</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span class="feedback-pill" id="avScore" style="background:#fee2e2;color:#991b1b;">Спіймано: 0 / 10</span>
+            <button class="btn btn-sm btn-primary" onclick="startAv()">▶ Почати</button>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="av-arena" id="avArena">
+            <div id="avIntro" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;font-weight:900;font-size:1.3rem;color:#065f46;text-align:center;padding:10px;">
+              <div style="font-size:3.5rem;">🛡️</div>Натисни «▶ Почати»
+            </div>
+          </div>
+          <div class="scene-fb" id="avFb">🛡️ Захисти комп’ютер!</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: Небезпечний сайт -->
+      <section class="slide" data-slide="8">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">⚠️ Обережно!</span>
+            <h2 class="slide-title">Що натиснеш?</h2>
+            <p class="slide-subtitle">Іноді сайти хитрують. Обери безпечну дію.</p>
+          </div>
+          <span class="feedback-pill" id="trapCount" style="background:#e0e7ff;color:#3730a3;">Ситуація 1 з 3</span>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="popup-site">
+            <div class="bar"><span>⬅ ➡ ⟳</span><span class="u" id="trapUrl"></span></div>
+            <div class="body" id="trapBody"></div>
+          </div>
+          <div class="choice-row" id="trapChoices"></div>
+          <div class="quiz-fb" id="trapFb"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: Фізкультхвилинка -->
+      <section class="slide" data-slide="9">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🤸 Фізкультхвилинка</span>
+            <h2 class="slide-title">Світлофор безпеки</h2>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="break-grid">
+            <div style="text-align:center;background:#f8fafc;border:2.5px solid #c7d2fe;border-radius:24px;padding:18px;">
+              <div class="timer-circle" id="timerCircle" style="--deg: 360deg;"><div class="timer-inner"><span id="timerText">60</span><span style="font-size:0.75rem;color:#64748b;font-weight:800;">СЕКУНД</span></div></div>
+              <div style="display:flex;gap:8px;justify-content:center;margin-top:14px;">
+                <button class="btn btn-success btn-sm" onclick="startBreakTimer()">▶ Старт</button>
+                <button class="btn btn-accent btn-sm" onclick="pauseBreakTimer()">⏸ Пауза</button>
+                <button class="btn btn-secondary btn-sm" onclick="resetBreakTimer()">🔄 Скинути</button>
+              </div>
+            </div>
+            <div style="background:linear-gradient(135deg,#eef2ff,#fff7ed);border:2.5px solid #818cf8;border-radius:24px;padding:16px;text-align:center;">
+              <div class="poem" style="border:none;font-size:1.15rem;line-height:1.55;">
+                Учитель показує колір — діти виконують рух:<br>
+                🔴 <b>Червоний</b> — завмри, як статуя! 🗿<br>
+                🟡 <b>Жовтий</b> — плескай у долоні! 👏<br>
+                🟢 <b>Зелений</b> — крокуй на місці! 🚶<br>
+                Хто помилився — робить 3 присідання 🧎
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: Мої правила -->
+      <section class="slide" data-slide="10">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">📜 Пам’ятка</span>
+            <h2 class="slide-title">Склади свої правила безпечного Інтернету</h2>
+            <p class="slide-subtitle">Натискай лише на правильні правила — вони потраплять у пам’ятку.</p>
+          </div>
+          <span class="feedback-pill" id="memoCount" style="background:#d1fae5;color:#065f46;">Правил: 0 / 6</span>
+        </div>
+        <div class="slide-body">
+          <div class="sort-pool" id="memoPool"></div>
+          <div class="memo"><div style="font-weight:900;font-size:1.1rem;color:#92400e;">🛡️ Мої правила безпеки:</div><ol id="memoList"></ol></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 11: Підсумки -->
+      <section class="slide" data-slide="11">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🏁 Підсумки уроку</span>
+            <h2 class="slide-title">Міркуємо, даємо відповідь</h2>
+          </div>
+          <button class="btn btn-accent" onclick="launchFireworksBurst(true)">🎆 Салют!</button>
+        </div>
+        <div class="slide-body">
+          <div class="grid g3">
+            <div class="tile"><div class="em">🛡️</div><div class="ttl">Як захистити комп’ютер від вірусів?</div><button class="reveal-btn" data-answer="Мати антивірус і не відкривати невідомі файли" onclick="reveal(this)">Перевірити</button></div>
+            <div class="tile" data-step="1"><div class="em">🔑</div><div class="ttl">Кому можна сказати свій пароль?</div><button class="reveal-btn" data-answer="Лише батькам. Більше нікому!" onclick="reveal(this)">Перевірити</button></div>
+            <div class="tile" data-step="2" style="background:#fef3c7;border-color:#fcd34d;"><div class="em">📅</div><div class="ttl">Цікавинка: у лютому весь світ відзначає <b>День безпечного Інтернету</b> (з 2004 року)!</div></div>
+          </div>
+          <div data-step="3" style="background:#f1f5f9;border-radius:16px;padding:11px 14px;">
+            <div style="font-weight:900;font-size:1rem;margin-bottom:6px;">🌟 Як тобі урок?</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🚀 Супер!')">🚀 Супер!</button>
+              <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '😊 Цікаво!')">😊 Цікаво!</button>
+              <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🤔 Треба повторити')">🤔 Повторю</button>
+            </div>
+            <div id="reflectionReply" style="margin-top:6px;font-weight:800;font-size:0.9rem;color:#059669;"></div>
+          </div>
+          <div class="t-only teacher-note">Практична робота: підручник с. 48. Сайт «On-ляндія — безпечна веб-країна» (сторінка «Для учнів», історія «Безмежний ліс»): <a href="https://disted.edu.vn.ua/media/bp/html/etusivu.htm" target="_blank" rel="noopener">відкрити</a>. Гра Interland від Google: <a href="https://beinternetawesome.withgoogle.com/uk_ua/interland" target="_blank" rel="noopener">відкрити</a>. Домашнє завдання: скласти правила безпечного Інтернету для себе і своїх близьких.</div>
+        </div>
+      </section>
+<!--SCRIPT-->
+    // ===== 3 клас, урок 11 =====
+    const cw = [
+      buildRiddle('cw1', 'НОВИНИ', () => $id('cw1').closest('.rebus-card').classList.add('solved')),
+      buildRiddle('cw2', 'БРАУЗЕР', () => $id('cw2').closest('.rebus-card').classList.add('solved'))
+    ];
+
+    makeSorter('ruleSorter', [
+      { t: '👋 Чемно привітатися', b: 'yes' }, { t: '👨‍👩‍👧 Розповісти батькам про лихе', b: 'yes' },
+      { t: '🙋 Спитати дозволу дорослих', b: 'yes' }, { t: '😊 Писати доброзичливо', b: 'yes' },
+      { t: '🔑 Сказати пароль', b: 'no' }, { t: '🏠 Написати домашню адресу', b: 'no' },
+      { t: '🚶 Зустрітися з незнайомцем', b: 'no' }, { t: '😡 Ображати когось', b: 'no' }
+    ], [
+      { id: 'yes', label: '🟢 Можна', bg: '#f0fdf4', border: '#4ade80', color: '#15803d' },
+      { id: 'no', label: '🔴 Не можна', bg: '#fef2f2', border: '#f87171', color: '#b91c1c' }
+    ]);
+
+    makeQuiz('sitQuiz', [
+      { emoji: '💬', q: 'Незнайомець у грі пише: «Скажи свій пароль, я подарую тобі монетки!»', options: ['Скажу пароль', 'Не скажу й повідомлю дорослих', 'Скажу половину пароля'], correct: 1, explain: 'Пароль — секрет! Його знають лише батьки.' },
+      { emoji: '📸', q: 'Онлайн-друг просить фото твого будинку й номер школи.', options: ['Надішлю', 'Не надсилатиму інформацію про себе', 'Надішлю лише номер школи'], correct: 1, explain: 'Не розголошуй інформацію про себе та близьких!' },
+      { emoji: '😨', q: 'Ти побачив(-ла) в Інтернеті щось страшне й неприємне.', options: ['Нікому не скажу', 'Розповім батькам або вчителю', 'Перешлю друзям'], correct: 1, explain: 'Дорослі завжди допоможуть!' },
+      { emoji: '🤝', q: '«Друг» з Інтернету кличе зустрітися в парку. Що робити?', options: ['Піду сам(-а)', 'Відмовлюся й скажу батькам', 'Покличу ще друзів'], correct: 1, explain: 'Не погоджуйся на зустрічі з незнайомцями!' }
+    ], { label: 'Ситуація' });
+
+    // ---- Гра «Антивірус» ----
+    let avGot = 0, avTimer = null;
+    function avSpawn() {
+      const arena = $id('avArena');
+      if (arena.querySelectorAll('.av-item').length >= 4) return;
+      const isVirus = Math.random() < 0.6;
+      const it = document.createElement('button');
+      it.className = 'av-item ' + (isVirus ? 'virus' : 'file');
+      it.textContent = isVirus ? '🦠' : ['📄', '🖼️', '🎵'][Math.floor(Math.random() * 3)];
+      it.style.left = (10 + Math.random() * 80) + '%';
+      it.style.top = (18 + Math.random() * 66) + '%';
+      const life = setTimeout(() => it.remove(), 1900);
+      it.onclick = () => {
+        clearTimeout(life);
+        const r = it.getBoundingClientRect();
+        it.remove();
+        if (isVirus) {
+          avGot++;
+          createExplosion(r.left + r.width / 2, r.top + r.height / 2, 18, false);
+          SoundFX.pop();
+          $id('avScore').textContent = `Спіймано: ${avGot} / 10`;
+          $id('avFb').innerHTML = '✅ Вірус знешкоджено!';
+          if (avGot >= 10) avFinish();
+        } else {
+          SoundFX.error();
+          $id('avFb').innerHTML = '😮 Ой! Це був корисний файл. Лови лише віруси 🦠!';
+        }
+      };
+      arena.appendChild(it);
+    }
+    function startAv() {
+      clearInterval(avTimer);
+      $id('avArena').querySelectorAll('.av-item').forEach(x => x.remove());
+      $id('avIntro').style.display = 'none';
+      avGot = 0;
+      $id('avScore').textContent = 'Спіймано: 0 / 10';
+      $id('avFb').innerHTML = '🛡️ Захисти комп’ютер!';
+      SoundFX.click();
+      avSpawn();
+      avTimer = setInterval(avSpawn, 750);
+    }
+    function avFinish() {
+      clearInterval(avTimer);
+      $id('avArena').querySelectorAll('.av-item').forEach(x => x.remove());
+      const intro = $id('avIntro');
+      intro.style.display = 'flex';
+      intro.innerHTML = '<div style="font-size:3.5rem;">🏆</div>Комп’ютер захищено! Ти — справжній антивірус!';
+      SoundFX.success();
+      launchFireworksBurst(false);
+    }
+
+    // ---- Хитрі сайти ----
+    const TRAPS = [
+      { url: 'www.super-pryz.xyz', body: '<div class="ad">🎁 ВІТАЄМО! Ти виграв новий телефон! 📱</div><div>Натисни кнопку й введи пароль, щоб отримати приз!</div>',
+        choices: [['🎁 Отримати приз', false, 'Це пастка! Справжні призи так не роздають.'], ['✕ Закрити сторінку', true, 'Правильно! Закривай такі сторінки й розкажи дорослим.']] },
+      { url: '⚠️ Цей сайт може бути небезпечним', body: '<div style="font-size:3rem;">⚠️</div><div class="ad" style="color:#b45309;">Браузер попереджає: сайт може бути небезпечним!</div>',
+        choices: [['➡ Все одно відкрити', false, 'Не відкривай сайт, якщо браузер попереджає про небезпеку!'], ['⬅ Повернутися назад', true, 'Молодець! Попередження браузера треба слухати.']] },
+      { url: 'Лист від: незнайомець@пошта', body: '<div style="font-size:3rem;">✉️📎</div><div class="ad" style="color:#7c3aed;">«Відкрий файл ігра.exe — там подарунок!»</div>',
+        choices: [['📎 Відкрити файл', false, 'У невідомих файлах можуть бути віруси!'], ['🙋 Показати дорослим, не відкриваючи', true, 'Правильно! Невідомі файли не відкриваємо.']] }
+    ];
+    let trapI = 0;
+    function renderTrap() {
+      const t = TRAPS[trapI];
+      $id('trapCount').textContent = `Ситуація ${trapI + 1} з ${TRAPS.length}`;
+      $id('trapUrl').textContent = t.url;
+      $id('trapBody').innerHTML = t.body;
+      $id('trapFb').className = 'quiz-fb';
+      $id('trapFb').innerHTML = '';
+      const row = $id('trapChoices');
+      row.innerHTML = '';
+      shuffleArr(t.choices).forEach(([label, ok, msg]) => {
+        const b = document.createElement('button');
+        b.className = 'opt-btn big';
+        b.innerHTML = label;
+        b.onclick = () => {
+          if (ok) {
+            SoundFX.success();
+            b.classList.add('correct');
+            row.querySelectorAll('button').forEach(x => x.disabled = true);
+            $id('trapFb').className = 'quiz-fb ok';
+            $id('trapFb').innerHTML = '✅ ' + msg + '<br>';
+            const nx = document.createElement('button');
+            nx.className = 'btn btn-primary';
+            nx.textContent = trapI + 1 < TRAPS.length ? 'Наступна ➡' : '🔄 Ще раз';
+            nx.onclick = () => { trapI = (trapI + 1) % TRAPS.length; SoundFX.click(); renderTrap(); };
+            $id('trapFb').appendChild(nx);
+            if (trapI + 1 === TRAPS.length) launchFireworksBurst(false);
+          } else {
+            SoundFX.error();
+            b.classList.add('wrong');
+            b.disabled = true;
+            $id('trapFb').className = 'quiz-fb bad';
+            $id('trapFb').innerHTML = '🛑 ' + msg;
+          }
+        };
+        row.appendChild(b);
+      });
+    }
+    renderTrap();
+
+    // ---- Пам’ятка ----
+    (() => {
+      const RULES = [
+        ['🙋 Відкривай сайти з дозволу дорослих', true], ['🔑 Нікому не кажи свій пароль', true],
+        ['🏠 Не розповідай про себе незнайомцям', true], ['📎 Не відкривай невідомі файли', true],
+        ['🚫 Не ходи на зустрічі з онлайн-незнайомцями', true], ['🛡️ Май антивірус на комп’ютері', true],
+        ['🎁 Натискай на всі яскраві реклами', false], ['📸 Надсилай фото всім, хто просить', false]
+      ];
+      let n = 0;
+      shuffleArr(RULES).forEach(([t, ok]) => {
+        const b = document.createElement('button');
+        b.className = 'word-chip';
+        b.innerHTML = t;
+        b.onclick = () => {
+          if (ok) {
+            SoundFX.success();
+            const li = document.createElement('li');
+            li.innerHTML = t;
+            $id('memoList').appendChild(li);
+            b.remove();
+            n++;
+            $id('memoCount').textContent = `Правил: ${n} / 6`;
+            if (n === 6) launchFireworksBurst(false);
+          } else {
+            SoundFX.error();
+            b.classList.add('wrong', 'shake');
+            setTimeout(() => b.classList.remove('shake'), 420);
+          }
+        };
+        $id('memoPool').appendChild(b);
+      });
+    })();

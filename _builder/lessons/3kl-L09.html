@@ -1,0 +1,507 @@
+<!--META
+{
+  "title": "Урок 9 • Файли і папки (3 клас НУШ)",
+  "pill": "НУШ • 3 КЛАС",
+  "brand": "Урок 9: Файли і папки",
+  "emojis": ["📁", "📄", "🖼️", "🎵", "🎬", "📂", "💾", "🗂️", "✏️", "🌳"],
+  "topic": "nush3-urok09-faily-papky",
+  "out": "3-klas/urok-09/index.html"
+}
+-->
+<!--SLIDES-->
+      <style>
+        .ctx-menu { position: absolute; z-index: 20; background: #fff; border-radius: 12px; box-shadow: 0 12px 28px rgba(0,0,0,.35); padding: 6px; min-width: 190px; }
+        .ctx-menu button { display: block; width: 100%; text-align: left; border: none; background: none; padding: 10px 14px; border-radius: 8px;
+          font-family: inherit; font-weight: 900; font-size: 1.05rem; color: #1e293b; cursor: pointer; }
+        .ctx-menu button:hover { background: #e0e7ff; }
+        .ctx-menu .sub { position: absolute; left: 100%; top: 0; }
+        .name-input { width: 92px; font-family: inherit; font-weight: 900; font-size: .85rem; text-align: center; border: 2px solid #f59e0b; border-radius: 6px; padding: 2px; }
+        .desk-icon2.drop-hot { background: rgba(255,255,255,.45); border-color: #fde68a; }
+        .fname { display: inline-flex; align-items: center; gap: 4px; font-size: clamp(1.3rem, 2.4vw, 1.9rem); font-weight: 900; }
+        .fname .p1 { background: #dbeafe; color: #1d4ed8; border: 3px solid #60a5fa; border-radius: 14px; padding: 6px 16px; }
+        .fname .p2 { background: #fef3c7; color: #b45309; border: 3px solid #fbbf24; border-radius: 14px; padding: 6px 16px; }
+        .fname .lb { display: block; font-size: .9rem; text-align: center; margin-top: 4px; }
+        .tree { background: #fff; border: 3px solid #a7f3d0; border-radius: 20px; padding: 12px 18px; font-weight: 900; font-size: 1.15rem; }
+        .tree ul { list-style: none; margin: 0; padding-left: 30px; border-left: 3px dashed #a7f3d0; }
+        .tree > ul { padding-left: 0; border: none; }
+        .tree li { margin: 5px 0; }
+        .tree .node { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 4px 16px; border-radius: 14px; border: 3px solid #fbbf24;
+          background: #fffbeb; cursor: pointer; font-family: inherit; font-weight: 900; font-size: 1.1rem; box-shadow: 0 4px 0 #fde68a; }
+        .tree .node.file { border-color: #cbd5e1; background: #f8fafc; box-shadow: none; cursor: default; }
+        .tree li.closed > ul { display: none; }
+      </style>
+
+      <!-- SLIDE 1 -->
+      <section class="slide active" data-slide="1">
+        <div class="slide-header">
+          <span class="slide-tag">📁 Урок 9 • Структурування інформації</span>
+          <span class="slide-tag" style="background:#fef3c7;color:#92400e;">💡 Натискай на падаючі смайлики!</span>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="hero-grid">
+            <div>
+              <div style="font-size:3.2rem;line-height:1;">📄 📁 🗂️ 🌳</div>
+              <h1 class="hero-title">Файли і папки</h1>
+              <p class="slide-subtitle" style="font-size:1.25rem;margin-bottom:14px;">
+                Як комп’ютер зберігає малюнки, тексти й музику? І як навести в ньому лад, щоб усе швидко знаходити?
+              </p>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <span class="feedback-pill" style="background:#e0e7ff;color:#3730a3;">📄 Імена файлів</span>
+                <span class="feedback-pill" style="background:#fef3c7;color:#92400e;">📁 Папки</span>
+                <span class="feedback-pill" style="background:#d1fae5;color:#065f46;">🖱️ Створюємо папку</span>
+              </div>
+            </div>
+            <div class="mission-box">
+              <div style="font-weight:900;font-size:1.2rem;color:#312e81;">🎯 Пригадаймо:</div>
+              <p style="font-size:0.95rem;color:#475569;margin-top:2px;">Натисни, якщо знаєш відповідь:</p>
+              <div class="mission-item" onclick="toggleMission(this)"><span>🖥️</span><span>Що лежить на Робочому столі?</span></div>
+              <div class="mission-item" onclick="toggleMission(this)"><span>🎨</span><span>Як зберегти малюнок у Paint?</span></div>
+              <div class="mission-item" onclick="toggleMission(this)"><span>💾</span><span>Де ще можна зберігати інформацію?</span></div>
+              <div class="mission-status" style="margin-top:10px;font-weight:800;font-size:0.95rem;color:#4f46e5;">Виконано: 0 з 3</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Анаграми -->
+      <section class="slide" data-slide="2">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🔤 Розминка</span>
+            <h2 class="slide-title">Літери переплутались!</h2>
+            <p class="slide-subtitle">Це засоби, де зберігають інформацію. Склади правильне слово.</p>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="grid g3">
+            <div class="rebus-card"><div style="font-size:2.6rem;">💿</div><div style="font-weight:900;font-size:1.5rem;letter-spacing:6px;color:#6366f1;">С Д К И</div><div class="letter-boxes" id="an1"></div></div>
+            <div class="rebus-card" data-step="1"><div style="font-size:2.6rem;">📓</div><div style="font-weight:900;font-size:1.5rem;letter-spacing:6px;color:#6366f1;">Ш Т И О З</div><div class="letter-boxes" id="an2"></div></div>
+            <div class="rebus-card" data-step="2"><div style="font-size:2.6rem;">💾</div><div style="font-weight:900;font-size:1.5rem;letter-spacing:6px;color:#6366f1;">К А Ш Ф Л Е</div><div class="letter-boxes" id="an3"></div></div>
+          </div>
+          <button class="btn btn-sm btn-secondary t-only" style="align-self:center;" onclick="an.forEach(c => c.showAnswer())">👁 Показати відповіді</button>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Лад у речах -->
+      <section class="slide" data-slide="3">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🧺 Наводимо лад</span>
+            <h2 class="slide-title">Розклади речі по полицях!</h2>
+            <p class="slide-subtitle">Люди здавна тримають речі на своїх місцях — тоді їх легко знайти. Натисни річ, потім полицю.</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div id="shelfSorter"></div>
+          <div class="def-box" data-step="1">💡 У комп’ютері теж треба наводити лад! Там усе зберігається у <b>файлах</b>, а файли розкладають по <b>папках</b>.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Що таке файл -->
+      <section class="slide" data-slide="4">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">📄 Дізнаємося</span>
+            <h2 class="slide-title">Що таке файл?</h2>
+            <p class="slide-subtitle">Переверни картки!</p>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="grid g3">
+            <div class="flip-card" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:4rem;">📄</div><div style="font-weight:900;font-size:1.4rem;">Файл</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.15rem;">У файлах комп’ютер зберігає <b>тексти, малюнки, музику, відео й програми</b>.</div>
+            </div></div>
+            <div class="flip-card" data-step="1" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:4rem;">🏷️</div><div style="font-weight:900;font-size:1.4rem;">Ім’я</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.15rem;">Кожен файл має <b>ім’я</b>. Давай такі імена, щоб файл потім було легко знайти!</div>
+            </div></div>
+            <div class="flip-card" data-step="2" onclick="flipCard(this)"><div class="flip-inner">
+              <div class="flip-front"><div style="font-size:4rem;">🖼️🎵🎬</div><div style="font-weight:900;font-size:1.4rem;">Значок</div><div style="font-size:0.85rem;color:#6366f1;font-weight:800;">Натисни ↻</div></div>
+              <div class="flip-back" style="font-size:1.15rem;">Файли з різним вмістом мають <b>різні значки</b>. За значком видно, що всередині.</div>
+            </div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Правило імен -->
+      <section class="slide" data-slide="5">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🏷️ Правило</span>
+            <h2 class="slide-title">Чи може це бути ім’ям файлу?</h2>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="def-box">В імені можна писати літери, цифри й пробіли. <b>Заборонені</b> знаки: <span style="font-size:1.5rem;letter-spacing:8px;color:#be123c;">\ / : * ? " &lt; &gt; |</span></div>
+          <div id="nameQuiz" data-step="1"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: Розширення -->
+      <section class="slide" data-slide="6">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🔍 Секрет імені</span>
+            <h2 class="slide-title">Ім’я файлу складається з двох частин</h2>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div style="display:flex;justify-content:center;">
+            <div class="fname"><span><span class="p1">котик</span><span class="lb" style="color:#1d4ed8;">ім’я</span></span><span style="padding-bottom:26px;">.</span><span><span class="p2">bmp</span><span class="lb" style="color:#b45309;">розширення</span></span></div>
+          </div>
+          <div class="def-box" data-step="1">Ім’я й розширення розділяє <b>крапка</b>. <b>Розширення</b> підказує, що у файлі і якою програмою його відкрити: bmp — малюнок 🎨</div>
+          <div id="extSorter" data-step="2"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: Папки і дерево -->
+      <section class="slide" data-slide="7">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🌳 Дерево папок</span>
+            <h2 class="slide-title">Папка в папці в папці…</h2>
+            <p class="slide-subtitle">Натискай на жовті папки, щоб відкрити їх. Знайди файл «Мій кіт.jpg»!</p>
+          </div>
+          <span class="feedback-pill" id="treeFb" style="background:#fef3c7;color:#92400e;">🔍 Шукаємо…</span>
+        </div>
+        <div class="slide-body" style="display:grid;grid-template-columns:1.2fr .8fr;gap:14px;align-items:center;">
+          <div class="tree" id="folderTree"></div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div class="def-box" data-step="1" style="font-size:1.05rem;">📁 <b>Папка</b> зберігає файли, згруповані за якоюсь ознакою. Папки всередині іншої — <b>вкладені</b>.</div>
+            <div class="def-box" data-step="2" style="font-size:1.05rem;background:#d1fae5;border-color:#10b981;color:#065f46;">🌳 Чому схему називають <b>деревом папок</b>? Бо вона розгалужується, як гілки дерева!</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: Розклади по папках -->
+      <section class="slide" data-slide="8">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🗂️ Упорядковуємо</span>
+            <h2 class="slide-title">Розклади файли по папках</h2>
+            <p class="slide-subtitle">Натисни на файл, потім — на папку, куди його покласти.</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div id="folderSorter"></div>
+          <div class="def-box" data-step="1">💡 Імена папкам давай такі, щоб було зрозуміло, <b>що в них лежить</b>.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: Фізкультхвилинка -->
+      <section class="slide" data-slide="9">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🤸 Фізкультхвилинка</span>
+            <h2 class="slide-title">Розкладаємо все по поличках!</h2>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="break-grid">
+            <div style="text-align:center;background:#f8fafc;border:2.5px solid #c7d2fe;border-radius:24px;padding:18px;">
+              <div class="timer-circle" id="timerCircle" style="--deg: 360deg;"><div class="timer-inner"><span id="timerText">60</span><span style="font-size:0.75rem;color:#64748b;font-weight:800;">СЕКУНД</span></div></div>
+              <div style="display:flex;gap:8px;justify-content:center;margin-top:14px;">
+                <button class="btn btn-success btn-sm" onclick="startBreakTimer()">▶ Старт</button>
+                <button class="btn btn-accent btn-sm" onclick="pauseBreakTimer()">⏸ Пауза</button>
+                <button class="btn btn-secondary btn-sm" onclick="resetBreakTimer()">🔄 Скинути</button>
+              </div>
+            </div>
+            <div style="background:linear-gradient(135deg,#eef2ff,#fff7ed);border:2.5px solid #818cf8;border-radius:24px;padding:16px;text-align:center;">
+              <div class="poem" style="border:none;font-size:1.15rem;line-height:1.55;">
+                Встаньте, діти, рівно-рівно! 🧍<br>
+                Верхня поличка — руки вгору! 🙌<br>
+                Середня поличка — руки в сторони! 🤸<br>
+                Нижня поличка — присідаємо! 🧎<br>
+                Відкриваємо папку — руки розводимо! 👐<br>
+                Закриваємо папку — плесь у долоні! 👏
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: Практикум — створи папку -->
+      <section class="slide" data-slide="10">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🖱️ Практикум</span>
+            <h2 class="slide-title">Створи власну папку!</h2>
+          </div>
+          <span class="feedback-pill" id="fsCount" style="background:#e0e7ff;color:#3730a3;">Виконано: 0 / 4</span>
+        </div>
+        <div class="slide-body">
+          <div style="display:grid;grid-template-columns:1.4fr .6fr;gap:14px;">
+            <div class="desk-sim" id="fsSim">
+              <div class="desk-taskbar"><button>⊞</button></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div class="mission-item sim-task" id="ft1"><span>1️⃣</span><span>Клацни <b>правою</b> кнопкою на вільному місці</span></div>
+              <div class="mission-item sim-task" id="ft2"><span>2️⃣</span><span>Обери <b>Створити → Папку</b></span></div>
+              <div class="mission-item sim-task" id="ft3"><span>3️⃣</span><span>Введи назву й натисни <b>Enter</b></span></div>
+              <div class="mission-item sim-task" id="ft4"><span>4️⃣</span><span>Перетягни обидва малюнки 🖼️ у папку</span></div>
+              <div class="quiz-fb" id="fsFb" style="font-size:1rem;"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 11: Підсумки -->
+      <section class="slide" data-slide="11">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🏁 Підсумки уроку</span>
+            <h2 class="slide-title">Міркуємо, даємо відповідь</h2>
+          </div>
+          <button class="btn btn-accent" onclick="launchFireworksBurst(true)">🎆 Салют!</button>
+        </div>
+        <div class="slide-body">
+          <div class="grid g3">
+            <div class="tile"><div class="em">📄</div><div class="ttl">Що може зберігатися у файлі?</div><button class="reveal-btn" data-answer="Тексти, малюнки, музика, відео, програми" onclick="reveal(this)">Перевірити</button></div>
+            <div class="tile" data-step="1"><div class="em">📁</div><div class="ttl">Для чого потрібні папки?</div><button class="reveal-btn" data-answer="Щоб упорядкувати файли й легко їх знаходити" onclick="reveal(this)">Перевірити</button></div>
+            <div class="tile" data-step="2" style="background:#fef3c7;border-color:#fcd34d;"><div class="em">📂</div><div class="ttl">Цікавинка: слово «папка» — з німецької, так називали картон. Значки папок у комп’ютері з’явилися у <b>1970</b> році!</div></div>
+          </div>
+          <div data-step="3" style="background:#f1f5f9;border-radius:16px;padding:11px 14px;">
+            <div style="font-weight:900;font-size:1rem;margin-bottom:6px;">🌟 Як тобі урок?</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🚀 Супер!')">🚀 Супер!</button>
+              <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '😊 Цікаво!')">😊 Цікаво!</button>
+              <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🤔 Треба повторити')">🤔 Повторю</button>
+            </div>
+            <div id="reflectionReply" style="margin-top:6px;font-weight:800;font-size:0.9rem;color:#059669;"></div>
+          </div>
+          <div class="t-only teacher-note">Практична робота: підручник с. 40 — створити на Робочому столі папку зі своїм ім’ям, зберегти в ній малюнок із Paint. Відео ПлюсПлюс «Корисні підказки. Учись учитися»: <a href="https://youtu.be/4IAB2bkqLQs" target="_blank" rel="noopener">youtu.be/4IAB2bkqLQs</a>. Домашнє завдання: з’ясувати, які імена та значки мають файли на домашньому комп’ютері.</div>
+        </div>
+      </section>
+<!--SCRIPT-->
+    // ===== 3 клас, урок 9 =====
+    const an = ['ДИСК', 'ЗОШИТ', 'ФЛЕШКА'].map((w, i) =>
+      buildRiddle('an' + (i + 1), w, () => $id('an' + (i + 1)).closest('.rebus-card').classList.add('solved')));
+
+    makeSorter('shelfSorter', [
+      { t: '📕 Казки', b: 'book' }, { t: '📘 Енциклопедія', b: 'book' }, { t: '📗 Підручник', b: 'book' },
+      { t: '🧸 Ведмедик', b: 'toy' }, { t: '🚗 Машинка', b: 'toy' }, { t: '🪀 Йо-йо', b: 'toy' },
+      { t: '👕 Футболка', b: 'cloth' }, { t: '🧦 Шкарпетки', b: 'cloth' }, { t: '🧢 Кепка', b: 'cloth' }
+    ], [
+      { id: 'book', label: '📚 Книжки', bg: '#eff6ff', border: '#60a5fa', color: '#1d4ed8' },
+      { id: 'toy', label: '🧸 Іграшки', bg: '#fff7ed', border: '#fb923c', color: '#c2410c' },
+      { id: 'cloth', label: '👕 Одяг', bg: '#f0fdf4', border: '#4ade80', color: '#15803d' }
+    ]);
+
+    makeQuiz('nameQuiz', [
+      { q: '📄 «Моя родина»', correct: 0, explain: 'Так! Лише літери й пробіл.' },
+      { q: '📄 «клас:третій»', correct: 1, explain: 'Ні! Двокрапка <b>:</b> заборонена.', hint: 'Придивися до знаків!' },
+      { q: '📄 «Ліцей 5»', correct: 0, explain: 'Так! Літери, пробіл і цифра — можна.' },
+      { q: '📄 «dog*black»', correct: 1, explain: 'Ні! Зірочка <b>*</b> заборонена.', hint: 'Придивися до знаків!' },
+      { q: '📄 «рибка чи киця?»', correct: 1, explain: 'Ні! Знак питання <b>?</b> заборонений.', hint: 'Придивися до знаків!' }
+    ], { options: ['✅ Так, можна', '❌ Ні, не можна'], big: true, label: 'Ім’я' });
+
+    makeSorter('extSorter', [
+      { t: '📄 казка.docx', b: 'txt' }, { t: '📄 вірш.txt', b: 'txt' },
+      { t: '🖼️ котик.bmp', b: 'img' }, { t: '🖼️ море.jpg', b: 'img' },
+      { t: '🎵 пісня.mp3', b: 'snd' },
+      { t: '🎬 мультик.mp4', b: 'vid' }
+    ], [
+      { id: 'txt', label: '📄 Текст', bg: '#eff6ff', border: '#60a5fa', color: '#1d4ed8' },
+      { id: 'img', label: '🖼️ Малюнок', bg: '#fdf2f8', border: '#f472b6', color: '#be185d' },
+      { id: 'snd', label: '🎵 Звук', bg: '#f0fdf4', border: '#4ade80', color: '#15803d' },
+      { id: 'vid', label: '🎬 Відео', bg: '#fffbeb', border: '#fbbf24', color: '#b45309' }
+    ]);
+
+    // ---- Дерево папок ----
+    const TREE = { n: '💽 Диск D:', c: [
+      { n: '📁 Навчання', c: [
+        { n: '📁 Математика', c: [{ f: '📄 Задачі.docx' }] },
+        { n: '📁 Інформатика', c: [{ f: '🖼️ Мій малюнок.bmp' }] }
+      ] },
+      { n: '📁 Розваги', c: [
+        { n: '📁 Музика', c: [{ f: '🎵 Пісня.mp3' }] },
+        { n: '📁 Фото', c: [{ f: '🖼️ Мій кіт.jpg', goal: true }] }
+      ] }
+    ] };
+    function renderTree(node) {
+      const li = document.createElement('li');
+      if (node.f) {
+        li.innerHTML = `<span class="node file">${node.f}</span>`;
+        if (node.goal) {
+          li.firstChild.id = 'goalFile';
+        }
+        return li;
+      }
+      li.className = 'closed';
+      const b = document.createElement('button');
+      b.className = 'node';
+      b.textContent = node.n;
+      b.onclick = () => {
+        const opening = li.classList.contains('closed');
+        if (opening) li.parentElement.querySelectorAll(':scope > li').forEach(x => { if (x !== li && x.querySelector(':scope > ul')) x.classList.add('closed'); });
+        li.classList.toggle('closed');
+        SoundFX.click();
+        if (!li.classList.contains('closed') && li.querySelector(':scope > ul > li > #goalFile')) {
+          $id('treeFb').textContent = '🎉 Знайшли: Диск D: → Розваги → Фото!';
+          $id('goalFile').style.borderColor = '#10b981';
+          $id('goalFile').style.background = '#d1fae5';
+          SoundFX.success();
+          launchFireworksBurst(false);
+        }
+      };
+      li.appendChild(b);
+      const ul = document.createElement('ul');
+      node.c.forEach(ch => ul.appendChild(renderTree(ch)));
+      li.appendChild(ul);
+      return li;
+    }
+    (() => { const ul = document.createElement('ul'); ul.appendChild(renderTree(TREE)); $id('folderTree').appendChild(ul); })();
+
+    makeSorter('folderSorter', [
+      { t: '🖼️ Мама.jpg', b: 'photo' }, { t: '🖼️ Море.jpg', b: 'photo' }, { t: '🖼️ Котик.jpg', b: 'photo' },
+      { t: '🎵 Колискова.mp3', b: 'music' }, { t: '🎵 Гімн.mp3', b: 'music' },
+      { t: '📄 Задача.docx', b: 'school' }, { t: '📄 Вірш.docx', b: 'school' }, { t: '🎨 Ялинка.bmp', b: 'school' }
+    ], [
+      { id: 'photo', label: '📁 Фото родини', bg: '#fdf2f8', border: '#f472b6', color: '#be185d' },
+      { id: 'music', label: '📁 Музика', bg: '#f0fdf4', border: '#4ade80', color: '#15803d' },
+      { id: 'school', label: '📁 Шкільні завдання', bg: '#eff6ff', border: '#60a5fa', color: '#1d4ed8' }
+    ]);
+
+    // ---- Практикум: створення папки ----
+    const fsDone = new Set();
+    let fsFolder = null, fsMoved = 0;
+    function fsTask(n, msg, ok = true) {
+      if (ok && n && !fsDone.has(n)) {
+        fsDone.add(n);
+        $id('ft' + n).classList.add('done');
+        $id('fsCount').textContent = `Виконано: ${fsDone.size} / 4`;
+        if (fsDone.size === 4) launchFireworksBurst(false);
+      }
+      $id('fsFb').className = 'quiz-fb ' + (ok ? 'ok' : 'bad');
+      $id('fsFb').innerHTML = msg;
+    }
+    function fsCloseMenu() { const m = $id('fsMenu'); if (m) m.remove(); }
+    function fsMakeIcon(ic, name, x, y) {
+      const el = document.createElement('div');
+      el.className = 'desk-icon2';
+      el.style.left = x + '%';
+      el.style.top = y + '%';
+      el.innerHTML = `<span class="ic">${ic}</span><span class="nm">${name}</span>`;
+      $id('fsSim').appendChild(el);
+      return el;
+    }
+    function fsDraggable(el, onDrop) {
+      const sim = $id('fsSim');
+      let start = null, moved = false, ox = 0, oy = 0;
+      el.addEventListener('pointerdown', (e) => {
+        if (e.button !== 0) return;
+        e.preventDefault();
+        el.setPointerCapture(e.pointerId);
+        const r = el.getBoundingClientRect();
+        start = { x: e.clientX, y: e.clientY }; ox = e.clientX - r.left; oy = e.clientY - r.top; moved = false;
+      });
+      el.addEventListener('pointermove', (e) => {
+        if (!start) return;
+        if (!moved && Math.hypot(e.clientX - start.x, e.clientY - start.y) < 6) return;
+        moved = true;
+        el.classList.add('dragging');
+        const s = sim.getBoundingClientRect();
+        el.style.left = (Math.max(0, Math.min(s.width - el.offsetWidth, e.clientX - s.left - ox)) / s.width * 100) + '%';
+        el.style.top = (Math.max(0, Math.min(s.height - 44 - el.offsetHeight, e.clientY - s.top - oy)) / s.height * 100) + '%';
+        if (fsFolder) fsFolder.classList.toggle('drop-hot', fsOver(el, fsFolder));
+      });
+      el.addEventListener('pointerup', () => {
+        if (!start) return;
+        start = null;
+        el.classList.remove('dragging');
+        if (fsFolder) fsFolder.classList.remove('drop-hot');
+        if (moved) onDrop(el); else onDrop(null);
+      });
+    }
+    function fsOver(a, b) {
+      const r = a.getBoundingClientRect(), q = b.getBoundingClientRect();
+      return !(r.right < q.left || r.left > q.right || r.bottom < q.top || r.top > q.bottom);
+    }
+    function buildFsSim() {
+      const sim = $id('fsSim');
+      [['🖼️', 'Котик.jpg', 4, 6, true], ['🖼️', 'Веселка.bmp', 4, 46, true], ['📄', 'Казка.docx', 22, 6, false]].forEach(([ic, nm, x, y, pic]) => {
+        const el = fsMakeIcon(ic, nm, x, y);
+        fsDraggable(el, (dragged) => {
+          if (!dragged) { SoundFX.click(); fsTask(0, `${ic} Це файл <b>${nm}</b>.`, true); $id('fsFb').className = 'quiz-fb'; return; }
+          if (fsFolder && fsOver(el, fsFolder)) {
+            if (!pic) { SoundFX.error(); fsTask(4, '🤔 Казка — не малюнок! Перенось лише малюнки 🖼️', false); return; }
+            el.remove();
+            fsMoved++;
+            SoundFX.success();
+            fsFolder.querySelector('.ic').textContent = '📂';
+            if (fsMoved === 2) fsTask(4, '🎉 Обидва малюнки тепер у твоїй папці! На Робочому столі лад.');
+            else fsTask(0, '✅ Один малюнок уже в папці. Перенеси ще один!', true);
+          } else {
+            SoundFX.pop();
+          }
+        });
+      });
+      sim.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        if (e.target.closest('.desk-icon2') || e.target.closest('.desk-taskbar') || e.target.closest('.ctx-menu')) return;
+        fsCloseMenu();
+        SoundFX.click();
+        const s = sim.getBoundingClientRect();
+        const m = document.createElement('div');
+        m.className = 'ctx-menu';
+        m.id = 'fsMenu';
+        m.style.left = Math.max(4, Math.min(e.clientX - s.left, s.width - 410)) + 'px';
+        m.style.top = Math.max(4, Math.min(e.clientY - s.top, s.height - 44 - 200)) + 'px';
+        m.innerHTML = '<button data-a="view">👁 Вигляд</button><button data-a="refresh">🔄 Оновити</button><button data-a="new">✨ Створити ▸</button>';
+        sim.appendChild(m);
+        m.addEventListener('pointerdown', ev => ev.stopPropagation());
+        m.onclick = (ev) => {
+          const a = ev.target.closest('button') && ev.target.closest('button').dataset.a;
+          if (!a) return;
+          SoundFX.click();
+          if (a === 'new') {
+            if (m.querySelector('.sub')) return;
+            const sub = document.createElement('div');
+            sub.className = 'ctx-menu sub';
+            sub.style.top = '90px';
+            sub.innerHTML = '<button data-a="folder">📁 Папку</button><button data-a="doc">📄 Текстовий документ</button>';
+            m.appendChild(sub);
+          } else if (a === 'folder') {
+            fsCloseMenu();
+            fsNewFolder();
+          } else if (a === 'doc') {
+            fsTask(2, '🤔 Нам потрібна саме <b>папка</b>, а не документ!', false);
+          } else {
+            fsTask(2, '🤔 Шукай пункт <b>Створити</b>.', false);
+          }
+        };
+        fsTask(1, '✅ Відкрилося <b>контекстне меню</b>! Тепер натисни «Створити».');
+      });
+      sim.addEventListener('pointerdown', (e) => {
+        if (e.target.closest('.ctx-menu')) return;
+        if (e.button === 0 && $id('fsMenu')) fsCloseMenu();
+        else if (e.button === 0 && !e.target.closest('.desk-icon2') && !fsFolder) {
+          $id('fsFb').className = 'quiz-fb';
+          $id('fsFb').innerHTML = '👉 Клацни <b>ПРАВОЮ</b> кнопкою миші на вільному місці!';
+        }
+      });
+    }
+    function fsNewFolder() {
+      if (fsFolder) { fsTask(2, '📁 Папку вже створено! Перетягни в неї малюнки.', true); return; }
+      const el = fsMakeIcon('📁', '', 46, 20);
+      fsFolder = el;
+      const inp = document.createElement('input');
+      inp.className = 'name-input';
+      inp.value = 'Нова папка';
+      el.querySelector('.nm').appendChild(inp);
+      setTimeout(() => { inp.focus(); inp.select(); }, 30);
+      inp.addEventListener('pointerdown', e => e.stopPropagation());
+      fsTask(2, '✅ З’явилася нова папка! Надрукуй назву, наприклад <b>Мої малюнки</b>, і натисни Enter.');
+      inp.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter') return;
+        const v = inp.value.trim();
+        if (!v) { SoundFX.error(); fsTask(3, '🤔 Назва не може бути порожньою!', false); return; }
+        if (/[\\/:*?"<>|]/.test(v)) { SoundFX.error(); fsTask(3, '⛔ У назві є <b>заборонений знак</b>: \\ / : * ? " &lt; &gt; |', false); return; }
+        el.querySelector('.nm').textContent = v;
+        SoundFX.success();
+        fsTask(3, `✅ Папка «<b>${v.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</b>» готова! Тепер перетягни в неї обидва малюнки 🖼️.`);
+        fsDraggable(el, () => {});
+      });
+    }
+    buildFsSim();

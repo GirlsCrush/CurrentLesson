@@ -1,0 +1,418 @@
+<!--META
+{
+  "title": "Урок 10 • Мережа Інтернет (3 клас НУШ)",
+  "pill": "НУШ • 3 КЛАС",
+  "brand": "Урок 10: Мережа Інтернет",
+  "emojis": ["🌐", "💻", "📡", "🕸️", "🔗", "📶", "✉️", "🔍", "📖", "🖱️"],
+  "topic": "nush3-urok10-internet",
+  "out": "3-klas/urok-10/index.html"
+}
+-->
+<!--SLIDES-->
+      <style>
+        .net-stage { position: relative; height: clamp(230px, 36vh, 320px); border-radius: 24px; border: 3px solid #93c5fd; background: linear-gradient(135deg,#eff6ff,#e0e7ff); overflow: hidden; }
+        .net-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+        .net-stage line { stroke: #6366f1; stroke-width: 1.2; stroke-dasharray: 3 2; animation: netDash 1s linear infinite; }
+        @keyframes netDash { to { stroke-dashoffset: -10; } }
+        .net-node { position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 2px;
+          min-width: 96px; padding: 8px 10px; border-radius: 18px; border: 3px solid #a5b4fc; background: #fff; box-shadow: 0 5px 0 #c7d2fe;
+          font-family: inherit; font-weight: 900; font-size: .95rem; color: #312e81; cursor: pointer; }
+        .net-node .ic { font-size: 2.3rem; line-height: 1; }
+        .net-node.on { border-color: #10b981; background: #d1fae5; box-shadow: 0 5px 0 #6ee7b7; }
+        .net-hub { cursor: default; border-color: #f59e0b; background: #fef3c7; box-shadow: 0 5px 0 #fde68a; }
+        .br { background: #fff; border-radius: 14px; border: 4px solid #1e293b; overflow: hidden; box-shadow: 0 10px 24px rgba(15,23,42,.18); }
+        .br-tabs { display: flex; align-items: flex-end; gap: 4px; background: #cbd5e1; padding: 6px 8px 0; }
+        .br-tab { display: flex; align-items: center; gap: 8px; background: #f1f5f9; border-radius: 10px 10px 0 0; padding: 8px 12px; font-weight: 900; font-size: .95rem; color: #1e293b; }
+        .br-tab.cur { background: #fff; }
+        .br-bar { display: flex; align-items: center; gap: 6px; padding: 6px 8px; background: #fff; border-bottom: 2px solid #e2e8f0; }
+        .br-btn { min-width: 46px; height: 44px; border-radius: 10px; border: 2.5px solid #cbd5e1; background: #f8fafc; font-family: inherit; font-size: 1.25rem; font-weight: 900; cursor: pointer; color: #1e293b; }
+        .br-btn:hover { border-color: #6366f1; background: #eef2ff; }
+        .br-btn:disabled { opacity: .35; cursor: default; }
+        .br-btn.seen, .br-part.seen { border-color: #10b981 !important; background: #d1fae5 !important; }
+        .br-url { flex: 1; height: 44px; border-radius: 22px; border: 2.5px solid #cbd5e1; background: #f1f5f9; display: flex; align-items: center; padding: 0 16px;
+          font-weight: 800; color: #334155; font-size: 1rem; cursor: pointer; font-family: inherit; text-align: left; }
+        .br-page { padding: 10px 18px; min-height: 120px; font-size: 1.1rem; color: #334155; }
+        .br-page h3 { margin: 0 0 8px; font-size: 1.4rem; color: #1e1b4b; }
+        .br-page a.lnk { color: #2563eb; font-weight: 900; text-decoration: underline; cursor: pointer; }
+        .br-page .pic-link { display: inline-flex; flex-direction: column; align-items: center; font-size: 3rem; border: 3px solid #93c5fd; border-radius: 16px; padding: 6px 14px; cursor: pointer; background: #eff6ff; vertical-align: middle; }
+        .br-page .pic-link span { font-size: .85rem; font-weight: 900; color: #2563eb; }
+        .br-part { cursor: pointer; border: 2.5px dashed transparent; border-radius: 10px; }
+        .br-part:hover { border-color: #6366f1; }
+        .compact .mission-item { font-size: 1rem; padding: 8px 12px; }
+        .book { display: flex; gap: 0; justify-content: center; }
+        .book .pg { width: 150px; height: 170px; background: #fff; border: 3px solid #c7d2fe; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+          font-weight: 900; color: #312e81; font-size: 1rem; text-align: center; padding: 8px; }
+        .book .pg:first-child { border-radius: 18px 0 0 18px; }
+        .book .pg:last-child { border-radius: 0 18px 18px 0; }
+        .book .pg .em { font-size: 2.6rem; }
+      </style>
+
+      <!-- SLIDE 1 -->
+      <section class="slide active" data-slide="1">
+        <div class="slide-header">
+          <span class="slide-tag">🌐 Урок 10 • Поняття про мережу Інтернет</span>
+          <span class="slide-tag" style="background:#fef3c7;color:#92400e;">💡 Натискай на падаючі смайлики!</span>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="hero-grid">
+            <div>
+              <div style="font-size:3.2rem;line-height:1;">💻 🔗 🌐 🕸️</div>
+              <h1 class="hero-title">Мережа Інтернет, браузер, вебсторінка</h1>
+              <p class="slide-subtitle" style="font-size:1.25rem;margin-bottom:14px;">
+                Як комп’ютери з різних куточків світу «розмовляють» між собою? І як мандрувати Всесвітньою павутиною?
+              </p>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <span class="feedback-pill" style="background:#e0e7ff;color:#3730a3;">🔗 Мережа</span>
+                <span class="feedback-pill" style="background:#fef3c7;color:#92400e;">📖 Сайт і сторінка</span>
+                <span class="feedback-pill" style="background:#d1fae5;color:#065f46;">🖱️ Гіперпосилання</span>
+              </div>
+            </div>
+            <div class="mission-box">
+              <div style="font-weight:900;font-size:1.2rem;color:#312e81;">🎯 Пригадаймо:</div>
+              <p style="font-size:0.95rem;color:#475569;margin-top:2px;">Натисни, якщо знаєш відповідь:</p>
+              <div class="mission-item" onclick="toggleMission(this)"><span>📄</span><span>Що таке файл?</span></div>
+              <div class="mission-item" onclick="toggleMission(this)"><span>📁</span><span>Для чого потрібні папки?</span></div>
+              <div class="mission-item" onclick="toggleMission(this)"><span>🔍</span><span>Що підказує розширення файлу?</span></div>
+              <div class="mission-status" style="margin-top:10px;font-weight:800;font-size:0.95rem;color:#4f46e5;">Виконано: 0 з 3</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Розминка -->
+      <section class="slide" data-slide="2">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">✏️ Розминка</span>
+            <h2 class="slide-title">Впиши слово по літерах!</h2>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="rebus-card" style="align-items:flex-start;"><div style="font-weight:900;font-size:1.25rem;">1️⃣ 🕷️ Її плете павук. А ще так називають Інтернет — Всесвітня …</div><div class="letter-boxes" id="cw1"></div></div>
+          <div class="rebus-card" data-step="1" style="align-items:flex-start;"><div style="font-weight:900;font-size:1.25rem;">2️⃣ 🎣 Нею ловлять рибу. А ще так кажуть про з’єднані комп’ютери — комп’ютерна …</div><div class="letter-boxes" id="cw2"></div></div>
+          <button class="btn btn-sm btn-secondary t-only" style="align-self:center;" onclick="cw.forEach(c => c.showAnswer())">👁 Показати відповіді</button>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Мережа -->
+      <section class="slide" data-slide="3">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🔗 Комп’ютерна мережа</span>
+            <h2 class="slide-title">З’єднай комп’ютери в мережу!</h2>
+            <p class="slide-subtitle">Натискай на кожен пристрій — він під’єднається до мережі.</p>
+          </div>
+          <span class="feedback-pill" id="netCount" style="background:#d1fae5;color:#065f46;">З’єднано: 0 / 5</span>
+        </div>
+        <div class="slide-body">
+          <div class="net-stage" id="netStage"><svg viewBox="0 0 100 100" preserveAspectRatio="none" id="netSvg"></svg></div>
+          <div class="def-box" data-step="1">💻🔗💻 Комп’ютери з’єднують у <b>мережу</b>, щоб разом працювати й обмінюватися даними. Мережа нашого кабінету — <b>локальна</b>.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Інтернет і можливості -->
+      <section class="slide" data-slide="4">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🌍 Всесвітня мережа</span>
+            <h2 class="slide-title">Що можна робити в Інтернеті?</h2>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="def-box"><b>Інтернет</b> — всесвітня мережа, яка з’єднує мільйони комп’ютерів по всьому світу. 🌍</div>
+          <div class="grid g3" data-step="1">
+            <div class="tile click" onclick="openTile(this)"><div class="em">🔍</div><div class="ttl">Пошук</div><div class="tap">Натисни 👆</div><div class="why">Знаходити відповіді на будь-які запитання</div></div>
+            <div class="tile click" onclick="openTile(this)"><div class="em">✉️</div><div class="ttl">Листування</div><div class="tap">Натисни 👆</div><div class="why">Надсилати листи за секунду</div></div>
+            <div class="tile click" onclick="openTile(this)"><div class="em">📹</div><div class="ttl">Спілкування</div><div class="tap">Натисни 👆</div><div class="why">Бачити й чути друзів з інших країн</div></div>
+          </div>
+          <div class="grid g3" data-step="2">
+            <div class="tile click" onclick="openTile(this)"><div class="em">🎬</div><div class="ttl">Фото й відео</div><div class="tap">Натисни 👆</div><div class="why">Дивитися мультфільми, ділитися фото</div></div>
+            <div class="tile click" onclick="openTile(this)"><div class="em">📚</div><div class="ttl">Навчання</div><div class="tap">Натисни 👆</div><div class="why">Онлайн-уроки, підручники, ігри для розуму</div></div>
+            <div class="tile" style="background:#fef3c7;border-color:#fcd34d;"><div class="em">🎂</div><div class="ttl" style="font-size:1rem;">День народження Інтернету — <b>29 жовтня 1969</b> р. Тоді з’єднали 2 комп’ютери за 500 км!</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Канали зв'язку -->
+      <section class="slide" data-slide="5">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">📶 Як біжать дані</span>
+            <h2 class="slide-title">Дротом чи без дроту?</h2>
+            <p class="slide-subtitle">Дані між пристроями передаються різними каналами. Розклади їх!</p>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div id="chanSorter"></div>
+          <div class="def-box" data-step="1">📶 <b>Wi-Fi</b> — бездротове підключення комп’ютерів, планшетів і телефонів до мережі.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: Сайт як книжка -->
+      <section class="slide" data-slide="6">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">📖 Вебсторінка і вебсайт</span>
+            <h2 class="slide-title">Сайт схожий на книжку!</h2>
+          </div>
+        </div>
+        <div class="slide-body" style="justify-content:center;">
+          <div class="def-box" style="font-size:1.1rem;">🕸️ Найпопулярніша служба Інтернету — <b>WWW</b> (World Wide Web), <b>Всесвітня павутина</b>.</div>
+          <div class="book" data-step="1">
+            <div class="pg"><div class="em">🏠</div>Головна сторінка</div>
+            <div class="pg"><div class="em">🐱</div>Сторінка «Котики»</div>
+            <div class="pg"><div class="em">🐶</div>Сторінка «Песики»</div>
+            <div class="pg"><div class="em">🦜</div>Сторінка «Папуги»</div>
+          </div>
+          <div class="grid g2" data-step="2">
+            <div class="def-box" style="background:#e0e7ff;border-color:#818cf8;color:#312e81;font-size:1.05rem;">📄 <b>Вебсторінка</b> — це як сторінка книжки.</div>
+            <div class="def-box" style="background:#d1fae5;border-color:#10b981;color:#065f46;font-size:1.05rem;">📖 <b>Вебсайт</b> — сторінки, пов’язані за змістом. Як ціла книжка!</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: Браузери -->
+      <section class="slide" data-slide="7">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🧭 Програма-браузер</span>
+            <h2 class="slide-title">Хто допомагає мандрувати Інтернетом?</h2>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="def-box"><b>Браузер</b> — програма, за допомогою якої переглядають вебсторінки. Наприклад: <b>Chrome, Edge, Firefox, Opera</b>.</div>
+          <div id="brQuiz" data-step="1"></div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: Вікно браузера -->
+      <section class="slide" data-slide="8">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🪟 Вікно браузера</span>
+            <h2 class="slide-title">Досліди вікно браузера!</h2>
+            <p class="slide-subtitle">Натискай на кожну частину вікна.</p>
+          </div>
+          <span class="feedback-pill" id="partCount" style="background:#d1fae5;color:#065f46;">Досліджено: 0 / 8</span>
+        </div>
+        <div class="slide-body">
+          <div class="br" id="brParts">
+            <div class="br-tabs">
+              <div class="br-tab cur br-part" data-info="🗂️ <b>Вкладка</b> — у кожній вкладці відкрита своя вебсторінка.">🌐 Дитячий сайт <span class="br-part" data-info="✕ <b>Закрити вкладку</b> — закриває цю сторінку." style="padding:0 6px;">✕</span></div>
+              <button class="br-btn br-part" data-info="➕ <b>Нова вкладка</b> — відкриває ще одну порожню вкладку.">＋</button>
+            </div>
+            <div class="br-bar">
+              <button class="br-btn br-part" data-info="⬅️➡️ <b>Назад і вперед</b> — перехід до попередньої або наступної сторінки.">⬅ ➡</button>
+              <button class="br-btn br-part" data-info="🔄 <b>Оновити</b> — завантажує сторінку ще раз.">⟳</button>
+              <div class="br-url br-part" data-info="🔤 <b>Адресний рядок</b> — тут пишуть адресу сайту.">🔒 www.dytyachyi-sait.ua</div>
+              <button class="br-btn br-part" data-info="⋮ <b>Налаштування</b> — меню керування браузером.">⋮</button>
+            </div>
+            <div class="br-page br-part" data-info="🖼️ <b>Робоча область</b> — тут показується сама вебсторінка." style="min-height:90px;">
+              <h3>Ласкаво просимо! 👋</h3>Тут показується вміст вебсторінки.
+            </div>
+          </div>
+          <div class="def-box" id="partInfo">👆 Натисни на будь-яку частину вікна</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: Фізкультхвилинка -->
+      <section class="slide" data-slide="9">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🤸 Фізкультхвилинка</span>
+            <h2 class="slide-title">Павучок плете павутинку</h2>
+          </div>
+        </div>
+        <div class="slide-body">
+          <div class="break-grid">
+            <div style="text-align:center;background:#f8fafc;border:2.5px solid #c7d2fe;border-radius:24px;padding:18px;">
+              <div class="timer-circle" id="timerCircle" style="--deg: 360deg;"><div class="timer-inner"><span id="timerText">60</span><span style="font-size:0.75rem;color:#64748b;font-weight:800;">СЕКУНД</span></div></div>
+              <div style="display:flex;gap:8px;justify-content:center;margin-top:14px;">
+                <button class="btn btn-success btn-sm" onclick="startBreakTimer()">▶ Старт</button>
+                <button class="btn btn-accent btn-sm" onclick="pauseBreakTimer()">⏸ Пауза</button>
+                <button class="btn btn-secondary btn-sm" onclick="resetBreakTimer()">🔄 Скинути</button>
+              </div>
+            </div>
+            <div style="background:linear-gradient(135deg,#eef2ff,#fff7ed);border:2.5px solid #818cf8;border-radius:24px;padding:16px;text-align:center;">
+              <div class="poem" style="border:none;font-size:1.15rem;line-height:1.55;">
+                Павучок по нитці вгору — тягнемось до неба! 🙌<br>
+                Павучок униз спустився — нахилились низько! 🙇<br>
+                Вліво нитка, вправо нитка — повороти в боки! ↔️<br>
+                Плете, плете павутинку — крутимо руками! 🔄<br>
+                Всі з’єдналися в мережу — взялися за руки! 🤝
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: Гіперпосилання -->
+      <section class="slide" data-slide="10">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🔗 Гіперпосилання</span>
+            <h2 class="slide-title">Мандруємо за посиланнями!</h2>
+            <p class="slide-subtitle">Наведи вказівник на посилання — він стане рукою 👆. Клацни — перейдеш на іншу сторінку.</p>
+          </div>
+          <span class="feedback-pill" id="linkCount" style="background:#e0e7ff;color:#3730a3;">Виконано: 0 / 4</span>
+        </div>
+        <div class="slide-body">
+          <div style="display:grid;grid-template-columns:1.3fr .7fr;gap:14px;">
+            <div class="br">
+              <div class="br-tabs" id="liveTabs"></div>
+              <div class="br-bar">
+                <button class="br-btn" id="bBack" onclick="brBack()">⬅</button>
+                <button class="br-btn" id="bFwd" onclick="brFwd()">➡</button>
+                <div class="br-url" id="bUrl"></div>
+              </div>
+              <div class="br-page" id="bPage"></div>
+            </div>
+            <div class="compact" style="display:flex;flex-direction:column;gap:6px;">
+              <div class="mission-item sim-task" id="lk1"><span>1️⃣</span><span>Перейди за посиланням-<b>словом</b></span></div>
+              <div class="mission-item sim-task" id="lk2"><span>2️⃣</span><span>Перейди за посиланням-<b>малюнком</b></span></div>
+              <div class="mission-item sim-task" id="lk3"><span>3️⃣</span><span>Повернись кнопкою <b>⬅</b></span></div>
+              <div class="mission-item sim-task" id="lk4"><span>4️⃣</span><span>Знайди сторінку про 🦜 <b>папуг</b></span></div>
+              <div class="def-box" data-step="1" style="font-size:.95rem;padding:8px 12px;">🔗 <b>Гіперпосилання</b> веде в інше місце. Це може бути слово, текст чи малюнок.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 11: Підсумки -->
+      <section class="slide" data-slide="11">
+        <div class="slide-header">
+          <div>
+            <span class="slide-tag">🏁 Підсумки уроку</span>
+            <h2 class="slide-title">Міркуємо, даємо відповідь</h2>
+          </div>
+          <button class="btn btn-accent" onclick="launchFireworksBurst(true)">🎆 Салют!</button>
+        </div>
+        <div class="slide-body">
+          <div class="grid g4">
+            <div class="tile"><div class="em">🌍</div><div class="ttl">Що таке Інтернет?</div><button class="reveal-btn" data-answer="Всесвітня мережа, що з’єднує мільйони комп’ютерів" onclick="reveal(this)">Перевірити</button></div>
+            <div class="tile" data-step="1"><div class="em">📖📄</div><div class="ttl">Як пов’язані вебсайт і вебсторінка?</div><button class="reveal-btn" data-answer="Сайт складається з вебсторінок, як книжка зі сторінок" onclick="reveal(this)">Перевірити</button></div>
+            <div class="tile" data-step="2"><div class="em">🧭</div><div class="ttl">Якою програмою переглядають вебсторінки?</div><button class="reveal-btn" data-answer="Програмою-браузером" onclick="reveal(this)">Перевірити</button></div>
+            <div class="tile" data-step="3" style="background:#fef3c7;border-color:#fcd34d;"><div class="em">💡</div><div class="ttl" style="font-size:1rem;">Цікавинка: у <b>1962</b> р. в Києві вчений <b>Віктор Глушков</b> придумав проєкт мережі — прообраз Інтернету!</div></div>
+          </div>
+          <div data-step="4" style="background:#f1f5f9;border-radius:16px;padding:11px 14px;">
+            <div style="font-weight:900;font-size:1rem;margin-bottom:6px;">🌟 Як тобі урок?</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🚀 Супер!')">🚀 Супер!</button>
+              <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '😊 Цікаво!')">😊 Цікаво!</button>
+              <button class="btn btn-sm btn-secondary" onclick="pickReflection(this, '🤔 Треба повторити')">🤔 Повторю</button>
+            </div>
+            <div id="reflectionReply" style="margin-top:6px;font-weight:800;font-size:0.9rem;color:#059669;"></div>
+          </div>
+          <div class="t-only teacher-note">Практична робота: підручник с. 38. Завдання «Гра у слова»: <a href="https://learningapps.org/watch?v=p7rb3k43a19" target="_blank" rel="noopener">LearningApps</a>. Мультфільм «Фіксики — Інтернет»: <a href="https://www.youtube.com/watch?v=X8HyrxqI4lg" target="_blank" rel="noopener">YouTube</a>. Домашнє завдання: з’ясувати, який браузер установлено вдома.</div>
+        </div>
+      </section>
+<!--SCRIPT-->
+    // ===== 3 клас, урок 10 =====
+    const cw = [
+      buildRiddle('cw1', 'ПАВУТИНА', () => $id('cw1').closest('.rebus-card').classList.add('solved')),
+      buildRiddle('cw2', 'МЕРЕЖА', () => $id('cw2').closest('.rebus-card').classList.add('solved'))
+    ];
+
+    // ---- Мережа ----
+    (() => {
+      const stage = $id('netStage'), svg = $id('netSvg');
+      const hub = document.createElement('div');
+      hub.className = 'net-node net-hub';
+      hub.style.left = '50%'; hub.style.top = '50%';
+      hub.innerHTML = '<span class="ic">📡</span>Мережа';
+      stage.appendChild(hub);
+      const nodes = [['💻', 'Ноутбук', 14, 22], ['🖥️', 'Комп’ютер', 14, 76], ['🖨️', 'Принтер', 86, 22], ['📱', 'Смартфон', 86, 76], ['📟', 'Планшет', 50, 14]];
+      let n = 0;
+      nodes.forEach(([ic, nm, x, y]) => {
+        const b = document.createElement('button');
+        b.className = 'net-node';
+        b.style.left = x + '%'; b.style.top = y + '%';
+        b.innerHTML = `<span class="ic">${ic}</span>${nm}`;
+        b.onclick = () => {
+          if (b.classList.contains('on')) return;
+          b.classList.add('on');
+          const l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          l.setAttribute('x1', 50); l.setAttribute('y1', 50); l.setAttribute('x2', x); l.setAttribute('y2', y);
+          svg.appendChild(l);
+          n++;
+          SoundFX.success();
+          $id('netCount').textContent = `З’єднано: ${n} / 5`;
+          if (n === 5) launchFireworksBurst(false);
+        };
+        stage.appendChild(b);
+      });
+    })();
+
+    makeSorter('chanSorter', [
+      { t: '🔌 Кабель', b: 'wire' }, { t: '☎️ Телефонна лінія', b: 'wire' }, { t: '💡 Оптоволокно', b: 'wire' },
+      { t: '📶 Wi-Fi', b: 'air' }, { t: '🛰️ Супутник', b: 'air' }, { t: '📻 Радіозв’язок', b: 'air' }
+    ], [
+      { id: 'wire', label: '🔌 Дротові', bg: '#fff7ed', border: '#fb923c', color: '#c2410c' },
+      { id: 'air', label: '📶 Бездротові', bg: '#eff6ff', border: '#60a5fa', color: '#1d4ed8' }
+    ]);
+
+    makeQuiz('brQuiz', [
+      { emoji: '🧭', q: 'Яка з цих програм — браузер?', options: ['🎨 Paint', '🌐 Google Chrome', '🧮 Калькулятор'], correct: 1, explain: 'Chrome — браузер!' },
+      { emoji: '📄', q: 'Для чого потрібен браузер?', options: ['Щоб малювати', 'Щоб переглядати вебсторінки', 'Щоб рахувати'], correct: 1 },
+      { emoji: '🦊', q: 'Який із них теж браузер?', options: ['📝 Блокнот', '🎵 Програвач', '🦊 Mozilla Firefox'], correct: 2, explain: 'Firefox — браузер з лисичкою!' }
+    ], { label: 'Питання' });
+
+    // ---- Частини вікна браузера ----
+    (() => {
+      const parts = $id('brParts').querySelectorAll('.br-part');
+      parts.forEach(p => {
+        p.addEventListener('click', (e) => {
+          e.stopPropagation();
+          SoundFX.click();
+          p.classList.add('seen');
+          $id('partInfo').innerHTML = p.dataset.info;
+          const n = $id('brParts').querySelectorAll('.br-part.seen').length;
+          $id('partCount').textContent = `Досліджено: ${n} / ${parts.length}`;
+          if (n === parts.length) launchFireworksBurst(false);
+        });
+      });
+    })();
+
+    // ---- Живий браузер з гіперпосиланнями ----
+    const PAGES = {
+      home: { url: 'www.zoo-dlia-ditei.ua', title: '🏠 Зоосайт', html: `<h3>🏠 Зоосайт для дітей</h3>Тут живуть різні тварини! Почитай про <a class="lnk" data-go="cats" data-kind="word">котиків</a> або натисни на малюнок:
+          <span class="pic-link" data-go="dogs" data-kind="pic">🐶<span>песики</span></span>` },
+      cats: { url: 'www.zoo-dlia-ditei.ua/kotyky', title: '🐱 Котики', html: `<h3>🐱 Котики</h3>Котики люблять спати 16 годин на добу! 😴 А ще в нас є сторінка про <a class="lnk" data-go="birds" data-kind="word">птахів</a>.` },
+      dogs: { url: 'www.zoo-dlia-ditei.ua/pesyky', title: '🐶 Песики', html: `<h3>🐶 Песики</h3>Песик розрізняє тисячі запахів! 👃 Повернися кнопкою ⬅ або перейди до <a class="lnk" data-go="birds" data-kind="word">птахів</a>.` },
+      birds: { url: 'www.zoo-dlia-ditei.ua/ptakhy', title: '🐦 Птахи', html: `<h3>🐦 Птахи</h3>Птахи бувають великі й маленькі. Які з них уміють говорити? Натисни:
+          <span class="pic-link" data-go="parrots" data-kind="pic">🦜<span>папуги</span></span>` },
+      parrots: { url: 'www.zoo-dlia-ditei.ua/papuhy', title: '🦜 Папуги', html: `<h3>🦜 Папуги</h3>🎉 Ти знайшов(-ла) сторінку про папуг! Деякі папуги вивчають понад 100 слів!` }
+    };
+    const brHist = ['home'];
+    let brPos = 0;
+    const lkDone = new Set();
+    function lkTask(n) {
+      if (lkDone.has(n)) return;
+      lkDone.add(n);
+      $id('lk' + n).classList.add('done');
+      $id('linkCount').textContent = `Виконано: ${lkDone.size} / 4`;
+      SoundFX.success();
+      if (lkDone.size === 4) launchFireworksBurst(false);
+    }
+    function brRender() {
+      const p = PAGES[brHist[brPos]];
+      $id('liveTabs').innerHTML = `<div class="br-tab cur">${p.title}</div>`;
+      $id('bUrl').textContent = '🔒 ' + p.url;
+      $id('bPage').innerHTML = p.html;
+      $id('bBack').disabled = brPos === 0;
+      $id('bFwd').disabled = brPos >= brHist.length - 1;
+      $id('bPage').querySelectorAll('[data-go]').forEach(a => {
+        a.onclick = () => {
+          brHist.splice(brPos + 1);
+          brHist.push(a.dataset.go);
+          brPos++;
+          SoundFX.pop();
+          lkTask(a.dataset.kind === 'pic' ? 2 : 1);
+          if (a.dataset.go === 'parrots') lkTask(4);
+          brRender();
+        };
+      });
+    }
+    function brBack() { if (brPos > 0) { brPos--; SoundFX.click(); lkTask(3); brRender(); } }
+    function brFwd() { if (brPos < brHist.length - 1) { brPos++; SoundFX.click(); brRender(); } }
+    brRender();
