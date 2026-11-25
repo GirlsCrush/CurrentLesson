@@ -48,10 +48,12 @@
 
     <footer class="bottom-nav">
       <button class="btn btn-secondary" id="btnPrev" onclick="changeSlide(-1)">⬅ Назад</button>
+      <button class="btn btn-sm btn-secondary t-nav" id="btnSlidesSetup" title="Вибрати слайди й завдання на оцінку">⚙️ Слайди</button>
       <div style="display:flex;align-items:center;gap:12px;flex:1;justify-content:center;">
         <span style="font-weight:900;font-size:0.95rem;color:var(--primary-dark);" id="slideIndicator">Слайд 1 / __NSLIDES__</span>
         <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
       </div>
+      <button class="btn btn-sm btn-finish t-nav" id="btnFinishLesson" title="Зупинити показ слайдів і показати учням оцінки">🏁 Завершити урок</button>
       <button class="btn btn-primary" id="btnNext" onclick="changeSlide(1)">Далі ➡</button>
     </footer>
   </div>

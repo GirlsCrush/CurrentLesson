@@ -169,3 +169,34 @@ def patch_nush3(js):
           url.searchParams.delete('role');""", """          const url = new URL((window.top !== window ? window.top : window).location.href);
           url.search = '';""")
     return js
+
+
+def patch_run(js):
+    """Проведення уроку (lessonrun.js): прибрані слайди, фаза уроку, завдання на оцінку.
+    Накладається після patch_nush4 лише на уроки, зібрані з lessons/*.html."""
+    js = _sub(js, """      const clamped = Math.max(1, Math.min(totalSlides, targetIndex));
+      currentSlide = clamped;""", """      const clamped = LessonRun.fixSlide(Math.max(1, Math.min(totalSlides, targetIndex)));
+      currentSlide = clamped;""")
+    js = _sub(js, "slideIndicator.textContent = `Слайд ${currentSlide} / ${totalSlides}` + (left",
+              "slideIndicator.textContent = LessonRun.label(currentSlide) + (left")
+    js = _sub(js, "progressFill.style.width = `${(currentSlide / totalSlides) * 100}%`;",
+              "progressFill.style.width = `${LessonRun.progress(currentSlide) * 100}%`;")
+    js = _sub(js, "btnPrev.disabled = (currentSlide === 1 && currentStep === 0) || lockedForStudent;",
+              "btnPrev.disabled = (!LessonRun.nextVisible(currentSlide, -1) && currentStep === 0) || lockedForStudent;")
+    js = _sub(js, "btnNext.disabled = (currentSlide === totalSlides && !left) || lockedForStudent;",
+              "btnNext.disabled = (!LessonRun.nextVisible(currentSlide, 1) && !left) || lockedForStudent;")
+    js = _sub(js, """      if ((delta > 0 && currentSlide === totalSlides) || (delta < 0 && currentSlide === 1)) return;
+      SoundFX.click();
+      renderSlide(currentSlide + delta, false, delta < 0 ? 999 : 0);""", """      const target = LessonRun.nextVisible(currentSlide, delta);
+      if (!target) return;
+      SoundFX.click();
+      renderSlide(target, false, delta < 0 ? 999 : 0);""")
+    js = _sub(js, """    function handleIncomingState(data) {
+      if (!data || typeof data !== 'object') return;""", """    function handleIncomingState(data) {
+      if (!data || typeof data !== 'object') return;
+      LessonRun.onState(data);""")
+    js = _sub(js, """    function publishState() {
+      const payload = { slide: currentSlide, step: currentStep, followMode: followMode, ts: Date.now() };""", """    function publishState() {
+      if (LessonRun.noPublish) return; // перегляд уроку вчителем не впливає на учнів
+      const payload = Object.assign({ slide: currentSlide, step: currentStep, followMode: followMode, ts: Date.now() }, LessonRun.statePart());""")
+    return js

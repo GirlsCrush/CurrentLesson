@@ -65,13 +65,19 @@
     function makeQuiz(id, questions, opts = {}) {
       const root = $id(id);
       root.classList.add('quiz-box');
+      // Завдання на оцінку: одна спроба на кожне питання, «пройти ще раз» — лише в учителя
+      const T = LessonRun.begin(id, questions.length, opts, () => makeQuiz(id, questions, opts));
+      if (T === 'locked') return;
+      const exam = !!T;
       let i = 0, score = 0;
       function render() {
         if (i >= questions.length) {
+          if (T) T.done();
+          const again = !exam || T.teacher;
           root.innerHTML = `<div class="quiz-done"><div style="font-size:3.5rem;">🏆</div>
-            <div>Молодці! З першої спроби: <b>${score} з ${questions.length}</b></div>
-            <button class="btn btn-secondary">🔄 Пройти ще раз</button></div>`;
-          root.querySelector('button').onclick = () => { i = 0; score = 0; SoundFX.click(); render(); };
+            <div>${exam ? 'Завдання виконано! Правильних відповідей' : 'Молодці! З першої спроби'}: <b>${score} з ${questions.length}</b></div>
+            ${again ? '<button class="btn btn-secondary">🔄 Пройти ще раз</button>' : ''}</div>`;
+          if (again) root.querySelector('button').onclick = () => { SoundFX.click(); makeQuiz(id, questions, opts); };
           launchFireworksBurst(false);
           return;
         }
@@ -92,6 +98,21 @@
           b.innerHTML = o;
           b.onclick = () => {
             if (locked) return;
+            if (exam) {
+              locked = true;
+              const ok = k === q.correct;
+              box.querySelectorAll('.opt-btn').forEach((x, kk) => { x.disabled = true; if (kk === q.correct) x.classList.add('correct'); });
+              if (ok) { score++; SoundFX.success(); } else { b.classList.add('wrong'); SoundFX.error(); }
+              T.point(ok);
+              fb.className = 'quiz-fb ' + (ok ? 'ok' : 'bad');
+              fb.innerHTML = (ok ? '✅ ' + (q.explain || 'Правильно!') : '❌ Неправильно. Правильну відповідь позначено зеленим.') + '<br>';
+              const nx = document.createElement('button');
+              nx.className = 'btn btn-primary';
+              nx.textContent = i + 1 < questions.length ? 'Наступне ➡' : 'Результат 🏆';
+              nx.onclick = () => { i++; SoundFX.click(); render(); };
+              fb.appendChild(nx);
+              return;
+            }
             if (k === q.correct) {
               locked = true;
               b.classList.add('correct');
@@ -120,16 +141,19 @@
     }
 
     // --- Сортування по кошиках: натисни картку, потім кошик ---
-    function makeSorter(id, items, buckets) {
+    function makeSorter(id, items, buckets, opts = {}) {
       const root = $id(id);
-      let active = null, placed = 0;
+      const T = LessonRun.begin(id, items.length, opts, () => makeSorter(id, items, buckets, opts));
+      if (T === 'locked') return;
+      const exam = !!T, canRestart = !exam || T.teacher;
+      let active = null, placed = 0, firstOk = 0;
       root.innerHTML = `<div class="sort-pool"></div>
         <div class="sort-buckets" style="grid-template-columns:repeat(${buckets.length},1fr);margin-top:12px;"></div>
-        <div class="sort-status" style="margin-top:10px;"><span class="st"></span><button class="btn btn-sm btn-secondary">🔄 Спочатку</button></div>`;
+        <div class="sort-status" style="margin-top:10px;"><span class="st"></span>${canRestart ? '<button class="btn btn-sm btn-secondary">🔄 Спочатку</button>' : ''}</div>`;
       const pool = root.querySelector('.sort-pool');
       const bw = root.querySelector('.sort-buckets');
       const st = root.querySelector('.st');
-      root.querySelector('.sort-status button').onclick = () => { SoundFX.click(); makeSorter(id, items, buckets); };
+      if (canRestart) root.querySelector('.sort-status button').onclick = () => { SoundFX.click(); makeSorter(id, items, buckets, opts); };
       const upd = () => { st.textContent = `Розкладено: ${placed} з ${items.length}`; };
       shuffleArr(items).forEach(it => {
         const b = document.createElement('button');
@@ -159,16 +183,19 @@
             active.classList.remove('picked');
             active.classList.add('placed');
             d.querySelector('.bucket-items').appendChild(active);
+            if (T && !active.dataset.miss) { firstOk++; T.point(true); }
             active = null;
             placed++;
             upd();
             if (placed === items.length) {
-              st.textContent = '🎉 Усе розкладено правильно!';
+              st.textContent = exam ? `🎉 Готово! З першого разу правильно: ${firstOk} з ${items.length}` : '🎉 Усе розкладено правильно!';
+              if (T) T.done();
               launchFireworksBurst(false);
             }
           } else {
             SoundFX.error();
             const a = active;
+            if (T && !a.dataset.miss) { a.dataset.miss = '1'; a.classList.add('missed'); T.point(false); }
             a.classList.add('shake');
             setTimeout(() => a.classList.remove('shake'), 420);
           }
@@ -366,13 +393,16 @@
     // --- Розстав кроки по порядку: натискай кроки в правильній послідовності ---
     function makeOrder(id, steps, opts = {}) {
       const root = $id(id);
-      let next = 0;
+      const T = LessonRun.begin(id, steps.length, opts, () => makeOrder(id, steps, opts));
+      if (T === 'locked') return;
+      const canRestart = !T || T.teacher;
+      let next = 0, miss = false;
       root.innerHTML = `<div class="order-list"></div><div class="sort-pool order-pool" style="margin-top:12px;"></div>
-        <div class="sort-status" style="margin-top:10px;"><span class="st"></span><button class="btn btn-sm btn-secondary">🔄 Спочатку</button></div>`;
+        <div class="sort-status" style="margin-top:10px;"><span class="st"></span>${canRestart ? '<button class="btn btn-sm btn-secondary">🔄 Спочатку</button>' : ''}</div>`;
       const list = root.querySelector('.order-list');
       const pool = root.querySelector('.order-pool');
       const st = root.querySelector('.st');
-      root.querySelector('.sort-status button').onclick = () => { SoundFX.click(); makeOrder(id, steps, opts); };
+      if (canRestart) root.querySelector('.sort-status button').onclick = () => { SoundFX.click(); makeOrder(id, steps, opts); };
       const upd = () => { st.textContent = next < steps.length ? `Який крок №${next + 1}? Натисни на нього!` : '🎉 Усе по порядку!'; };
       steps.forEach((t, i) => {
         const slot = document.createElement('div');
@@ -390,12 +420,15 @@
             const slot = list.children[next];
             slot.classList.add('filled');
             slot.querySelector('.order-text').innerHTML = it.t;
+            if (T) { T.point(!miss); if (miss) slot.classList.add('missed'); }
+            miss = false;
             b.remove();
             next++;
             upd();
-            if (next === steps.length) { launchFireworksBurst(false); if (opts.onDone) opts.onDone(); }
+            if (next === steps.length) { if (T) T.done(); launchFireworksBurst(false); if (opts.onDone) opts.onDone(); }
           } else {
             SoundFX.error();
+            miss = true;
             b.classList.add('shake');
             setTimeout(() => b.classList.remove('shake'), 420);
           }

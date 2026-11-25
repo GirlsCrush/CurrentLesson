@@ -1068,6 +1068,70 @@
     .step-in { animation: stepIn .55s cubic-bezier(.22, 1, .36, 1); }
     @keyframes stepIn { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: none; } }
 
+
+    /* ===== Проведення уроку: підготовка, завдання на оцінку, підсумок ===== */
+    .test-warn { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;
+      background: #fff7ed; border: 2.5px solid #fb923c; color: #9a3412; border-radius: 14px;
+      padding: 5px 12px; margin: 0 auto 8px; font-weight: 800; font-size: clamp(.9rem, 1.3vw, 1.05rem); width: fit-content; max-width: 100%; }
+    .test-warn.in-header { flex-direction: column; gap: 3px; margin: 0 0 0 auto; text-align: center; line-height: 1.2; padding: 6px 14px; }
+    body.is-teacher .test-warn { background: #eef2ff; border-color: #818cf8; color: #3730a3; }
+    body:not(.is-teacher) .t-nav { display: none !important; }
+    .bottom-nav .t-nav { flex-shrink: 0; }
+    .test-warn .btn-sm { padding: 4px 10px; min-height: 0; }
+    .test-locked { text-align: center; padding: 18px; font-weight: 800; font-size: clamp(1.1rem, 1.8vw, 1.4rem); color: #065f46;
+      background: #ecfdf5; border: 3px solid #6ee7b7; border-radius: 20px; }
+    .test-locked-note { font-size: .9rem; color: #64748b; margin-top: 6px; }
+    .word-chip.missed.placed { background: #ffe4e6; border-color: #f43f5e; color: #9f1239; }
+    .quiz-box .opt-btn.correct:disabled { opacity: 1; color: #fff; background: #10b981; border-color: #059669; }
+    .quiz-box .opt-btn.wrong:disabled { color: #be123c; }
+    .quiz-box .opt-btn:disabled:not(.correct):not(.wrong) { opacity: .55; }
+
+    .btn-finish { background: linear-gradient(135deg, #f43f5e, #e11d48); color: #fff; box-shadow: 0 6px 16px rgba(225, 29, 72, .28); }
+
+    .lr-overlay { position: fixed; inset: 0; z-index: 900; display: none; align-items: center; justify-content: center; padding: 16px;
+      background: rgba(238, 242, 255, .94); backdrop-filter: blur(6px); }
+    .lr-overlay.open { display: flex; }
+    .lr-card { background: #fff; border: 3px solid #c7d2fe; border-radius: 28px; padding: 22px 26px; max-width: 640px; width: 100%;
+      box-shadow: 0 20px 50px rgba(49, 46, 129, .18); max-height: calc(100vh - 32px); overflow-y: auto; }
+    .lr-card.lr-wide { max-width: 1240px; display: flex; flex-direction: column; gap: 12px; }
+    .lr-center { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .lr-card h2 { font-weight: 900; color: #1e1b4b; font-size: clamp(1.4rem, 2.6vw, 2rem); }
+    .lr-card p { font-weight: 700; color: #475569; font-size: 1.02rem; }
+    .lr-big { font-size: 4rem; line-height: 1; }
+    .lr-muted { color: #64748b !important; font-size: .95rem !important; }
+    .lr-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .lr-head p { margin-top: 4px; font-size: .95rem; }
+    .lr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; overflow-y: auto; min-height: 0; padding: 2px; }
+    .lr-slide { display: flex; gap: 10px; align-items: flex-start; background: #f8fafc; border: 2.5px solid #a5b4fc; border-radius: 16px; padding: 10px; }
+    .lr-slide.off { background: #f1f5f9; border-color: #e2e8f0; border-style: dashed; }
+    .lr-slide.off .lr-slide-txt { opacity: .45; text-decoration: line-through; }
+    .lr-check { flex-shrink: 0; width: 40px; height: 40px; border-radius: 12px; border: 3px solid #6366f1; background: #6366f1; color: #fff;
+      font-size: 1.4rem; font-weight: 900; cursor: pointer; font-family: inherit; }
+    .lr-slide.off .lr-check { background: #fff; border-color: #cbd5e1; }
+    .lr-slide-txt { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .lr-slide-num { font-size: .78rem; font-weight: 900; color: #6366f1; }
+    .lr-slide-ttl { font-size: .95rem; font-weight: 800; color: #1e1b4b; line-height: 1.2; }
+    .lr-test { align-self: flex-start; border: 2px solid #cbd5e1; background: #fff; color: #64748b; border-radius: 999px; padding: 3px 10px;
+      font-family: inherit; font-weight: 800; font-size: .8rem; cursor: pointer; }
+    .lr-test.on { border-color: #fb923c; background: #fff7ed; color: #9a3412; }
+    .lr-test:disabled { cursor: default; }
+    .lr-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; border-top: 2px solid #e2e8f0; padding-top: 12px; }
+    .lr-sum { font-weight: 800; color: #334155; }
+    .lr-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .lr-go { min-height: 56px; font-size: 1.15rem; padding: 12px 28px; }
+    .lr-points { font-size: 1.25rem; font-weight: 800; color: #334155; }
+    .lr-grade { border-radius: 24px; padding: 14px 34px; color: #fff; }
+    .lr-grade-num { font-size: 4rem; font-weight: 900; line-height: 1; }
+    .lr-grade-num span { font-size: 1.6rem; opacity: .85; }
+    .lr-grade-lv { font-size: 1.3rem; font-weight: 900; }
+    .lv-П { background: #f97316; } .lv-С { background: #eab308; } .lv-Д { background: #0ea5e9; } .lv-В { background: #10b981; }
+    .lr-rows { width: 100%; display: flex; flex-direction: column; gap: 4px; text-align: left; }
+    .lr-row { display: flex; justify-content: space-between; gap: 12px; padding: 6px 12px; background: #f8fafc; border-radius: 10px; font-weight: 700; color: #334155; }
+    .lr-row.lr-total { background: #eef2ff; color: #312e81; }
+    .lr-scale { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+    .lr-scale span { color: #fff; font-weight: 900; font-size: .85rem; padding: 4px 10px; border-radius: 999px; }
+    .order-slot.missed { border-color: #f43f5e !important; background: #ffe4e6 !important; }
+
   </style>
 </head>
 <body>
@@ -1364,10 +1428,12 @@
 
     <footer class="bottom-nav">
       <button class="btn btn-secondary" id="btnPrev" onclick="changeSlide(-1)">⬅ Назад</button>
+      <button class="btn btn-sm btn-secondary t-nav" id="btnSlidesSetup" title="Вибрати слайди й завдання на оцінку">⚙️ Слайди</button>
       <div style="display:flex;align-items:center;gap:12px;flex:1;justify-content:center;">
         <span style="font-weight:900;font-size:0.95rem;color:var(--primary-dark);" id="slideIndicator">Слайд 1 / 11</span>
         <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
       </div>
+      <button class="btn btn-sm btn-finish t-nav" id="btnFinishLesson" title="Зупинити показ слайдів і показати учням оцінки">🏁 Завершити урок</button>
       <button class="btn btn-primary" id="btnNext" onclick="changeSlide(1)">Далі ➡</button>
     </footer>
   </div>
@@ -1778,7 +1844,7 @@
     function stepsLeft() { return Math.max(0, LessonSteps.max(slides[currentSlide - 1]) - currentStep); }
 
     function renderSlide(targetIndex, fromSync = false, step = 0) {
-      const clamped = Math.max(1, Math.min(totalSlides, targetIndex));
+      const clamped = LessonRun.fixSlide(Math.max(1, Math.min(totalSlides, targetIndex)));
       currentSlide = clamped;
       slides.forEach((s, idx) => {
         s.classList.toggle('active', idx + 1 === currentSlide);
@@ -1787,8 +1853,8 @@
       currentStep = Math.max(0, Math.min(step, LessonSteps.max(slideEl)));
       LessonSteps.show(slideEl, currentStep);
       const left = stepsLeft();
-      slideIndicator.textContent = `Слайд ${currentSlide} / ${totalSlides}` + (left ? ` • ще ${left} ⬇` : '');
-      progressFill.style.width = `${(currentSlide / totalSlides) * 100}%`;
+      slideIndicator.textContent = LessonRun.label(currentSlide) + (left ? ` • ще ${left} ⬇` : '');
+      progressFill.style.width = `${LessonRun.progress(currentSlide) * 100}%`;
       updateNavLockUI();
 
       if (isTeacher && !fromSync) {
@@ -1799,8 +1865,8 @@
     function updateNavLockUI() {
       const lockedForStudent = !isTeacher && followMode;
       const left = stepsLeft();
-      btnPrev.disabled = (currentSlide === 1 && currentStep === 0) || lockedForStudent;
-      btnNext.disabled = (currentSlide === totalSlides && !left) || lockedForStudent;
+      btnPrev.disabled = (!LessonRun.nextVisible(currentSlide, -1) && currentStep === 0) || lockedForStudent;
+      btnNext.disabled = (!LessonRun.nextVisible(currentSlide, 1) && !left) || lockedForStudent;
       btnNext.textContent = left ? 'Показати ще ⬇' : 'Далі ➡';
       btnNext.classList.toggle('btn-accent', !!left);
       btnNext.classList.toggle('btn-primary', !left);
@@ -1824,9 +1890,10 @@
       const max = LessonSteps.max(slides[currentSlide - 1]);
       if (delta > 0 && currentStep < max) { SoundFX.pop(); renderSlide(currentSlide, false, currentStep + 1); return; }
       if (delta < 0 && currentStep > 0) { SoundFX.click(); renderSlide(currentSlide, false, currentStep - 1); return; }
-      if ((delta > 0 && currentSlide === totalSlides) || (delta < 0 && currentSlide === 1)) return;
+      const target = LessonRun.nextVisible(currentSlide, delta);
+      if (!target) return;
       SoundFX.click();
-      renderSlide(currentSlide + delta, false, delta < 0 ? 999 : 0);
+      renderSlide(target, false, delta < 0 ? 999 : 0);
     }
 
     document.addEventListener('keydown', (e) => {
@@ -1890,6 +1957,7 @@
 
     function handleIncomingState(data) {
       if (!data || typeof data !== 'object') return;
+      LessonRun.onState(data);
       if (typeof data.followMode === 'boolean') {
         followMode = data.followMode;
       }
@@ -1907,7 +1975,8 @@
     }
 
     function publishState() {
-      const payload = { slide: currentSlide, step: currentStep, followMode: followMode, ts: Date.now() };
+      if (LessonRun.noPublish) return; // перегляд уроку вчителем не впливає на учнів
+      const payload = Object.assign({ slide: currentSlide, step: currentStep, followMode: followMode, ts: Date.now() }, LessonRun.statePart());
       try {
         if (bcChannel) bcChannel.postMessage({ type: 'state', payload });
       } catch (e) {}
@@ -2384,6 +2453,418 @@
 
 
     /* =====================================================================
+       7. ПРОВЕДЕННЯ УРОКУ: підготовка (вибір слайдів), завдання на оцінку,
+          завершення уроку з оцінкою за 12-бальною шкалою
+       ---------------------------------------------------------------------
+       Стан, який учитель розсилає учням разом зі слайдом (publishState):
+         run      — ідентифікатор проведення уроку (новий після «Почати урок»)
+         phase    — 'setup' | 'live' | 'done'
+         hidden   — номери слайдів, які вчитель прибрав
+         ungraded — id завдань, які вчитель не зараховує в оцінку
+         resets   — {id завдання: n} — учитель дозволив «почати знову» всім учням
+       Відповіді учня зберігаються лише в його браузері (localStorage) і
+       переживають перезавантаження сторінки — тест не можна перепройти.
+       ===================================================================== */
+    var LessonRun = (() => {
+      const P = new URLSearchParams(location.search || '');
+      const PREVIEW = isTeacher && P.get('preview') === '1';
+      const WANT_SETUP = P.get('setup') === '1';
+      const KEY_T = 'lr_t_' + LESSON_TOPIC;
+      const KEY_PREF = 'lr_pref_' + LESSON_TOPIC;
+      const MAX_AGE = 8 * 3600 * 1000;
+
+      let run = null, phase = 'live', hidden = [], ungraded = [], resets = {};
+      const tests = new Map(); // id -> { id, max, rebuild, slide }
+      let shownResultFor = '';
+
+      const jget = (k, fb) => { try { const v = JSON.parse(safeStorageGet(k, 'null')); return v == null ? fb : v; } catch (e) { return fb; } };
+      const jset = (k, v) => safeStorageSet(k, JSON.stringify(v));
+      const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+      const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
+      /* ---------- Слайди ---------- */
+      function slideTitle(n) {
+        const s = slides[n - 1];
+        if (!s) return '';
+        const h = s.querySelector('.slide-title, h1, h2, h3') || s.querySelector('.slide-tag');
+        return h ? h.textContent.replace(/\s+/g, ' ').trim() : 'Слайд ' + n;
+      }
+      const isHidden = (n) => hidden.indexOf(n) !== -1;
+      function visibleList() {
+        const v = [];
+        for (let i = 1; i <= totalSlides; i++) if (!isHidden(i)) v.push(i);
+        return v.length ? v : [1];
+      }
+      function nextVisible(cur, delta) {
+        for (let i = cur + delta; i >= 1 && i <= totalSlides; i += delta) if (!isHidden(i)) return i;
+        return null;
+      }
+      function fixSlide(n) {
+        if (!isHidden(n)) return n;
+        return nextVisible(n, 1) || nextVisible(n, -1) || n;
+      }
+      function label(n) {
+        const v = visibleList();
+        const idx = v.indexOf(n) + 1 || n;
+        return `Слайд ${idx} / ${v.length}`;
+      }
+      function progress(n) {
+        const v = visibleList();
+        return (v.indexOf(n) + 1 || n) / v.length;
+      }
+
+      /* ---------- Завдання на оцінку ---------- */
+      const resKey = () => 'lr_res_' + LESSON_TOPIC + '_' + (run || 'solo');
+      const loadRes = () => jget(resKey(), {});
+      function saveRec(id, rec) { const all = loadRes(); all[id] = rec; jset(resKey(), all); }
+      const resetN = (id) => resets[id] || 0;
+      function validRec(id) {
+        const r = loadRes()[id];
+        return r && r.r === resetN(id) && r.answered > 0 ? r : null;
+      }
+      const counts = (id) => {
+        const t = tests.get(id);
+        return t && !isHidden(t.slide) && ungraded.indexOf(id) === -1;
+      };
+
+      function banner(id, root) {
+        let b = document.querySelector(`.test-warn[data-for="${id}"]`);
+        if (!b) {
+          b = document.createElement('div');
+          b.className = 'test-warn';
+          b.dataset.for = id;
+          // У заголовку слайда праворуч є вільне місце — так слайд не стає вищим
+          const sl = root.closest('section.slide');
+          const hdr = sl && sl.querySelector('.slide-header');
+          if (hdr) { b.classList.add('in-header'); hdr.appendChild(b); }
+          else root.parentNode.insertBefore(b, root);
+        }
+        const t = tests.get(id);
+        if (isTeacher) {
+          b.innerHTML = `<div><b>📝 Завдання на оцінку</b> • макс. ${t.max} б.</div>
+            <button class="btn btn-sm btn-secondary" type="button">🔄 Почати знову для всіх учнів</button>`;
+          b.querySelector('button').onclick = () => resetTest(id);
+        } else {
+          b.innerHTML = '<div><b>⚠️ Завдання на оцінку!</b></div><div>Уважно прочитай завдання і виконай з першого разу.</div>';
+        }
+        return b;
+      }
+      function removeBanner(id) {
+        const b = document.querySelector(`.test-warn[data-for="${id}"]`);
+        if (b) b.remove();
+      }
+
+      // Викликається віджетом. Повертає:
+      //   null      — звичайна вправа (не на оцінку): поводиться як раніше
+      //   'locked'  — учень уже виконував це завдання: показано результат, віджет не будується
+      //   {point(ok), done(), teacher} — завдання на оцінку
+      function begin(id, max, opts, rebuild) {
+        if (opts && opts.graded === false) return null;
+        const root = document.getElementById(id);
+        if (!root) return null;
+        const slideEl = root.closest('section.slide');
+        tests.set(id, { id, max, rebuild, slide: slides.indexOf(slideEl) + 1 });
+        if (ungraded.indexOf(id) !== -1) { removeBanner(id); return null; }
+        banner(id, root);
+        if (isTeacher) return { point() {}, done() {}, teacher: true };
+        const rec = validRec(id);
+        if (rec) { renderLocked(root, rec); return 'locked'; }
+        const cur = { got: 0, answered: 0, max, done: false, r: resetN(id) };
+        return {
+          teacher: false,
+          point(ok) { cur.answered++; if (ok) cur.got++; saveRec(id, cur); },
+          done() { cur.done = true; saveRec(id, cur); }
+        };
+      }
+
+      function renderLocked(root, rec) {
+        root.innerHTML = `<div class="test-locked">
+          <div style="font-size:3rem;">${rec.done ? '✅' : '📝'}</div>
+          <div>${rec.done ? 'Завдання виконано!' : 'Завдання вже зараховано.'} Твій результат: <b>${rec.got} з ${rec.max}</b></div>
+          <div class="test-locked-note">Пройти ще раз можна лише тоді, коли дозволить учитель.</div></div>`;
+      }
+
+      function rebuild(id) {
+        const t = tests.get(id);
+        if (!t) return;
+        try { t.rebuild(); } catch (e) {}
+      }
+
+      function resetTest(id) {
+        if (!isTeacher) return;
+        if (!confirm('Дозволити ВСІМ учням пройти це завдання знову? Їхні попередні відповіді на нього не зарахуються.')) return;
+        resets[id] = resetN(id) + 1;
+        saveT();
+        publishState();
+        SoundFX.click();
+        rebuild(id);
+      }
+
+      /* ---------- Оцінка ---------- */
+      function grade(got, max) {
+        if (!max) return null;
+        const g = Math.max(1, Math.min(12, Math.round(got / max * 12)));
+        const lv = g <= 3 ? ['П', 'Початковий'] : g <= 6 ? ['С', 'Середній'] : g <= 9 ? ['Д', 'Достатній'] : ['В', 'Високий'];
+        return { g, code: lv[0], name: lv[1] };
+      }
+      function summary() {
+        const rows = [];
+        let got = 0, max = 0;
+        const all = loadRes();
+        tests.forEach(t => {
+          if (!counts(t.id)) return;
+          const r = all[t.id];
+          const g = r && r.r === resetN(t.id) ? r.got : 0;
+          rows.push({ title: slideTitle(t.slide), got: g, max: t.max, done: !!(r && r.r === resetN(t.id) && r.answered) });
+          got += g;
+          max += t.max;
+        });
+        return { rows, got, max, grade: grade(got, max) };
+      }
+
+      /* ---------- Стан для синхронізації ---------- */
+      function statePart() {
+        return { run, phase, hidden: hidden.slice(), ungraded: ungraded.slice(), resets: Object.assign({}, resets) };
+      }
+      function saveT() {
+        if (!isTeacher || PREVIEW) return;
+        jset(KEY_T, { run, phase, hidden, ungraded, resets, ts: Date.now() });
+        jset(KEY_PREF, { hidden, ungraded });
+      }
+
+      function onState(d) {
+        if (isTeacher || !d) return;
+        let all = false;
+        const changed = new Set();
+        if ('run' in d && d.run !== run) { run = d.run || null; all = true; }
+        if (Array.isArray(d.hidden) && !same(d.hidden, hidden)) {
+          hidden = d.hidden.slice();
+          tests.forEach(t => changed.add(t.id));
+        }
+        if (Array.isArray(d.ungraded) && !same(d.ungraded, ungraded)) {
+          new Set(ungraded.concat(d.ungraded)).forEach(id => {
+            if ((ungraded.indexOf(id) === -1) !== (d.ungraded.indexOf(id) === -1)) changed.add(id);
+          });
+          ungraded = d.ungraded.slice();
+        }
+        if (d.resets && typeof d.resets === 'object') {
+          const nr = d.resets;
+          new Set(Object.keys(resets).concat(Object.keys(nr))).forEach(id => {
+            if ((nr[id] || 0) !== (resets[id] || 0)) changed.add(id);
+          });
+          resets = Object.assign({}, nr);
+        }
+        if (all) tests.forEach(t => rebuild(t.id));
+        else changed.forEach(id => { if (!isHidden((tests.get(id) || {}).slide)) rebuild(id); });
+        if (typeof d.phase === 'string') setPhase(d.phase);
+      }
+
+      /* ---------- Екрани поверх слайдів ---------- */
+      function overlay(id) {
+        let o = document.getElementById(id);
+        if (!o) {
+          o = document.createElement('div');
+          o.id = id;
+          o.className = 'lr-overlay';
+          document.body.appendChild(o);
+        }
+        return o;
+      }
+      function closeOverlay(id) {
+        const o = document.getElementById(id);
+        if (o) o.classList.remove('open');
+      }
+
+      function setPhase(p) {
+        phase = p;
+        if (isTeacher) return;
+        if (p === 'setup') {
+          const o = overlay('lrWait');
+          o.innerHTML = `<div class="lr-card lr-center"><div class="lr-big">🧑‍🏫</div>
+            <h2>Урок скоро почнеться</h2><p>Учитель готує урок. Зачекай трошки!</p></div>`;
+          o.classList.add('open');
+        } else closeOverlay('lrWait');
+        if (p === 'done') showStudentResult();
+        else { closeOverlay('lrDone'); shownResultFor = ''; }
+      }
+
+      function gradeHtml(s) {
+        if (!s.grade) return `<p class="lr-muted">На цьому уроці не було завдань на оцінку.</p>`;
+        return `<div class="lr-points">Правильних відповідей: <b>${s.got} з ${s.max}</b></div>
+          <div class="lr-grade lv-${s.grade.code}">
+            <div class="lr-grade-num">${s.grade.g}<span> / 12</span></div>
+            <div class="lr-grade-lv">${s.grade.name} рівень (${s.grade.code})</div>
+          </div>`;
+      }
+
+      function showStudentResult() {
+        const s = summary();
+        const o = overlay('lrDone');
+        o.innerHTML = `<div class="lr-card lr-center">
+          <div class="lr-big">🏁</div>
+          <h2>Урок завершено!</h2>
+          <p>Твоя оцінка за урок:</p>
+          ${gradeHtml(s)}
+          ${s.rows.length ? `<div class="lr-rows">${s.rows.map(r => `<div class="lr-row"><span>${esc(r.title)}</span><b>${r.got} з ${r.max}</b></div>`).join('')}</div>` : ''}
+          <p class="lr-muted">Дякуємо за урок! 🌟</p></div>`;
+        o.classList.add('open');
+        const key = run + '|' + s.got;
+        if (shownResultFor !== key) { shownResultFor = key; if (s.grade && s.grade.g >= 7) launchFireworksBurst(false); }
+      }
+
+      function scaleHtml() {
+        return `<div class="lr-scale">
+          <span class="lv-П">П — 1–3</span><span class="lv-С">С — 4–6</span>
+          <span class="lv-Д">Д — 7–9</span><span class="lv-В">В — 10–12</span></div>`;
+      }
+
+      function showTeacherDone() {
+        const s = summary();
+        const o = overlay('lrDone');
+        o.innerHTML = `<div class="lr-card lr-center">
+          <div class="lr-big">🏁</div>
+          <h2>Урок завершено</h2>
+          <p>Кожен учень зараз бачить на своєму екрані свої бали й оцінку.</p>
+          ${s.rows.length ? `<div class="lr-rows">${s.rows.map(r => `<div class="lr-row"><span>${esc(r.title)}</span><b>макс. ${r.max} б.</b></div>`).join('')}
+            <div class="lr-row lr-total"><span>Разом</span><b>${s.max} б. = 12 балів</b></div></div>` : '<p class="lr-muted">У цьому уроці немає завдань на оцінку.</p>'}
+          ${scaleHtml()}
+          <div class="lr-actions">
+            <button class="btn btn-secondary" type="button" id="lrResume">↩ Повернутися до слайдів</button>
+            <button class="btn btn-primary" type="button" id="lrRestart">🔁 Провести урок заново</button>
+          </div></div>`;
+        o.classList.add('open');
+        o.querySelector('#lrResume').onclick = () => { phase = 'live'; saveT(); closeOverlay('lrDone'); publishState(); };
+        o.querySelector('#lrRestart').onclick = () => {
+          if (!confirm('Почати урок заново? Усі відповіді учнів на цьому уроці обнуляться.')) return;
+          closeOverlay('lrDone');
+          openSetup(true);
+        };
+      }
+
+      /* ---------- Підготовка уроку (вчитель) ---------- */
+      function openSetup(isStart) {
+        if (!isTeacher) return;
+        if (isStart) { phase = 'setup'; saveT(); publishState(); }
+        const o = overlay('lrSetup');
+        o.classList.add('lr-setup');
+        const draw = () => {
+          const v = visibleList().length;
+          let nt = 0, pts = 0;
+          tests.forEach(t => { if (counts(t.id)) { nt++; pts += t.max; } });
+          let cards = '';
+          for (let n = 1; n <= totalSlides; n++) {
+            const off = isHidden(n);
+            const ts = [];
+            tests.forEach(t => { if (t.slide === n) ts.push(t); });
+            cards += `<div class="lr-slide${off ? ' off' : ''}" data-n="${n}">
+              <button class="lr-check" type="button" data-n="${n}" title="Показувати цей слайд">${off ? '' : '✓'}</button>
+              <div class="lr-slide-txt"><div class="lr-slide-num">Слайд ${n}</div><div class="lr-slide-ttl">${esc(slideTitle(n))}</div>
+              ${ts.map(t => `<button class="lr-test${ungraded.indexOf(t.id) === -1 ? ' on' : ''}" type="button" data-t="${t.id}" ${off ? 'disabled' : ''}>
+                 ${ungraded.indexOf(t.id) === -1 ? '📝 На оцінку' : '🎲 Без оцінки'} • ${t.max} б.</button>`).join('')}
+              </div></div>`;
+          }
+          o.innerHTML = `<div class="lr-card lr-wide">
+            <div class="lr-head"><div><h2>🧭 Підготовка уроку</h2>
+              <p>Приберіть позначку ✓ зі слайдів, які на цьому уроці не потрібні — учні їх не побачать.
+              Натискайте «📝 На оцінку», щоб вирішити, які завдання рахуються в оцінку.</p></div>
+              ${isStart ? '' : '<button class="btn btn-sm btn-secondary" type="button" id="lrClose">✕</button>'}</div>
+            <div class="lr-grid">${cards}</div>
+            <div class="lr-foot">
+              <div class="lr-sum">Слайдів: <b>${v} з ${totalSlides}</b> • Завдань на оцінку: <b>${nt}</b> • Усього балів: <b>${pts}</b></div>
+              <div class="lr-actions">
+                <button class="btn btn-secondary" type="button" id="lrAll">✅ Усі слайди</button>
+                <button class="btn btn-success lr-go" type="button" id="lrGo">${isStart ? '▶ Почати урок' : '💾 Зберегти'}</button>
+              </div></div></div>`;
+          o.querySelectorAll('.lr-check').forEach(b => b.onclick = () => {
+            const n = +b.dataset.n;
+            if (isHidden(n)) hidden = hidden.filter(x => x !== n);
+            else if (visibleList().length > 1) hidden = hidden.concat([n]).sort((a, c) => a - c);
+            SoundFX.click();
+            draw();
+          });
+          o.querySelectorAll('.lr-test').forEach(b => b.onclick = () => {
+            const id = b.dataset.t;
+            ungraded = ungraded.indexOf(id) === -1 ? ungraded.concat([id]) : ungraded.filter(x => x !== id);
+            SoundFX.click();
+            draw();
+          });
+          o.querySelector('#lrAll').onclick = () => { hidden = []; SoundFX.click(); draw(); };
+          o.querySelector('#lrGo').onclick = () => (isStart ? start() : apply());
+          const c = o.querySelector('#lrClose');
+          if (c) c.onclick = () => apply();
+        };
+        draw();
+        o.classList.add('open');
+      }
+
+      function apply() {
+        closeOverlay('lrSetup');
+        saveT();
+        tests.forEach(t => rebuild(t.id));
+        renderSlide(fixSlide(currentSlide), false, currentStep);
+      }
+
+      function start() {
+        run = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+        phase = 'live';
+        resets = {};
+        saveT();
+        closeOverlay('lrSetup');
+        closeOverlay('lrDone');
+        tests.forEach(t => rebuild(t.id));
+        SoundFX.success();
+        renderSlide(fixSlide(1), false, 0);
+      }
+
+      function finish(ask) {
+        if (!isTeacher) return;
+        if (ask !== false && !confirm('Завершити урок? Показ слайдів зупиниться, і кожен учень побачить свою оцінку.')) return;
+        closeOverlay('lrSetup');
+        phase = 'done';
+        saveT();
+        publishState();
+        showTeacherDone();
+        SoundFX.success();
+      }
+
+      /* ---------- Старт ---------- */
+      function init() {
+        if (!isTeacher) return;
+        const bs = document.getElementById('btnSlidesSetup');
+        const bf = document.getElementById('btnFinishLesson');
+        if (bs) bs.onclick = () => { SoundFX.click(); openSetup(phase === 'setup'); };
+        if (bf) bf.onclick = () => finish(true);
+        if (PREVIEW) { run = 'preview'; phase = 'live'; return; }
+        const st = jget(KEY_T, null);
+        if (!WANT_SETUP && st && st.run && Date.now() - (st.ts || 0) < MAX_AGE) {
+          run = st.run;
+          phase = st.phase || 'live';
+          hidden = st.hidden || [];
+          ungraded = st.ungraded || [];
+          resets = st.resets || {};
+        } else {
+          const pref = jget(KEY_PREF, {});
+          hidden = (pref.hidden || []).filter(n => n >= 1 && n <= totalSlides);
+          ungraded = pref.ungraded || [];
+          run = null;
+          resets = {};
+          phase = 'setup';
+        }
+        ungraded.forEach(id => rebuild(id));
+        if (phase === 'setup') openSetup(true);
+        if (phase === 'done') showTeacherDone();
+      }
+
+      return {
+        init, begin, onState, statePart, finish, openSetup,
+        nextVisible, fixSlide, label, progress, summary, grade,
+        get noPublish() { return PREVIEW; },
+        get phase() { return phase; }
+      };
+    })();
+
+
+    /* =====================================================================
        6. СПІЛЬНІ ІНТЕРАКТИВНІ ВІДЖЕТИ (для всіх уроків)
        ===================================================================== */
     const $id = (id) => document.getElementById(id);
@@ -2449,13 +2930,19 @@
     function makeQuiz(id, questions, opts = {}) {
       const root = $id(id);
       root.classList.add('quiz-box');
+      // Завдання на оцінку: одна спроба на кожне питання, «пройти ще раз» — лише в учителя
+      const T = LessonRun.begin(id, questions.length, opts, () => makeQuiz(id, questions, opts));
+      if (T === 'locked') return;
+      const exam = !!T;
       let i = 0, score = 0;
       function render() {
         if (i >= questions.length) {
+          if (T) T.done();
+          const again = !exam || T.teacher;
           root.innerHTML = `<div class="quiz-done"><div style="font-size:3.5rem;">🏆</div>
-            <div>Молодці! З першої спроби: <b>${score} з ${questions.length}</b></div>
-            <button class="btn btn-secondary">🔄 Пройти ще раз</button></div>`;
-          root.querySelector('button').onclick = () => { i = 0; score = 0; SoundFX.click(); render(); };
+            <div>${exam ? 'Завдання виконано! Правильних відповідей' : 'Молодці! З першої спроби'}: <b>${score} з ${questions.length}</b></div>
+            ${again ? '<button class="btn btn-secondary">🔄 Пройти ще раз</button>' : ''}</div>`;
+          if (again) root.querySelector('button').onclick = () => { SoundFX.click(); makeQuiz(id, questions, opts); };
           launchFireworksBurst(false);
           return;
         }
@@ -2476,6 +2963,21 @@
           b.innerHTML = o;
           b.onclick = () => {
             if (locked) return;
+            if (exam) {
+              locked = true;
+              const ok = k === q.correct;
+              box.querySelectorAll('.opt-btn').forEach((x, kk) => { x.disabled = true; if (kk === q.correct) x.classList.add('correct'); });
+              if (ok) { score++; SoundFX.success(); } else { b.classList.add('wrong'); SoundFX.error(); }
+              T.point(ok);
+              fb.className = 'quiz-fb ' + (ok ? 'ok' : 'bad');
+              fb.innerHTML = (ok ? '✅ ' + (q.explain || 'Правильно!') : '❌ Неправильно. Правильну відповідь позначено зеленим.') + '<br>';
+              const nx = document.createElement('button');
+              nx.className = 'btn btn-primary';
+              nx.textContent = i + 1 < questions.length ? 'Наступне ➡' : 'Результат 🏆';
+              nx.onclick = () => { i++; SoundFX.click(); render(); };
+              fb.appendChild(nx);
+              return;
+            }
             if (k === q.correct) {
               locked = true;
               b.classList.add('correct');
@@ -2504,16 +3006,19 @@
     }
 
     // --- Сортування по кошиках: натисни картку, потім кошик ---
-    function makeSorter(id, items, buckets) {
+    function makeSorter(id, items, buckets, opts = {}) {
       const root = $id(id);
-      let active = null, placed = 0;
+      const T = LessonRun.begin(id, items.length, opts, () => makeSorter(id, items, buckets, opts));
+      if (T === 'locked') return;
+      const exam = !!T, canRestart = !exam || T.teacher;
+      let active = null, placed = 0, firstOk = 0;
       root.innerHTML = `<div class="sort-pool"></div>
         <div class="sort-buckets" style="grid-template-columns:repeat(${buckets.length},1fr);margin-top:12px;"></div>
-        <div class="sort-status" style="margin-top:10px;"><span class="st"></span><button class="btn btn-sm btn-secondary">🔄 Спочатку</button></div>`;
+        <div class="sort-status" style="margin-top:10px;"><span class="st"></span>${canRestart ? '<button class="btn btn-sm btn-secondary">🔄 Спочатку</button>' : ''}</div>`;
       const pool = root.querySelector('.sort-pool');
       const bw = root.querySelector('.sort-buckets');
       const st = root.querySelector('.st');
-      root.querySelector('.sort-status button').onclick = () => { SoundFX.click(); makeSorter(id, items, buckets); };
+      if (canRestart) root.querySelector('.sort-status button').onclick = () => { SoundFX.click(); makeSorter(id, items, buckets, opts); };
       const upd = () => { st.textContent = `Розкладено: ${placed} з ${items.length}`; };
       shuffleArr(items).forEach(it => {
         const b = document.createElement('button');
@@ -2543,16 +3048,19 @@
             active.classList.remove('picked');
             active.classList.add('placed');
             d.querySelector('.bucket-items').appendChild(active);
+            if (T && !active.dataset.miss) { firstOk++; T.point(true); }
             active = null;
             placed++;
             upd();
             if (placed === items.length) {
-              st.textContent = '🎉 Усе розкладено правильно!';
+              st.textContent = exam ? `🎉 Готово! З першого разу правильно: ${firstOk} з ${items.length}` : '🎉 Усе розкладено правильно!';
+              if (T) T.done();
               launchFireworksBurst(false);
             }
           } else {
             SoundFX.error();
             const a = active;
+            if (T && !a.dataset.miss) { a.dataset.miss = '1'; a.classList.add('missed'); T.point(false); }
             a.classList.add('shake');
             setTimeout(() => a.classList.remove('shake'), 420);
           }
@@ -2750,13 +3258,16 @@
     // --- Розстав кроки по порядку: натискай кроки в правильній послідовності ---
     function makeOrder(id, steps, opts = {}) {
       const root = $id(id);
-      let next = 0;
+      const T = LessonRun.begin(id, steps.length, opts, () => makeOrder(id, steps, opts));
+      if (T === 'locked') return;
+      const canRestart = !T || T.teacher;
+      let next = 0, miss = false;
       root.innerHTML = `<div class="order-list"></div><div class="sort-pool order-pool" style="margin-top:12px;"></div>
-        <div class="sort-status" style="margin-top:10px;"><span class="st"></span><button class="btn btn-sm btn-secondary">🔄 Спочатку</button></div>`;
+        <div class="sort-status" style="margin-top:10px;"><span class="st"></span>${canRestart ? '<button class="btn btn-sm btn-secondary">🔄 Спочатку</button>' : ''}</div>`;
       const list = root.querySelector('.order-list');
       const pool = root.querySelector('.order-pool');
       const st = root.querySelector('.st');
-      root.querySelector('.sort-status button').onclick = () => { SoundFX.click(); makeOrder(id, steps, opts); };
+      if (canRestart) root.querySelector('.sort-status button').onclick = () => { SoundFX.click(); makeOrder(id, steps, opts); };
       const upd = () => { st.textContent = next < steps.length ? `Який крок №${next + 1}? Натисни на нього!` : '🎉 Усе по порядку!'; };
       steps.forEach((t, i) => {
         const slot = document.createElement('div');
@@ -2774,12 +3285,15 @@
             const slot = list.children[next];
             slot.classList.add('filled');
             slot.querySelector('.order-text').innerHTML = it.t;
+            if (T) { T.point(!miss); if (miss) slot.classList.add('missed'); }
+            miss = false;
             b.remove();
             next++;
             upd();
-            if (next === steps.length) { launchFireworksBurst(false); if (opts.onDone) opts.onDone(); }
+            if (next === steps.length) { if (T) T.done(); launchFireworksBurst(false); if (opts.onDone) opts.onDone(); }
           } else {
             SoundFX.error();
+            miss = true;
             b.classList.add('shake');
             setTimeout(() => b.classList.remove('shake'), 420);
           }
@@ -2986,6 +3500,7 @@
       winTask(4, '✅ Вікно закрито — програма завершила роботу.');
     }
 
+    LessonRun.init();
     renderSlide(1, true);
 
   </script>

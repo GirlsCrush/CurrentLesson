@@ -7,7 +7,7 @@
 import json, os, re, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from patches import patch_nush3, patch_nush4  # noqa: E402
+from patches import patch_nush3, patch_nush4, patch_run  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))  # CurrentLesson/_builder
 REPO = os.path.dirname(HERE)  # корінь репозиторію CurrentLesson
@@ -24,7 +24,7 @@ def build(path):
     slides = src.split('<!--SLIDES-->', 1)[1].split('<!--SCRIPT-->', 1)[0]
     script = src.split('<!--SCRIPT-->', 1)[1]
     n_slides = len(re.findall(r'<section class="slide', slides))
-    engine_js = patch_nush4(read('engine.js'))
+    engine_js = patch_run(patch_nush4(read('engine.js')))
     engine_js = engine_js.replace('__EMOJIS__', json.dumps(meta['emojis'], ensure_ascii=False))
     engine_js = engine_js.replace("'__TOPIC__'", json.dumps(meta['topic']))
     engine_js = engine_js.replace("'__TOPIC___'", json.dumps(meta['topic'].replace('-', '_') + '_'))
@@ -34,9 +34,10 @@ def build(path):
         '__PILL__': meta['pill'],
         '__BRAND__': meta['brand'],
         '__NSLIDES__': str(n_slides),
-        '/*__CSS__*/': read('engine.css') + '\n' + read('widgets.css') + '\n' + read('steps.css'),
+        '/*__CSS__*/': read('engine.css') + '\n' + read('widgets.css') + '\n' + read('steps.css') + '\n' + read('lessonrun.css'),
         '<!--__SLIDES__-->': slides,
-        '/*__JS__*/': read('steps.js') + '\n' + engine_js + '\n' + read('widgets.js') + '\n' + script + '\n    renderSlide(1, true);\n',
+        '/*__JS__*/': read('steps.js') + '\n' + engine_js + '\n' + read('lessonrun.js') + '\n' + read('widgets.js') + '\n' + script
+                      + '\n    LessonRun.init();\n    renderSlide(1, true);\n',
     }.items():
         html = html.replace(key, val)
     out = os.path.join(REPO, meta['out'])
